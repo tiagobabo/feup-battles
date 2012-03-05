@@ -357,6 +357,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         ball_geo.addControl(ball_phy);
 
         bulletAppState.getPhysicsSpace().add(ball_phy);
+        
 
         ball_phy.setLinearVelocity(new Vector3f(d * power / 20, power / 40, 0));
     }
@@ -458,6 +459,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
                 System.out.println(p.getPlayerName() + " GOT HIT!\n HITPOINTS LEFT:" + p.getHitPoints());
                 explosion(cannon.getLocalTranslation());
                 rootNode.detachChild(cannon);
+                bulletAppState.getPhysicsSpace().remove(cannon.getControl(0));
             }
 
         }
