@@ -2,6 +2,8 @@ package mygame;
 
 import com.jme3.app.SimpleApplication;
 import com.jme3.bullet.BulletAppState;
+import com.jme3.bullet.collision.PhysicsCollisionEvent;
+import com.jme3.bullet.collision.PhysicsCollisionListener;
 import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.input.KeyInput;
 import com.jme3.input.controls.ActionListener;
@@ -12,11 +14,13 @@ import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.RenderManager;
 import com.jme3.scene.Geometry;
+import com.jme3.scene.Node;
+import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Box;
 import com.jme3.scene.shape.Sphere;
 import com.jme3.scene.shape.Sphere.TextureMode;
 
-public class Main extends SimpleApplication {
+public class Main extends SimpleApplication implements PhysicsCollisionListener {
 
     private BulletAppState bulletAppState;
 
@@ -25,8 +29,8 @@ public class Main extends SimpleApplication {
         app.start();
     }
     float velocity = 0.01f;
-    Geometry player1;
-    Geometry player2;
+    Player player1;
+    Player player2;
 
     @Override
     public void simpleInitApp() {
@@ -47,17 +51,14 @@ public class Main extends SimpleApplication {
 
         //Player 1
         Vector3f p1_pos = new Vector3f(-5.0f, 1f, 0f);
-        player1 = new Geometry("Player1", b);
-        player1.setLocalTranslation(p1_pos);
-        player1.setMaterial(mat);
-        rootNode.attachChild(player1);
+        player1 = new Player("player 1", mat, p1_pos);
+        rootNode.attachChild(player1.getPlayerGeo());
 
         //Player 2
         Vector3f p2_pos = new Vector3f(30.0f, 1f, 0f);
-        player2 = new Geometry("Player2", b);
-        player2.setLocalTranslation(p2_pos);
-        player2.setMaterial(mat);
-        rootNode.attachChild(player2);
+        player2 = new Player("player 2", mat, p2_pos);
+        rootNode.attachChild(player2.getPlayerGeo());
+
 
         //Platform 1
         Vector3f plat1_pos = new Vector3f(0, -10, 0);
@@ -75,31 +76,30 @@ public class Main extends SimpleApplication {
         rootNode.attachChild(plat2);
 
         //Fisica dos objetos
-        RigidBodyControl player1_rb = new RigidBodyControl(2.0f);
-        RigidBodyControl player2_rb = new RigidBodyControl(0.0f);
+
         RigidBodyControl plat1_rb = new RigidBodyControl(2.0f);
         RigidBodyControl plat2_rb = new RigidBodyControl(0.0f);
 
         //Associacao da fisica
-        player1.addControl(player1_rb);
-        player2.addControl(plat1_rb);
-        plat1.addControl(player2_rb);
+
+        plat1.addControl(plat1_rb);
         plat2.addControl(plat2_rb);
 
 
-        player1_rb.setKinematic(true);
-        player2_rb.setKinematic(true);
+
         plat1_rb.setKinematic(true);
         plat2_rb.setKinematic(true);
 
-        bulletAppState.getPhysicsSpace().add(player1_rb);
-        bulletAppState.getPhysicsSpace().add(player2_rb);
+        bulletAppState.getPhysicsSpace().add(player1.getPlayerControl());
+        bulletAppState.getPhysicsSpace().add(player2.getPlayerControl());
         bulletAppState.getPhysicsSpace().add(plat1_rb);
         bulletAppState.getPhysicsSpace().add(plat2_rb);
+        bulletAppState.getPhysicsSpace().addCollisionListener(this);
 
         initKeys();
     }
     private AnalogListener analogListener = new AnalogListener() {
+
         public void onAnalog(String name, float value, float tpf) {
             Vector3f player1_pos = player1.getLocalTranslation();
             Vector3f player2_pos = player2.getLocalTranslation();
@@ -155,12 +155,12 @@ public class Main extends SimpleApplication {
         public void onAction(String name, boolean keyPressed, float tpf) {
             if (name.equals("P1_Shoot") && !keyPressed) {
                 player1_power = System.currentTimeMillis() - player1_power;
-                makeBall(player1_power, player1, 1);
+                makeBall(player1_power, player1.getPlayerGeo(), 1);
             } else if (name.equals("P1_Shoot")) {
                 player1_power = System.currentTimeMillis();
             } else if (name.equals("P2_Shoot") && !keyPressed) {
                 player2_power = System.currentTimeMillis() - player2_power;
-                makeBall(player2_power, player2, -1);
+                makeBall(player2_power, player2.getPlayerGeo(), -1);
             } else {
                 player2_power = System.currentTimeMillis();
             }
@@ -196,5 +196,34 @@ public class Main extends SimpleApplication {
 
     @Override
     public void simpleRender(RenderManager rm) {
+    }
+
+    public void collision(PhysicsCollisionEvent pce) {
+        Spatial cannon = null;
+        Player p = null;
+        if (pce.getNodeA().getName().equals("cannon ball")) {
+            cannon = pce.getNodeA();
+        } else if (pce.getNodeB().getName().equals("cannon ball")) {
+            cannon = pce.getNodeB();
+        }
+
+        if (pce.getNodeA().getName().equals(player1.getPlayerName()) || pce.getNodeB().getName().equals(player1.getPlayerName())) {
+            p = player1;
+        }
+
+        if (pce.getNodeA().getName().equals(player2.getPlayerName()) || pce.getNodeB().getName().equals(player2.getPlayerName())) {
+            p = player2;
+        }
+
+        if (p != null && cannon != null) {
+
+            if (rootNode.hasChild(cannon)) {
+                p.setHitPoints(p.getHitPoints() - 1);
+                System.out.println(p.getPlayerName() + " GOT HIT!\n HITPOINTS LEFT:" + p.getHitPoints());
+                rootNode.detachChild(cannon);
+               
+            }
+
+        }
     }
 }
