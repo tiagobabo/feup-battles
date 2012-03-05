@@ -1,6 +1,5 @@
 package mygame;
 
-import com.jme3.app.SimpleApplication;
 import com.jme3.bullet.BulletAppState;
 import com.jme3.bullet.collision.PhysicsCollisionEvent;
 import com.jme3.bullet.collision.PhysicsCollisionListener;
@@ -10,9 +9,6 @@ import com.jme3.input.KeyInput;
 import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.AnalogListener;
 import com.jme3.input.controls.KeyTrigger;
-import com.jme3.material.Material;
-import com.jme3.math.ColorRGBA;
-import com.jme3.math.Vector3f;
 import com.jme3.renderer.RenderManager;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Spatial;
@@ -26,8 +22,6 @@ import com.jme3.effect.shapes.EmitterSphereShape;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.FastMath;
-import com.jme3.math.Quaternion;
-import com.jme3.math.Transform;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 
@@ -42,16 +36,12 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
     float velocity = 0.01f;
     Player player1;
     Player player2;
-    
-   
-
-     private static final int COUNT_FACTOR = 1;
+    private static final int COUNT_FACTOR = 1;
     private static final float COUNT_FACTOR_F = 1f;
-
     private static final boolean POINT_SPRITE = true;
     private static final Type EMITTER_TYPE = POINT_SPRITE ? Type.Point : Type.Triangle;
 
-    private ParticleEmitter createFlame(ParticleEmitter flame){
+    private ParticleEmitter createFlame(ParticleEmitter flame) {
         flame = new ParticleEmitter("Flame", EMITTER_TYPE, 32 * COUNT_FACTOR);
         flame.setSelectRandomImage(true);
         flame.setStartColor(new ColorRGBA(1f, 0.4f, 0.05f, (float) (1f / COUNT_FACTOR_F)));
@@ -72,10 +62,10 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         mat.setBoolean("PointSprite", POINT_SPRITE);
         flame.setMaterial(mat);
         return flame;
-        
+
     }
 
-    private ParticleEmitter createFlash(ParticleEmitter flash){
+    private ParticleEmitter createFlash(ParticleEmitter flash) {
         flash = new ParticleEmitter("Flash", EMITTER_TYPE, 24 * COUNT_FACTOR);
         flash.setSelectRandomImage(true);
         flash.setStartColor(new ColorRGBA(1f, 0.8f, 0.36f, (float) (1f / COUNT_FACTOR_F)));
@@ -98,7 +88,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         return flash;
     }
 
-    private ParticleEmitter createRoundSpark(ParticleEmitter roundspark){
+    private ParticleEmitter createRoundSpark(ParticleEmitter roundspark) {
         roundspark = new ParticleEmitter("RoundSpark", EMITTER_TYPE, 20 * COUNT_FACTOR);
         roundspark.setStartColor(new ColorRGBA(1f, 0.29f, 0.34f, (float) (1.0 / COUNT_FACTOR_F)));
         roundspark.setEndColor(new ColorRGBA(0, 0, 0, (float) (0.5f / COUNT_FACTOR_F)));
@@ -120,7 +110,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         return roundspark;
     }
 
-    private ParticleEmitter createSpark(ParticleEmitter spark){
+    private ParticleEmitter createSpark(ParticleEmitter spark) {
         spark = new ParticleEmitter("Spark", Type.Triangle, 30 * COUNT_FACTOR);
         spark.setStartColor(new ColorRGBA(1f, 0.8f, 0.36f, (float) (1.0f / COUNT_FACTOR_F)));
         spark.setEndColor(new ColorRGBA(1f, 0.8f, 0.36f, 0f));
@@ -141,7 +131,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         return spark;
     }
 
-    private ParticleEmitter createSmokeTrail(ParticleEmitter smoketrail){
+    private ParticleEmitter createSmokeTrail(ParticleEmitter smoketrail) {
         smoketrail = new ParticleEmitter("SmokeTrail", Type.Triangle, 22 * COUNT_FACTOR);
         smoketrail.setStartColor(new ColorRGBA(1f, 0.8f, 0.36f, (float) (1.0f / COUNT_FACTOR_F)));
         smoketrail.setEndColor(new ColorRGBA(1f, 0.8f, 0.36f, 0f));
@@ -164,7 +154,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         return smoketrail;
     }
 
-    private ParticleEmitter createDebris(ParticleEmitter debris){
+    private ParticleEmitter createDebris(ParticleEmitter debris) {
         debris = new ParticleEmitter("Debris", Type.Triangle, 15 * COUNT_FACTOR);
         debris.setSelectRandomImage(true);
         debris.setRandomAngle(true);
@@ -189,7 +179,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         return debris;
     }
 
-    private ParticleEmitter createShockwave(ParticleEmitter shockwave){
+    private ParticleEmitter createShockwave(ParticleEmitter shockwave) {
         shockwave = new ParticleEmitter("Shockwave", Type.Triangle, 1 * COUNT_FACTOR);
 //        shockwave.setRandomAngle(true);
         shockwave.setFaceNormal(Vector3f.UNIT_Y);
@@ -212,7 +202,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         shockwave.setMaterial(mat);
         return shockwave;
     }
- 
+
     @Override
     public void simpleInitApp() {
         bulletAppState = new BulletAppState();
@@ -370,70 +360,70 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
 
         ball_phy.setLinearVelocity(new Vector3f(d * power / 20, power / 40, 0));
     }
-    
+
     public void explosion(Vector3f pos) {
-   
+
         Node explosionEffect = new Node("explosionFX");
-        ParticleEmitter flame = null, flash=null, spark=null, roundspark=null, smoketrail=null, debris=null,
-                            shockwave=null;
+        ParticleEmitter flame = null, flash = null, spark = null, roundspark = null, smoketrail = null, debris = null,
+                shockwave = null;
         flame = createFlame(flame);
         explosionEffect.attachChild(flame);
-        
+
         flash = createFlash(flash);
         explosionEffect.attachChild(flash);
-        
+
         spark = createSpark(spark);
         explosionEffect.attachChild(spark);
-        
+
         roundspark = createRoundSpark(roundspark);
         explosionEffect.attachChild(roundspark);
-        
+
         smoketrail = createSmokeTrail(smoketrail);
         explosionEffect.attachChild(smoketrail);
-        
+
         debris = createDebris(debris);
         explosionEffect.attachChild(debris);
-        
+
         shockwave = createShockwave(shockwave);
         explosionEffect.attachChild(shockwave);
-        
+
         explosionEffect.setLocalScale(0.5f);
         renderManager.preloadScene(explosionEffect);
-        
+
         rootNode.attachChild(explosionEffect);
-        
+
         explosionEffect.setLocalTranslation(pos);
-        
+
         flash.emitAllParticles();
         spark.emitAllParticles();
         smoketrail.emitAllParticles();
         debris.emitAllParticles();
         shockwave.emitAllParticles();
     }
+    
+    BitmapText player1HP;
+    BitmapText player2HP;
 
-
-     BitmapText player1HP;
-     BitmapText player2HP;
-    public void initHPs(){
+    public void initHPs() {
         guiNode.detachAllChildren();
-      player1HP = new BitmapText(guiFont, false);          
+        player1HP = new BitmapText(guiFont, false);
         player1HP.setSize(guiFont.getCharSet().getRenderedSize());      // font size
         player1HP.setColor(ColorRGBA.Blue);                             // font color
-        player1HP.setText("HP:"+player1.getHitPoints());
-        player1HP.setLocalTranslation(10, settings.getHeight()-player1HP.getLineHeight(), 0); // position
+        player1HP.setText("HP:" + player1.getHitPoints());
+        player1HP.setLocalTranslation(10, settings.getHeight() - player1HP.getLineHeight(), 0); // position
         guiNode.attachChild(player1HP);
-        player2HP = new BitmapText(guiFont, false);          
+        player2HP = new BitmapText(guiFont, false);
         player2HP.setSize(guiFont.getCharSet().getRenderedSize());      // font size
         player2HP.setColor(ColorRGBA.Blue);                             // font color
-        player2HP.setText("HP:"+player2.getHitPoints());
-        player2HP.setLocalTranslation(settings.getWidth()-player2HP.getLineWidth()-10,settings.getHeight()- player2HP.getLineHeight(), 0); // position
+        player2HP.setText("HP:" + player2.getHitPoints());
+        player2HP.setLocalTranslation(settings.getWidth() - player2HP.getLineWidth() - 10, settings.getHeight() - player2HP.getLineHeight(), 0); // position
         guiNode.attachChild(player2HP);
     }
-    
+
     @Override
     public void simpleUpdate(float tpf) {
-          player1HP.setText("HP:"+player1.getHitPoints());
-           player2HP.setText("HP:"+player2.getHitPoints());
+        player1HP.setText("HP:" + player1.getHitPoints());
+        player2HP.setText("HP:" + player2.getHitPoints());
     }
 
     @Override
@@ -446,11 +436,11 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         Vector3f pos = null;
         if (pce.getNodeA().getName().equals("cannon ball")) {
             cannon = pce.getNodeA();
-            pos = cannon.getLocalTranslation(); 
+            pos = cannon.getLocalTranslation();
         } else if (pce.getNodeB().getName().equals("cannon ball")) {
             cannon = pce.getNodeB();
-            pos = cannon.getLocalTranslation(); 
-            
+            pos = cannon.getLocalTranslation();
+
         }
 
         if (pce.getNodeA().getName().equals(player1.getPlayerName()) || pce.getNodeB().getName().equals(player1.getPlayerName())) {
