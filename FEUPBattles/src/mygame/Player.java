@@ -4,12 +4,14 @@
  */
 package mygame;
 
-import com.jme3.bullet.collision.PhysicsCollisionEvent;
-import com.jme3.bullet.collision.PhysicsCollisionListener;
+
+import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.material.Material;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
+import com.jme3.scene.Node;
 import com.jme3.scene.shape.Box;
+import com.jme3.scene.shape.Quad;
 
 /**
  *
@@ -19,20 +21,24 @@ public class Player {
 
     private Geometry playerGeo;
     private int hitPoints = 10;
-    private MyControl playerControl;
+    private RigidBodyControl playerControl;
     private float mass = 2.0f;
     private Box playerBox;
     private String playerName;
+  
+   
 
     public Player(String name, Material playerMaterial, Vector3f initialPosition) {
         playerBox = new Box(Vector3f.ZERO, 1, 1, 1);
         playerGeo = new Geometry(name, playerBox);
         playerGeo.setLocalTranslation(initialPosition);
         playerGeo.setMaterial(playerMaterial);
-        playerControl = new MyControl(mass);
+        playerControl = new RigidBodyControl(mass);
         playerGeo.addControl(playerControl);
         playerControl.setKinematic(true);
         playerName = name;
+        
+     
 
 
     }
@@ -68,14 +74,14 @@ public class Player {
     /**
      * @return the playerControl
      */
-    public MyControl getPlayerControl() {
+    public RigidBodyControl getPlayerControl() {
         return playerControl;
     }
 
     /**
      * @param playerControl the playerControl to set
      */
-    public void setPlayerControl(MyControl playerControl) {
+    public void setPlayerControl(RigidBodyControl playerControl) {
         this.playerControl = playerControl;
     }
 
@@ -128,4 +134,6 @@ public class Player {
     public void setPlayerName(String playerName) {
         this.playerName = playerName;
     }
+
+   
 }

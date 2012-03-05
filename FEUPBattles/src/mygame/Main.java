@@ -5,6 +5,7 @@ import com.jme3.bullet.BulletAppState;
 import com.jme3.bullet.collision.PhysicsCollisionEvent;
 import com.jme3.bullet.collision.PhysicsCollisionListener;
 import com.jme3.bullet.control.RigidBodyControl;
+import com.jme3.font.BitmapText;
 import com.jme3.input.KeyInput;
 import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.AnalogListener;
@@ -276,6 +277,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         bulletAppState.getPhysicsSpace().addCollisionListener(this);
         bulletAppState.getPhysicsSpace().enableDebug(assetManager);
         initKeys();
+        initHPs();
     }
     private AnalogListener analogListener = new AnalogListener() {
 
@@ -409,9 +411,29 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         shockwave.emitAllParticles();
     }
 
+
+     BitmapText player1HP;
+     BitmapText player2HP;
+    public void initHPs(){
+        guiNode.detachAllChildren();
+      player1HP = new BitmapText(guiFont, false);          
+        player1HP.setSize(guiFont.getCharSet().getRenderedSize());      // font size
+        player1HP.setColor(ColorRGBA.Blue);                             // font color
+        player1HP.setText("HP:"+player1.getHitPoints());
+        player1HP.setLocalTranslation(10, settings.getHeight()-player1HP.getLineHeight(), 0); // position
+        guiNode.attachChild(player1HP);
+        player2HP = new BitmapText(guiFont, false);          
+        player2HP.setSize(guiFont.getCharSet().getRenderedSize());      // font size
+        player2HP.setColor(ColorRGBA.Blue);                             // font color
+        player2HP.setText("HP:"+player2.getHitPoints());
+        player2HP.setLocalTranslation(settings.getWidth()-player2HP.getLineWidth()-10,settings.getHeight()- player2HP.getLineHeight(), 0); // position
+        guiNode.attachChild(player2HP);
+    }
+    
     @Override
     public void simpleUpdate(float tpf) {
-
+          player1HP.setText("HP:"+player1.getHitPoints());
+           player2HP.setText("HP:"+player2.getHitPoints());
     }
 
     @Override
