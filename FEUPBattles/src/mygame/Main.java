@@ -41,7 +41,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         Main app = new Main();
         app.start();
     }
-    float velocity = 10.0f;
+    float velocity = 0.01f;
     Player player1;
     Player player2;
     private static final int COUNT_FACTOR = 1;
@@ -288,28 +288,28 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
             Vector3f player1_pos = player1.getLocalTranslation();
             Vector3f player2_pos = player2.getLocalTranslation();
             if (name.equals("P1_Left")) {
-                Vector3f temp = new Vector3f(player1_pos.x - tpf*velocity, player1_pos.y, player1_pos.z);
+                Vector3f temp = new Vector3f(player1_pos.x - velocity, player1_pos.y, player1_pos.z);
                 player1.setLocalTranslation(temp);
             } else if (name.equals("P1_Right")) {
-                Vector3f temp = new Vector3f(player1_pos.x + tpf*velocity, player1_pos.y, player1_pos.z);
+                Vector3f temp = new Vector3f(player1_pos.x + velocity, player1_pos.y, player1_pos.z);
                 player1.setLocalTranslation(temp);
             } else if (name.equals("P1_Up")) {
-                Vector3f temp = new Vector3f(player1_pos.x, player1_pos.y, player1_pos.z - tpf*velocity);
+                Vector3f temp = new Vector3f(player1_pos.x, player1_pos.y, player1_pos.z - velocity);
                 player1.setLocalTranslation(temp);
             } else if (name.equals("P1_Down")) {
-                Vector3f temp = new Vector3f(player1_pos.x, player1_pos.y, player1_pos.z + tpf*velocity);
+                Vector3f temp = new Vector3f(player1_pos.x, player1_pos.y, player1_pos.z + velocity);
                 player1.setLocalTranslation(temp);
             } else if (name.equals("P2_Left")) {
-                Vector3f temp = new Vector3f(player2_pos.x - tpf*velocity, player2_pos.y, player2_pos.z);
+                Vector3f temp = new Vector3f(player2_pos.x - velocity, player2_pos.y, player2_pos.z);
                 player2.setLocalTranslation(temp);
             } else if (name.equals("P2_Right")) {
-                Vector3f temp = new Vector3f(player2_pos.x + tpf*velocity, player2_pos.y, player2_pos.z);
+                Vector3f temp = new Vector3f(player2_pos.x + velocity, player2_pos.y, player2_pos.z);
                 player2.setLocalTranslation(temp);
             } else if (name.equals("P2_Up")) {
-                Vector3f temp = new Vector3f(player2_pos.x, player2_pos.y, player2_pos.z - tpf*velocity);
+                Vector3f temp = new Vector3f(player2_pos.x, player2_pos.y, player2_pos.z - velocity);
                 player2.setLocalTranslation(temp);
             } else if (name.equals("P2_Down")) {
-                Vector3f temp = new Vector3f(player2_pos.x, player2_pos.y, player2_pos.z + tpf*velocity);
+                Vector3f temp = new Vector3f(player2_pos.x, player2_pos.y, player2_pos.z + velocity);
                 player2.setLocalTranslation(temp);
             }
            
