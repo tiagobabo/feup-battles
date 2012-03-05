@@ -41,6 +41,10 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
     private static final float COUNT_FACTOR_F = 1f;
     private static final boolean POINT_SPRITE = true;
     private static final Type EMITTER_TYPE = POINT_SPRITE ? Type.Point : Type.Triangle;
+    HitPointsBox hp1;
+    HitPointsBox hp2;
+    long player1_power = 0;
+    long player2_power = 0;
 
     private ParticleEmitter createFlame(ParticleEmitter flame) {
         flame = new ParticleEmitter("Flame", EMITTER_TYPE, 32 * COUNT_FACTOR);
@@ -320,8 +324,6 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         inputManager.addListener(actionListener, new String[]{"P1_Shoot", "P2_Shoot"});
 
     }
-    long player1_power = 0;
-    long player2_power = 0;
     private ActionListener actionListener = new ActionListener() {
 
         public void onAction(String name, boolean keyPressed, float tpf) {
@@ -358,14 +360,9 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         ball_geo.addControl(ball_phy);
 
         bulletAppState.getPhysicsSpace().add(ball_phy);
-        
 
         ball_phy.setLinearVelocity(new Vector3f(d * power / 20, power / 40, 0));
     }
-
-    
-    
-
 
     public void explosion(Vector3f pos) {
 
@@ -405,33 +402,26 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         smoketrail.emitAllParticles();
         debris.emitAllParticles();
         shockwave.emitAllParticles();
+      
     }
-    HitPointsBox hp1;
-    HitPointsBox hp2;
-   
+
     public void initHPs() {
         guiNode.detachAllChildren();
         Material black = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
         black.setColor("Color", ColorRGBA.Black);
         Material green = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
         green.setColor("Color", ColorRGBA.Green);
-        Vector3f leftPosition = new Vector3f(10, settings.getHeight()-20, 0);
-          Vector3f rightPosition = new Vector3f(settings.getWidth() - 200-20, settings.getHeight() - 20, 0);
-        hp1 = new HitPointsBox("hp1b",leftPosition,green,black);
-        hp2 = new HitPointsBox("hp2b",rightPosition,green,black);
-       // player1.addHitPointBox(hp1);
+        Vector3f leftPosition = new Vector3f(10, settings.getHeight() - 20, 0);
+        Vector3f rightPosition = new Vector3f(settings.getWidth() - 200 - 20, settings.getHeight() - 20, 0);
+        hp1 = new HitPointsBox("hp1b", leftPosition, green, black);
+        hp2 = new HitPointsBox("hp2b", rightPosition, green, black);
+        // player1.addHitPointBox(hp1);
         guiNode.attachChild(hp1.getHpNode());
         guiNode.attachChild(hp2.getHpNode());
-
-   
-
     }
 
     @Override
     public void simpleUpdate(float tpf) {
-
-        
-
     }
 
     @Override
@@ -463,10 +453,11 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
 
             if (rootNode.hasChild(cannon)) {
                 p.setHitPoints(p.getHitPoints() - 1);
-                if(p.equals(player1))
+                if (p.equals(player1)) {
                     hp1.loseLife(1);
-                else
+                } else {
                     hp2.loseLife(1);
+                }
                 System.out.println(p.getPlayerName() + " GOT HIT!\n HITPOINTS LEFT:" + p.getHitPoints());
                 explosion(cannon.getLocalTranslation());
                 rootNode.detachChild(cannon);
