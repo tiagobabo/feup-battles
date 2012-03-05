@@ -11,7 +11,6 @@ import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.shape.Box;
-import com.jme3.scene.shape.Quad;
 
 /**
  *
@@ -61,7 +60,8 @@ public class Player {
      * @param hitPoints the hitPoints to set
      */
     public void setHitPoints(int hitPoints) {
-        this.hitPoints = hitPoints;
+        if(hitPoints >= 0)
+            this.hitPoints = hitPoints;
     }
 
     /**
