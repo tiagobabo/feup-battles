@@ -1,2 +1,0 @@
-FEUPBattles/build/
-.DS_Store
