@@ -25,7 +25,8 @@ public class Player {
     private float mass = 2.0f;
     private Box playerBox;
     private String playerName;
-  
+    private Node playerNode;
+    private HitPointsBox hpBox;
    
 
     public Player(String name, Material playerMaterial, Vector3f initialPosition) {
@@ -37,11 +38,17 @@ public class Player {
         playerGeo.addControl(playerControl);
         playerControl.setKinematic(true);
         playerName = name;
-        
+        playerNode = new Node(name);
+        playerNode.attachChild(playerGeo);
      
 
 
     }
+    public void addHitPointBox(HitPointsBox hpb){
+        this.hpBox = hpb;
+        playerNode.attachChild(hpBox.getHpNode());
+    };
+    
 
     /**
      * @return the hitPoints
@@ -133,6 +140,20 @@ public class Player {
      */
     public void setPlayerName(String playerName) {
         this.playerName = playerName;
+    }
+
+    /**
+     * @return the playerNode
+     */
+    public Node getPlayerNode() {
+        return playerNode;
+    }
+
+    /**
+     * @param playerNode the playerNode to set
+     */
+    public void setPlayerNode(Node playerNode) {
+        this.playerNode = playerNode;
     }
 
    

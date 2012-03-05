@@ -18,6 +18,7 @@ import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Box;
+import com.jme3.scene.shape.Quad;
 import com.jme3.scene.shape.Sphere;
 import com.jme3.scene.shape.Sphere.TextureMode;
 
@@ -53,12 +54,12 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         //Player 1
         Vector3f p1_pos = new Vector3f(-5.0f, 1f, 0f);
         player1 = new Player("player 1", mat, p1_pos);
-        rootNode.attachChild(player1.getPlayerGeo());
+        rootNode.attachChild(player1.getPlayerNode());
 
         //Player 2
         Vector3f p2_pos = new Vector3f(30.0f, 1f, 0f);
         player2 = new Player("player 2", mat, p2_pos);
-        rootNode.attachChild(player2.getPlayerGeo());
+        rootNode.attachChild(player2.getPlayerNode());
 
 
         //Platform 1
@@ -191,27 +192,47 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
 
         ball_phy.setLinearVelocity(new Vector3f(d * power / 20, power / 40, 0));
     }
-     BitmapText player1HP;
-     BitmapText player2HP;
-    public void initHPs(){
+    BitmapText player1HP;
+    BitmapText player2HP;
+    
+    HitPointsBox hp1;
+    HitPointsBox hp2;
+    public void initHPs() {
         guiNode.detachAllChildren();
-      player1HP = new BitmapText(guiFont, false);          
+        /*player1HP = new BitmapText(guiFont, false);
         player1HP.setSize(guiFont.getCharSet().getRenderedSize());      // font size
         player1HP.setColor(ColorRGBA.Blue);                             // font color
-        player1HP.setText("HP:"+player1.getHitPoints());
-        player1HP.setLocalTranslation(10, settings.getHeight()-player1HP.getLineHeight(), 0); // position
+        player1HP.setText("HP:" + player1.getHitPoints());
+        player1HP.setLocalTranslation(10, settings.getHeight() - player1HP.getLineHeight(), 0); // position
         guiNode.attachChild(player1HP);
-        player2HP = new BitmapText(guiFont, false);          
+        player2HP = new BitmapText(guiFont, false);
         player2HP.setSize(guiFont.getCharSet().getRenderedSize());      // font size
         player2HP.setColor(ColorRGBA.Blue);                             // font color
-        player2HP.setText("HP:"+player2.getHitPoints());
-        player2HP.setLocalTranslation(settings.getWidth()-player2HP.getLineWidth()-10,settings.getHeight()- player2HP.getLineHeight(), 0); // position
-        guiNode.attachChild(player2HP);
+        player2HP.setText("HP:" + player2.getHitPoints());
+        player2HP.setLocalTranslation(settings.getWidth() - player2HP.getLineWidth() - 10, settings.getHeight() - player2HP.getLineHeight(), 0); // position
+        guiNode.attachChild(player2HP);*/
+        Material black = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
+        black.setColor("Color", ColorRGBA.Black);
+        Material green = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
+        green.setColor("Color", ColorRGBA.Green);
+        Vector3f leftPosition = new Vector3f(10, settings.getHeight()-20, 0);
+          Vector3f rightPosition = new Vector3f(settings.getWidth() - 200-20, settings.getHeight() - 20, 0);
+        hp1 = new HitPointsBox("hp1b",leftPosition,green,black);
+        hp2 = new HitPointsBox("hp2b",rightPosition,green,black);
+       // player1.addHitPointBox(hp1);
+        guiNode.attachChild(hp1.getHpNode());
+        guiNode.attachChild(hp2.getHpNode());
+        
+        
+
+
     }
+
     @Override
     public void simpleUpdate(float tpf) {
-          player1HP.setText("HP:"+player1.getHitPoints());
-           player2HP.setText("HP:"+player2.getHitPoints());
+        /*player1HP.setText("HP:" + player1.getHitPoints());
+        player2HP.setText("HP:" + player2.getHitPoints());*/
+        
     }
 
     @Override
@@ -239,9 +260,13 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
 
             if (rootNode.hasChild(cannon)) {
                 p.setHitPoints(p.getHitPoints() - 1);
+                if(p.equals(player1))
+                    hp1.loseLife(1);
+                else
+                    hp2.loseLife(1);
                 System.out.println(p.getPlayerName() + " GOT HIT!\n HITPOINTS LEFT:" + p.getHitPoints());
                 rootNode.detachChild(cannon);
-               
+
             }
 
         }
