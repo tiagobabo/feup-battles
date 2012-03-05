@@ -25,6 +25,13 @@ import com.jme3.math.ColorRGBA;
 import com.jme3.math.FastMath;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
+import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Main extends SimpleApplication implements PhysicsCollisionListener {
 
@@ -45,6 +52,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
     HitPointsBox hp2;
     long player1_power = 0;
     long player2_power = 0;
+    public ArrayList< Future<Node> > tasks = new ArrayList< Future<Node> >();
 
     private ParticleEmitter createFlame(ParticleEmitter flame) {
         flame = new ParticleEmitter("Flame", EMITTER_TYPE, 32 * COUNT_FACTOR);
@@ -216,7 +224,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         //bulletAppState.getPhysicsSpace().setAccuracy(0.005f);
         cam.setLocation(new Vector3f(15f, 20f, 60f));
         //cam.lookAt(new Vector3f(1, 1, 0), Vector3f.UNIT_Y);
-
+        
         //Objetos básicos
         Box b = new Box(Vector3f.ZERO, 1, 1, 1);
         Box b2 = new Box(Vector3f.ZERO, 10, 10, 10);
@@ -402,6 +410,13 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         smoketrail.emitAllParticles();
         debris.emitAllParticles();
         shockwave.emitAllParticles();
+        
+        final ExecutorService service;
+        final Future<Node>  task;
+
+        service = Executors.newFixedThreadPool(1);        
+        task    = service.submit(new ExplosionCleaner(explosionEffect));
+        tasks.add(task);
       
     }
 
@@ -422,6 +437,20 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
 
     @Override
     public void simpleUpdate(float tpf) {
+        
+        int i = 0;
+        while(tasks.size() > 0 && tasks.get(i).isDone()) {
+            try {
+                rootNode.detachChild(tasks.get(i).get());
+            } catch (InterruptedException ex) {
+                Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (ExecutionException ex) {
+                Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            tasks.remove(i);
+        }
+            
+        
     }
 
     @Override
