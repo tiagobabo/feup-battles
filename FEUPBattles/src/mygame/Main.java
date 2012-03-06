@@ -44,12 +44,16 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
     private static final Type EMITTER_TYPE = POINT_SPRITE ? Type.Point : Type.Triangle;
     HitPointsBox hp1;
     HitPointsBox hp2;
+    BallPowerBox bp1;
+    BallPowerBox bp2;
     long player1_power = 0;
     long player2_power = 0;
-    public ArrayList< Future<Node> > tasks = new ArrayList< Future<Node> >();
+    float powerScale = 5.0f;
+    boolean player1_shoot = false, player2_shoot = false;
     boolean player1_reload = false, player2_reload = false;
     float p1_reloadTime = RELOAD_TIME, p2_reloadTime = RELOAD_TIME;
     float time = 0f;
+    public ArrayList< Future<Node> > tasks = new ArrayList< Future<Node> >();
 
     public static void main(String[] args) {
         Main app = new Main();
@@ -279,8 +283,11 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         bulletAppState.getPhysicsSpace().add(plat2_rb);
         bulletAppState.getPhysicsSpace().addCollisionListener(this);
         bulletAppState.getPhysicsSpace().enableDebug(assetManager);
+        
+        guiNode.detachAllChildren();
         initKeys();
         initHPs();
+        initPowerBar();
     }
     private AnalogListener analogListener = new AnalogListener() {
 
@@ -336,25 +343,33 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
 
         public void onAction(String name, boolean keyPressed, float tpf) {
             if (name.equals("P1_Shoot") && !keyPressed && !player1_reload) {
-                player1_power = System.currentTimeMillis() - player1_power;
-                makeBall(player1_power, player1.getPlayerGeo(), 1);
+                //player1_power = System.currentTimeMillis() - player1_power;
+                //makeBall(player1_power, player1.getPlayerGeo(), 1);
+                makeBall(bp1.getCurrentPower()*powerScale,player1.getPlayerGeo(),1);
                 player1_reload = true;
+                player1_shoot = false;
+                bp1.resetPower();
+                System.out.println("Stopped Shooting");
                 p1_reloadTime = RELOAD_TIME;
-                
-            } else if (name.equals("P1_Shoot")) {
-                player1_power = System.currentTimeMillis();
+            } else if (name.equals("P1_Shoot") && !player1_reload) {
+                //player1_power = System.currentTimeMillis();
+                player1_shoot = true;
             } else if (name.equals("P2_Shoot") && !keyPressed && !player2_reload) {
-                player2_power = System.currentTimeMillis() - player2_power;
-                makeBall(player2_power, player2.getPlayerGeo(), -1);
+                //player2_power = System.currentTimeMillis() - player2_power;
+                //makeBall(player2_power, player2.getPlayerGeo(), -1);
+                makeBall(bp2.getCurrentPower()*powerScale,player2.getPlayerGeo(),-1);
                 player2_reload = true;
+                player2_shoot = false;
+                bp2.resetPower();
                 p2_reloadTime = RELOAD_TIME;
-            } else {
-                player2_power = System.currentTimeMillis();
+            } else if(name.equals("P2_Shoot") && !player2_reload) {
+                //player2_power = System.currentTimeMillis();
+                player2_shoot = true;
             }
         }
     };
 
-    private void makeBall(long power, Geometry geom, int d) {
+    private void makeBall(float power, Geometry geom, int d) {
 
         Sphere sphere = new Sphere(32, 32, 0.4f, true, false);
         sphere.setTextureMode(TextureMode.Projected);
@@ -426,7 +441,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
     }
 
     public void initHPs() {
-        guiNode.detachAllChildren();
+        
         Material black = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
         black.setColor("Color", ColorRGBA.Black);
         Material green = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
@@ -438,6 +453,21 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         // player1.addHitPointBox(hp1);
         guiNode.attachChild(hp1.getHpNode());
         guiNode.attachChild(hp2.getHpNode());
+    }
+    
+    private void initPowerBar() {
+        Material green = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
+        Material yellow = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
+        Material red = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
+        green.setColor("Color", ColorRGBA.Green);
+        yellow.setColor("Color", ColorRGBA.Yellow);
+        red.setColor("Color",ColorRGBA.Red);
+        Vector3f leftPosition = new Vector3f(settings.getWidth()*0.05f, settings.getHeight()*0.1f, 0);
+        Vector3f rightPosition = new Vector3f(settings.getWidth()*0.95f, settings.getHeight()*0.1f, 0);
+        bp1 = new BallPowerBox("bp1",leftPosition, green,yellow,red);
+        bp2 = new BallPowerBox("bp2",rightPosition, green,yellow,red);
+        guiNode.attachChild(bp1.getPowerNode());
+        guiNode.attachChild(bp2.getPowerNode());
     }
 
     @Override
@@ -456,7 +486,10 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
             tasks.remove(i);
         }
         
-        
+        if (player1_shoot)
+            bp1.increasePower(1);
+        if (player2_shoot)
+            bp2.increasePower(1);
         if (player1_reload)
             p1_reloadTime -= tpf / speed;
         if (player2_reload)    
@@ -512,4 +545,6 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
 
         }
     }
+
+    
 }
