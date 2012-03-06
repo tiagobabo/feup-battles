@@ -18,6 +18,7 @@ import com.jme3.app.SimpleApplication;
 import com.jme3.effect.ParticleEmitter;
 import com.jme3.effect.ParticleMesh.Type;
 import com.jme3.effect.shapes.EmitterSphereShape;
+import com.jme3.font.BitmapText;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.FastMath;
@@ -46,6 +47,8 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
     HitPointsBox hp2;
     BallPowerBox bp1;
     BallPowerBox bp2;
+    BitmapText reloadP1;
+    BitmapText reloadP2;
     long player1_power = 0;
     long player2_power = 0;
     float powerScale = 5.0f;
@@ -288,6 +291,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         initKeys();
         initHPs();
         initPowerBar();
+        initReloads();
     }
     private AnalogListener analogListener = new AnalogListener() {
 
@@ -450,7 +454,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         Vector3f rightPosition = new Vector3f(settings.getWidth() - 200 - 20, settings.getHeight() - 20, 0);
         hp1 = new HitPointsBox("hp1b", leftPosition, green, black);
         hp2 = new HitPointsBox("hp2b", rightPosition, green, black);
-        // player1.addHitPointBox(hp1);
+       
         guiNode.attachChild(hp1.getHpNode());
         guiNode.attachChild(hp2.getHpNode());
     }
@@ -486,18 +490,30 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
             tasks.remove(i);
         }
         
+        
+        
         if (player1_shoot)
             bp1.increasePower(1);
         if (player2_shoot)
             bp2.increasePower(1);
-        if (player1_reload)
+        
+        if (player1_reload){
             p1_reloadTime -= tpf / speed;
-        if (player2_reload)    
+            reloadP1.setText("RELOAD");
+        }
+        if (player2_reload){    
             p2_reloadTime -= tpf / speed;
-        if (p1_reloadTime <= 0f)
+            reloadP2.setText("RELOAD");
+            reloadP2.setLocalTranslation(settings.getWidth() - reloadP2.getLineWidth() - 20, settings.getHeight() - reloadP2.getLineHeight()- 20, 0); // position
+        }
+        if (p1_reloadTime <= 0f){
             player1_reload = false;
-        if (p2_reloadTime <= 0f)
+            reloadP1.setText("");
+        }
+        if (p2_reloadTime <= 0f){
             player2_reload = false;
+             reloadP2.setText("");
+        }
         
     }
 
@@ -546,5 +562,20 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         }
     }
 
-    
+    private void initReloads() {
+        reloadP1 = new BitmapText(guiFont, false);          
+        reloadP1.setSize(guiFont.getCharSet().getRenderedSize());      // font size
+        reloadP1.setColor(ColorRGBA.Red);                             // font color
+        reloadP1.setText("");             // the text
+        reloadP1.setLocalTranslation(10, settings.getHeight() - reloadP1.getLineHeight()- 20, 0); // position
+        guiNode.attachChild(reloadP1);
+        
+        reloadP2 = new BitmapText(guiFont, false);          
+        reloadP2.setSize(guiFont.getCharSet().getRenderedSize());      // font size
+        reloadP2.setColor(ColorRGBA.Red);                             // font color
+        reloadP2.setText("");             // the text
+        reloadP2.setLocalTranslation(settings.getWidth() - reloadP2.getLineWidth() - 20, settings.getHeight() - reloadP2.getLineHeight()- 20, 0); // position
+        guiNode.attachChild(reloadP2);
+    }
+
 }
