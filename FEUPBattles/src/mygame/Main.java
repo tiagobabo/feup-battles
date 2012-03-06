@@ -439,7 +439,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         Vector3f rightPosition = new Vector3f(settings.getWidth() - 200 - 20, settings.getHeight() - 20, 0);
         hp1 = new HitPointsBox("hp1b", leftPosition, green, black);
         hp2 = new HitPointsBox("hp2b", rightPosition, green, black);
-        // player1.addHitPointBox(hp1);
+       
         guiNode.attachChild(hp1.getHpNode());
         guiNode.attachChild(hp2.getHpNode());
     }

@@ -15,32 +15,33 @@ import com.jme3.scene.shape.Quad;
  * @author ZePedro
  */
 public class HitPointsBox {
+
     private Quad greenHpQuad;
     private Geometry greenHpGeometry;
     private Quad blackHpQuad;
     private Geometry blackHpGeometry;
     private Node hpNode;
     private float currentLife = 200.0f;
-    
-    public HitPointsBox(String name,  Vector3f position, Material green,Material black){
+
+    public HitPointsBox(String name, Vector3f position, Material green, Material black) {
         hpNode = new Node("hpbNode");
-        
-        greenHpQuad = new Quad(currentLife,5f);
-        greenHpGeometry = new Geometry("green"+name,greenHpQuad);
+
+        greenHpQuad = new Quad(currentLife, 5f);
+        greenHpGeometry = new Geometry("green" + name, greenHpQuad);
         greenHpGeometry.setLocalTranslation(position);
         greenHpGeometry.setMaterial(green);
-  
+
         hpNode.attachChild(greenHpGeometry);
-        
-        blackHpQuad = new Quad(20.0f,0.5f);
-        blackHpGeometry = new Geometry("black"+name,blackHpQuad);
+
+        blackHpQuad = new Quad(20.0f, 0.5f);
+        blackHpGeometry = new Geometry("black" + name, blackHpQuad);
         Vector3f pos2 = new Vector3f(position);
         pos2.setZ(-1.0f);
         blackHpGeometry.setLocalTranslation(pos2);
         blackHpGeometry.setMaterial(black);
-  
+
         hpNode.attachChild(blackHpGeometry);
-        
+
     }
 
     /**
@@ -112,13 +113,14 @@ public class HitPointsBox {
     public void setHpNode(Node hpNode) {
         this.hpNode = hpNode;
     }
-    public void loseLife(int lifeLost){
-        
-        float scale = 1-20/currentLife;
-        greenHpGeometry.scale(scale,1.0f,1.0f);
-        currentLife = currentLife*scale;
-        System.out.println(currentLife);
-      
+
+    public void loseLife(int lifeLost) {
+        if (currentLife > 0) {
+            float scale = 1 - 20 / currentLife;
+            greenHpGeometry.scale(scale, 1.0f, 1.0f);
+            currentLife = currentLife * scale;
+            System.out.println(currentLife);
+        }
+
     }
-    
 }
