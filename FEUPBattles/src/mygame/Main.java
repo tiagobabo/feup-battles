@@ -349,23 +349,24 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
             if (name.equals("P1_Shoot") && !keyPressed && !player1_reload) {
                 //player1_power = System.currentTimeMillis() - player1_power;
                 //makeBall(player1_power, player1.getPlayerGeo(), 1);
-                makeBall(bp1.getCurrentPower()*powerScale,player1.getPlayerGeo(),1);
-                player1_reload = true;
-                player1_shoot = false;
-                bp1.resetPower();
-                System.out.println("Stopped Shooting");
-                p1_reloadTime = RELOAD_TIME;
+                if(bp1.getCurrentPower() > 1){
+                    makeBall(bp1.getCurrentPower()*powerScale,player1.getPlayerGeo(),1);
+                    player1_reload = true;
+                    player1_shoot = false;
+                    p1_reloadTime = RELOAD_TIME;
+                }
             } else if (name.equals("P1_Shoot") && !player1_reload) {
                 //player1_power = System.currentTimeMillis();
                 player1_shoot = true;
             } else if (name.equals("P2_Shoot") && !keyPressed && !player2_reload) {
                 //player2_power = System.currentTimeMillis() - player2_power;
                 //makeBall(player2_power, player2.getPlayerGeo(), -1);
-                makeBall(bp2.getCurrentPower()*powerScale,player2.getPlayerGeo(),-1);
-                player2_reload = true;
-                player2_shoot = false;
-                bp2.resetPower();
-                p2_reloadTime = RELOAD_TIME;
+                if(bp2.getCurrentPower() > 1){
+                    makeBall(bp2.getCurrentPower()*powerScale,player2.getPlayerGeo(),-1);
+                    player2_reload = true;
+                    player2_shoot = false;
+                    p2_reloadTime = RELOAD_TIME;
+                }
             } else if(name.equals("P2_Shoot") && !player2_reload) {
                 //player2_power = System.currentTimeMillis();
                 player2_shoot = true;
@@ -498,21 +499,28 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
             bp2.increasePower(1);
         
         if (player1_reload){
-            p1_reloadTime -= tpf / speed;
-            reloadP1.setText("RELOAD");
+            if(p1_reloadTime <= 0f){
+                bp1.resetPower();
+                player1_reload = false;
+                reloadP1.setText("");
+            }
+            else{
+                p1_reloadTime -= tpf / speed;
+                reloadP1.setText("RELOAD");
+            }
         }
-        if (player2_reload){    
-            p2_reloadTime -= tpf / speed;
-            reloadP2.setText("RELOAD");
-            reloadP2.setLocalTranslation(settings.getWidth() - reloadP2.getLineWidth() - 20, settings.getHeight() - reloadP2.getLineHeight()- 20, 0); // position
-        }
-        if (p1_reloadTime <= 0f){
-            player1_reload = false;
-            reloadP1.setText("");
-        }
-        if (p2_reloadTime <= 0f){
-            player2_reload = false;
-             reloadP2.setText("");
+        
+        if (player2_reload){
+            if(p2_reloadTime <= 0f){
+                bp2.resetPower();
+                player2_reload = false;
+                reloadP2.setText("");
+            }
+            else{
+                p2_reloadTime -= tpf / speed;
+                reloadP2.setText("RELOAD");
+                reloadP2.setLocalTranslation(settings.getWidth() - reloadP2.getLineWidth() - 20, settings.getHeight() - reloadP2.getLineHeight()- 20, 0); // position
+            }
         }
         
     }

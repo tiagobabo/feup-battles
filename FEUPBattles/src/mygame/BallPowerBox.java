@@ -24,7 +24,7 @@ public class BallPowerBox {
     private Material matRed;
     private float currentPower = 1.0f;
     private float barWidth = 10.0f;
-    float increaseScale = 1.001f;
+    float increaseScale = 1.003f;
     
     
     public BallPowerBox(String name,  Vector3f position, Material green, Material yellow, Material red){
@@ -107,13 +107,12 @@ public class BallPowerBox {
         if(currentPower*increaseScale < 100){
             greenPowerGeometry.scale(1.0f,increaseScale,1.0f);
             currentPower = currentPower*increaseScale;
-            System.out.println("Power: "+currentPower);
         }
         
-        if(currentPower*increaseScale > 50)
+        if(currentPower > 50 && currentPower < 80)
             greenPowerGeometry.setMaterial(matYellow);
         
-        if(currentPower*increaseScale > 80)
+        if(currentPower >= 80)
             greenPowerGeometry.setMaterial(matRed);
     }
     
