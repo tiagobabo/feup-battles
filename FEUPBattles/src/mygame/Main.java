@@ -268,7 +268,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         rootNode.attachChild(plat2);
 
         //Fisica dos objetos
-        RigidBodyControl plat1_rb = new RigidBodyControl(2.0f);
+        RigidBodyControl plat1_rb = new RigidBodyControl(0.0f);
         RigidBodyControl plat2_rb = new RigidBodyControl(0.0f);
 
         //Associacao da fisica
@@ -276,7 +276,8 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         plat2.addControl(plat2_rb);
 
 
-
+        plat1_rb.setRestitution(0.7f);
+        plat2_rb.setRestitution(0.7f);
         plat1_rb.setKinematic(true);
         plat2_rb.setKinematic(true);
 
@@ -393,7 +394,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         ball_geo.addControl(ball_phy);
 
         bulletAppState.getPhysicsSpace().add(ball_phy);
-
+        ball_phy.setRestitution(0.7f);
         ball_phy.setLinearVelocity(new Vector3f(d * power / 20, power / 40, 0));
     }
 
