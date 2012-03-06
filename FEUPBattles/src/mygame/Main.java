@@ -4,7 +4,6 @@ import com.jme3.bullet.BulletAppState;
 import com.jme3.bullet.collision.PhysicsCollisionEvent;
 import com.jme3.bullet.collision.PhysicsCollisionListener;
 import com.jme3.bullet.control.RigidBodyControl;
-import com.jme3.font.BitmapText;
 import com.jme3.input.KeyInput;
 import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.AnalogListener;
@@ -13,7 +12,6 @@ import com.jme3.renderer.RenderManager;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Box;
-import com.jme3.scene.shape.Quad;
 import com.jme3.scene.shape.Sphere;
 import com.jme3.scene.shape.Sphere.TextureMode;
 import com.jme3.app.SimpleApplication;
@@ -35,12 +33,8 @@ import java.util.logging.Logger;
 
 public class Main extends SimpleApplication implements PhysicsCollisionListener {
 
+    static final float RELOAD_TIME = 2.0f;
     private BulletAppState bulletAppState;
-
-    public static void main(String[] args) {
-        Main app = new Main();
-        app.start();
-    }
     float velocity = 0.01f;
     Player player1;
     Player player2;
@@ -53,7 +47,15 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
     long player1_power = 0;
     long player2_power = 0;
     public ArrayList< Future<Node> > tasks = new ArrayList< Future<Node> >();
+    boolean player1_reload = false, player2_reload = false;
+    float p1_reloadTime = RELOAD_TIME, p2_reloadTime = RELOAD_TIME;
+    float time = 0f;
 
+    public static void main(String[] args) {
+        Main app = new Main();
+        app.start();
+    }
+    
     private ParticleEmitter createFlame(ParticleEmitter flame) {
         flame = new ParticleEmitter("Flame", EMITTER_TYPE, 32 * COUNT_FACTOR);
         flame.setSelectRandomImage(true);
@@ -259,12 +261,10 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         rootNode.attachChild(plat2);
 
         //Fisica dos objetos
-
         RigidBodyControl plat1_rb = new RigidBodyControl(2.0f);
         RigidBodyControl plat2_rb = new RigidBodyControl(0.0f);
 
         //Associacao da fisica
-
         plat1.addControl(plat1_rb);
         plat2.addControl(plat2_rb);
 
@@ -335,14 +335,19 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
     private ActionListener actionListener = new ActionListener() {
 
         public void onAction(String name, boolean keyPressed, float tpf) {
-            if (name.equals("P1_Shoot") && !keyPressed) {
+            if (name.equals("P1_Shoot") && !keyPressed && !player1_reload) {
                 player1_power = System.currentTimeMillis() - player1_power;
                 makeBall(player1_power, player1.getPlayerGeo(), 1);
+                player1_reload = true;
+                p1_reloadTime = RELOAD_TIME;
+                
             } else if (name.equals("P1_Shoot")) {
                 player1_power = System.currentTimeMillis();
-            } else if (name.equals("P2_Shoot") && !keyPressed) {
+            } else if (name.equals("P2_Shoot") && !keyPressed && !player2_reload) {
                 player2_power = System.currentTimeMillis() - player2_power;
                 makeBall(player2_power, player2.getPlayerGeo(), -1);
+                player2_reload = true;
+                p2_reloadTime = RELOAD_TIME;
             } else {
                 player2_power = System.currentTimeMillis();
             }
@@ -437,6 +442,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
 
     @Override
     public void simpleUpdate(float tpf) {
+        time += tpf / speed;
         
         int i = 0;
         while(tasks.size() > 0 && tasks.get(i).isDone()) {
@@ -449,7 +455,16 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
             }
             tasks.remove(i);
         }
-            
+        
+        
+        if (player1_reload)
+            p1_reloadTime -= tpf / speed;
+        if (player2_reload)    
+            p2_reloadTime -= tpf / speed;
+        if (p1_reloadTime <= 0f)
+            player1_reload = false;
+        if (p2_reloadTime <= 0f)
+            player2_reload = false;
         
     }
 
