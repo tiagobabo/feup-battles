@@ -18,6 +18,7 @@ import com.jme3.app.SimpleApplication;
 import com.jme3.effect.ParticleEmitter;
 import com.jme3.effect.ParticleMesh.Type;
 import com.jme3.effect.shapes.EmitterSphereShape;
+import com.jme3.font.BitmapText;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.FastMath;
@@ -44,6 +45,8 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
     private static final Type EMITTER_TYPE = POINT_SPRITE ? Type.Point : Type.Triangle;
     HitPointsBox hp1;
     HitPointsBox hp2;
+    BitmapText reloadP1;
+    BitmapText reloadP2;
     long player1_power = 0;
     long player2_power = 0;
     public ArrayList< Future<Node> > tasks = new ArrayList< Future<Node> >();
@@ -281,6 +284,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         bulletAppState.getPhysicsSpace().enableDebug(assetManager);
         initKeys();
         initHPs();
+        initReloads();
     }
     private AnalogListener analogListener = new AnalogListener() {
 
@@ -457,14 +461,23 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         }
         
         
-        if (player1_reload)
+        if (player1_reload){
             p1_reloadTime -= tpf / speed;
-        if (player2_reload)    
+            reloadP1.setText("RELOAD");
+        }
+        if (player2_reload){    
             p2_reloadTime -= tpf / speed;
-        if (p1_reloadTime <= 0f)
+            reloadP2.setText("RELOAD");
+            reloadP2.setLocalTranslation(settings.getWidth() - reloadP2.getLineWidth() - 20, settings.getHeight() - reloadP2.getLineHeight()- 20, 0); // position
+        }
+        if (p1_reloadTime <= 0f){
             player1_reload = false;
-        if (p2_reloadTime <= 0f)
+            reloadP1.setText("");
+        }
+        if (p2_reloadTime <= 0f){
             player2_reload = false;
+             reloadP2.setText("");
+        }
         
     }
 
@@ -511,5 +524,21 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
             }
 
         }
+    }
+  
+    private void initReloads() {
+        reloadP1 = new BitmapText(guiFont, false);          
+        reloadP1.setSize(guiFont.getCharSet().getRenderedSize());      // font size
+        reloadP1.setColor(ColorRGBA.Red);                             // font color
+        reloadP1.setText("");             // the text
+        reloadP1.setLocalTranslation(10, settings.getHeight() - reloadP1.getLineHeight()- 20, 0); // position
+        guiNode.attachChild(reloadP1);
+        
+        reloadP2 = new BitmapText(guiFont, false);          
+        reloadP2.setSize(guiFont.getCharSet().getRenderedSize());      // font size
+        reloadP2.setColor(ColorRGBA.Red);                             // font color
+        reloadP2.setText("");             // the text
+        reloadP2.setLocalTranslation(settings.getWidth() - reloadP2.getLineWidth() - 20, settings.getHeight() - reloadP2.getLineHeight()- 20, 0); // position
+        guiNode.attachChild(reloadP2);
     }
 }
