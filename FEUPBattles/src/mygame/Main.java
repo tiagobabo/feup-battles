@@ -34,7 +34,7 @@ import java.util.logging.Logger;
 
 public class Main extends SimpleApplication implements PhysicsCollisionListener {
 
-    static final float RELOAD_TIME = 2.0f;
+    static final float RELOAD_TIME = 0.5f;
     private BulletAppState bulletAppState;
     float velocity = 0.01f;
     Player player1;
@@ -240,7 +240,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         Material mat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
         mat.setColor("Color", ColorRGBA.Blue);
         Material mat2 = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
-        mat2.setColor("Color", ColorRGBA.Green);
+        mat2.setColor("Color", ColorRGBA.LightGray);
 
         //Player 1
         Vector3f p1_pos = new Vector3f(-5.0f, 1f, 0f);
@@ -495,9 +495,9 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         
         
         if (player1_shoot)
-            bp1.increasePower(1);
+            bp1.increasePower();
         if (player2_shoot)
-            bp2.increasePower(1);
+            bp2.increasePower();
         
         if (player1_reload){
             if(p1_reloadTime <= 0f){
