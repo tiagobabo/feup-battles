@@ -19,11 +19,15 @@ import com.jme3.effect.ParticleEmitter;
 import com.jme3.effect.ParticleMesh.Type;
 import com.jme3.effect.shapes.EmitterSphereShape;
 import com.jme3.font.BitmapText;
+import com.jme3.light.AmbientLight;
+import com.jme3.light.DirectionalLight;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.FastMath;
 import com.jme3.math.Vector3f;
+import com.jme3.renderer.queue.RenderQueue.ShadowMode;
 import com.jme3.scene.Node;
+import com.jme3.shadow.BasicShadowRenderer;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -56,13 +60,14 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
     boolean player1_reload = false, player2_reload = false;
     float p1_reloadTime = RELOAD_TIME, p2_reloadTime = RELOAD_TIME;
     float time = 0f;
-    public ArrayList< Future<Node> > tasks = new ArrayList< Future<Node> >();
+    public ArrayList< Future<Node>> tasks = new ArrayList< Future<Node>>();
+    BasicShadowRenderer bsr;
 
     public static void main(String[] args) {
         Main app = new Main();
         app.start();
     }
-    
+
     private ParticleEmitter createFlame(ParticleEmitter flame) {
         flame = new ParticleEmitter("Flame", EMITTER_TYPE, 32 * COUNT_FACTOR);
         flame.setSelectRandomImage(true);
@@ -227,20 +232,27 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
 
     @Override
     public void simpleInitApp() {
+        
+        rootNode.setShadowMode(ShadowMode.Off);
         bulletAppState = new BulletAppState();
         stateManager.attach(bulletAppState);
         //bulletAppState.getPhysicsSpace().setGravity(new Vector3f(0f, -1f, 0f));
         //bulletAppState.getPhysicsSpace().setAccuracy(0.005f);
         cam.setLocation(new Vector3f(15f, 20f, 60f));
         //cam.lookAt(new Vector3f(1, 1, 0), Vector3f.UNIT_Y);
-        
+
         //Objetos básicos
         Box b = new Box(Vector3f.ZERO, 1, 1, 1);
         Box b2 = new Box(Vector3f.ZERO, 10, 10, 10);
         Material mat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
         mat.setColor("Color", ColorRGBA.Blue);
-        Material mat2 = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
-        mat2.setColor("Color", ColorRGBA.LightGray);
+
+        Material mat2 = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md");
+        mat2.setBoolean("m_UseMaterialColors", true);
+        mat2.setColor("m_Ambient", ColorRGBA.Green);
+        mat2.setColor("m_Diffuse", ColorRGBA.Green);
+        mat2.setColor("m_Specular", ColorRGBA.White);
+        mat2.setFloat("m_Shininess", 12);
 
         //Player 1
         Vector3f p1_pos = new Vector3f(-5.0f, 1f, 0f);
@@ -253,19 +265,22 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         rootNode.attachChild(player2.getPlayerNode());
 
 
+        Node platforms = new Node();
+
         //Platform 1
         Vector3f plat1_pos = new Vector3f(0, -10, 0);
         Geometry plat1 = new Geometry("Plat1", b2);
         plat1.setLocalTranslation(plat1_pos);
         plat1.setMaterial(mat2);
-        rootNode.attachChild(plat1);
+        platforms.attachChild(plat1);
 
         //Platform 2
         Vector3f plat2_pos = new Vector3f(30, -10, 0);
         Geometry plat2 = new Geometry("Plat2", b2);
         plat2.setLocalTranslation(plat2_pos);
         plat2.setMaterial(mat2);
-        rootNode.attachChild(plat2);
+        platforms.attachChild(plat2);
+        rootNode.attachChild(platforms);
 
         //Fisica dos objetos
         RigidBodyControl plat1_rb = new RigidBodyControl(0.0f);
@@ -287,7 +302,18 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         bulletAppState.getPhysicsSpace().add(plat2_rb);
         bulletAppState.getPhysicsSpace().addCollisionListener(this);
         bulletAppState.getPhysicsSpace().enableDebug(assetManager);
-        
+
+        //sombras
+        bsr = new BasicShadowRenderer(assetManager, 1024);
+        bsr.setDirection(new Vector3f(-1, -10, -1).normalizeLocal()); // light direction
+        viewPort.addProcessor(bsr);
+
+        AmbientLight al = new AmbientLight();
+        al.setColor(ColorRGBA.White.mult(1.3f));
+        rootNode.addLight(al);
+
+        platforms.setShadowMode(ShadowMode.Receive);
+
         guiNode.detachAllChildren();
         initKeys();
         initHPs();
@@ -324,7 +350,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
                 Vector3f temp = new Vector3f(player2_pos.x, player2_pos.y, player2_pos.z + velocity);
                 player2.setLocalTranslation(temp);
             }
-           
+
         }
     };
 
@@ -350,8 +376,8 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
             if (name.equals("P1_Shoot") && !keyPressed && !player1_reload) {
                 //player1_power = System.currentTimeMillis() - player1_power;
                 //makeBall(player1_power, player1.getPlayerGeo(), 1);
-                if(bp1.getCurrentPower() > 1){
-                    makeBall(bp1.getCurrentPower()*powerScale,player1.getPlayerGeo(),1);
+                if (bp1.getCurrentPower() > 1) {
+                    makeBall(bp1.getCurrentPower() * powerScale, player1.getPlayerGeo(), 1);
                     player1_reload = true;
                     player1_shoot = false;
                     p1_reloadTime = RELOAD_TIME;
@@ -362,13 +388,13 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
             } else if (name.equals("P2_Shoot") && !keyPressed && !player2_reload) {
                 //player2_power = System.currentTimeMillis() - player2_power;
                 //makeBall(player2_power, player2.getPlayerGeo(), -1);
-                if(bp2.getCurrentPower() > 1){
-                    makeBall(bp2.getCurrentPower()*powerScale,player2.getPlayerGeo(),-1);
+                if (bp2.getCurrentPower() > 1) {
+                    makeBall(bp2.getCurrentPower() * powerScale, player2.getPlayerGeo(), -1);
                     player2_reload = true;
                     player2_shoot = false;
                     p2_reloadTime = RELOAD_TIME;
                 }
-            } else if(name.equals("P2_Shoot") && !player2_reload) {
+            } else if (name.equals("P2_Shoot") && !player2_reload) {
                 //player2_power = System.currentTimeMillis();
                 player2_shoot = true;
             }
@@ -381,9 +407,17 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         sphere.setTextureMode(TextureMode.Projected);
 
         Geometry ball_geo = new Geometry("cannon ball", sphere);
-        Material mat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
-        mat.setColor("Color", ColorRGBA.Yellow);
+        Material mat = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md");
+        mat.setBoolean("m_UseMaterialColors", true);
+        mat.setColor("m_Ambient", ColorRGBA.Orange);
+        mat.setColor("m_Diffuse", ColorRGBA.Orange);
+        mat.setColor("m_Specular", ColorRGBA.White);
+        mat.setFloat("m_Shininess", 12);
+
         ball_geo.setMaterial(mat);
+        
+        
+        ball_geo.setShadowMode(ShadowMode.Cast);
         rootNode.attachChild(ball_geo);
 
         Vector3f v = geom.getLocalTranslation();
@@ -436,18 +470,18 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         smoketrail.emitAllParticles();
         debris.emitAllParticles();
         shockwave.emitAllParticles();
-        
-        final ExecutorService service;
-        final Future<Node>  task;
 
-        service = Executors.newFixedThreadPool(1);        
-        task    = service.submit(new ExplosionCleaner(explosionEffect));
+        final ExecutorService service;
+        final Future<Node> task;
+
+        service = Executors.newFixedThreadPool(1);
+        task = service.submit(new ExplosionCleaner(explosionEffect));
         tasks.add(task);
-      
+
     }
 
     public void initHPs() {
-        
+
         Material black = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
         black.setColor("Color", ColorRGBA.Black);
         Material green = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
@@ -456,22 +490,22 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         Vector3f rightPosition = new Vector3f(settings.getWidth() - 200 - 20, settings.getHeight() - 20, 0);
         hp1 = new HitPointsBox("hp1b", leftPosition, green, black);
         hp2 = new HitPointsBox("hp2b", rightPosition, green, black);
-       
+
         guiNode.attachChild(hp1.getHpNode());
         guiNode.attachChild(hp2.getHpNode());
     }
-    
+
     private void initPowerBar() {
         Material green = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
         Material yellow = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
         Material red = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
         green.setColor("Color", ColorRGBA.Green);
         yellow.setColor("Color", ColorRGBA.Yellow);
-        red.setColor("Color",ColorRGBA.Red);
-        Vector3f leftPosition = new Vector3f(settings.getWidth()*0.05f, settings.getHeight()*0.1f, 0);
-        Vector3f rightPosition = new Vector3f(settings.getWidth()*0.95f, settings.getHeight()*0.1f, 0);
-        bp1 = new BallPowerBox("bp1",leftPosition, green,yellow,red);
-        bp2 = new BallPowerBox("bp2",rightPosition, green,yellow,red);
+        red.setColor("Color", ColorRGBA.Red);
+        Vector3f leftPosition = new Vector3f(settings.getWidth() * 0.05f, settings.getHeight() * 0.1f, 0);
+        Vector3f rightPosition = new Vector3f(settings.getWidth() * 0.95f, settings.getHeight() * 0.1f, 0);
+        bp1 = new BallPowerBox("bp1", leftPosition, green, yellow, red);
+        bp2 = new BallPowerBox("bp2", rightPosition, green, yellow, red);
         guiNode.attachChild(bp1.getPowerNode());
         guiNode.attachChild(bp2.getPowerNode());
     }
@@ -479,9 +513,9 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
     @Override
     public void simpleUpdate(float tpf) {
         time += tpf / speed;
-        
+
         int i = 0;
-        while(tasks.size() > 0 && tasks.get(i).isDone()) {
+        while (tasks.size() > 0 && tasks.get(i).isDone()) {
             try {
                 rootNode.detachChild(tasks.get(i).get());
             } catch (InterruptedException ex) {
@@ -491,39 +525,39 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
             }
             tasks.remove(i);
         }
-        
-        
-        
-        if (player1_shoot)
+
+
+
+        if (player1_shoot) {
             bp1.increasePower();
-        if (player2_shoot)
+        }
+        if (player2_shoot) {
             bp2.increasePower();
-        
-        if (player1_reload){
-            if(p1_reloadTime <= 0f){
+        }
+
+        if (player1_reload) {
+            if (p1_reloadTime <= 0f) {
                 bp1.resetPower();
                 player1_reload = false;
                 reloadP1.setText("");
-            }
-            else{
+            } else {
                 p1_reloadTime -= tpf / speed;
                 reloadP1.setText("RELOAD");
             }
         }
-        
-        if (player2_reload){
-            if(p2_reloadTime <= 0f){
+
+        if (player2_reload) {
+            if (p2_reloadTime <= 0f) {
                 bp2.resetPower();
                 player2_reload = false;
                 reloadP2.setText("");
-            }
-            else{
+            } else {
                 p2_reloadTime -= tpf / speed;
                 reloadP2.setText("RELOAD");
-                reloadP2.setLocalTranslation(settings.getWidth() - reloadP2.getLineWidth() - 20, settings.getHeight() - reloadP2.getLineHeight()- 20, 0); // position
+                reloadP2.setLocalTranslation(settings.getWidth() - reloadP2.getLineWidth() - 20, settings.getHeight() - reloadP2.getLineHeight() - 20, 0); // position
             }
         }
-        
+
     }
 
     @Override
@@ -572,19 +606,18 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
     }
 
     private void initReloads() {
-        reloadP1 = new BitmapText(guiFont, false);          
+        reloadP1 = new BitmapText(guiFont, false);
         reloadP1.setSize(guiFont.getCharSet().getRenderedSize());      // font size
         reloadP1.setColor(ColorRGBA.Red);                             // font color
         reloadP1.setText("");             // the text
-        reloadP1.setLocalTranslation(10, settings.getHeight() - reloadP1.getLineHeight()- 20, 0); // position
+        reloadP1.setLocalTranslation(10, settings.getHeight() - reloadP1.getLineHeight() - 20, 0); // position
         guiNode.attachChild(reloadP1);
-        
-        reloadP2 = new BitmapText(guiFont, false);          
+
+        reloadP2 = new BitmapText(guiFont, false);
         reloadP2.setSize(guiFont.getCharSet().getRenderedSize());      // font size
         reloadP2.setColor(ColorRGBA.Red);                             // font color
         reloadP2.setText("");             // the text
-        reloadP2.setLocalTranslation(settings.getWidth() - reloadP2.getLineWidth() - 20, settings.getHeight() - reloadP2.getLineHeight()- 20, 0); // position
+        reloadP2.setLocalTranslation(settings.getWidth() - reloadP2.getLineWidth() - 20, settings.getHeight() - reloadP2.getLineHeight() - 20, 0); // position
         guiNode.attachChild(reloadP2);
     }
-
 }
