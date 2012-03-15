@@ -325,32 +325,37 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         public void onAnalog(String name, float value, float tpf) {
             Vector3f player1_pos = player1.getLocalTranslation();
             Vector3f player2_pos = player2.getLocalTranslation();
-            if (name.equals("P1_Left")) {
-                Vector3f temp = new Vector3f(player1_pos.x - velocity, player1_pos.y, player1_pos.z);
-                player1.setLocalTranslation(temp);
-            } else if (name.equals("P1_Right")) {
-                Vector3f temp = new Vector3f(player1_pos.x + velocity, player1_pos.y, player1_pos.z);
-                player1.setLocalTranslation(temp);
-            } else if (name.equals("P1_Up")) {
-                Vector3f temp = new Vector3f(player1_pos.x, player1_pos.y, player1_pos.z - velocity);
-                player1.setLocalTranslation(temp);
-            } else if (name.equals("P1_Down")) {
-                Vector3f temp = new Vector3f(player1_pos.x, player1_pos.y, player1_pos.z + velocity);
-                player1.setLocalTranslation(temp);
-            } else if (name.equals("P2_Left")) {
-                Vector3f temp = new Vector3f(player2_pos.x - velocity, player2_pos.y, player2_pos.z);
-                player2.setLocalTranslation(temp);
-            } else if (name.equals("P2_Right")) {
-                Vector3f temp = new Vector3f(player2_pos.x + velocity, player2_pos.y, player2_pos.z);
-                player2.setLocalTranslation(temp);
-            } else if (name.equals("P2_Up")) {
-                Vector3f temp = new Vector3f(player2_pos.x, player2_pos.y, player2_pos.z - velocity);
-                player2.setLocalTranslation(temp);
-            } else if (name.equals("P2_Down")) {
-                Vector3f temp = new Vector3f(player2_pos.x, player2_pos.y, player2_pos.z + velocity);
-                player2.setLocalTranslation(temp);
+            if(player1.isAlive()){
+                if (name.equals("P1_Left")) {
+                    Vector3f temp = new Vector3f(player1_pos.x - velocity, player1_pos.y, player1_pos.z);
+                    player1.setLocalTranslation(temp);
+                } else if (name.equals("P1_Right")) {
+                    Vector3f temp = new Vector3f(player1_pos.x + velocity, player1_pos.y, player1_pos.z);
+                    player1.setLocalTranslation(temp);
+                } else if (name.equals("P1_Up")) {
+                    Vector3f temp = new Vector3f(player1_pos.x, player1_pos.y, player1_pos.z - velocity);
+                    player1.setLocalTranslation(temp);
+                } else if (name.equals("P1_Down")) {
+                    Vector3f temp = new Vector3f(player1_pos.x, player1_pos.y, player1_pos.z + velocity);
+                    player1.setLocalTranslation(temp);
+                }
             }
-
+            
+            if(player2.isAlive()){
+                if (name.equals("P2_Left")) {
+                Vector3f temp = new Vector3f(player2_pos.x - velocity, player2_pos.y, player2_pos.z);
+                    player2.setLocalTranslation(temp);
+                } else if (name.equals("P2_Right")) {
+                    Vector3f temp = new Vector3f(player2_pos.x + velocity, player2_pos.y, player2_pos.z);
+                    player2.setLocalTranslation(temp);
+                } else if (name.equals("P2_Up")) {
+                    Vector3f temp = new Vector3f(player2_pos.x, player2_pos.y, player2_pos.z - velocity);
+                    player2.setLocalTranslation(temp);
+                } else if (name.equals("P2_Down")) {
+                    Vector3f temp = new Vector3f(player2_pos.x, player2_pos.y, player2_pos.z + velocity);
+                    player2.setLocalTranslation(temp);
+                }
+            }
         }
     };
 
@@ -432,7 +437,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         ball_phy.setLinearVelocity(new Vector3f(d * power / 20, power / 40, 0));
     }
 
-    public void explosion(Vector3f pos) {
+    public void explosion(Vector3f pos, float explosionSize) {
 
         Node explosionEffect = new Node("explosionFX");
         ParticleEmitter flame = null, flash = null, spark = null, roundspark = null, smoketrail = null, debris = null,
@@ -458,7 +463,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         shockwave = createShockwave(shockwave);
         explosionEffect.attachChild(shockwave);
 
-        explosionEffect.setLocalScale(0.5f);
+        explosionEffect.setLocalScale(explosionSize);
         renderManager.preloadScene(explosionEffect);
 
         rootNode.attachChild(explosionEffect);
@@ -591,11 +596,17 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
                 p.setHitPoints(p.getHitPoints() - 1);
                 if (p.equals(player1)) {
                     hp1.loseLife(1);
+                    if(player1.getHitPoints()==0){
+                        death(player1);
+                    }
                 } else {
                     hp2.loseLife(1);
+                    if(player2.getHitPoints()==0){
+                        death(player2);
+                    }
                 }
                 System.out.println(p.getPlayerName() + " GOT HIT!\n HITPOINTS LEFT:" + p.getHitPoints());
-                explosion(cannon.getLocalTranslation());
+                explosion(cannon.getLocalTranslation(),0.5f);
                 rootNode.detachChild(cannon);
 
                 bulletAppState.getPhysicsSpace().remove(cannon.getControl(0));
@@ -619,5 +630,15 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         reloadP2.setText("");             // the text
         reloadP2.setLocalTranslation(settings.getWidth() - reloadP2.getLineWidth() - 20, settings.getHeight() - reloadP2.getLineHeight() - 20, 0); // position
         guiNode.attachChild(reloadP2);
+    }
+    
+    private void death(Player p){
+        //Material red = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
+        //red.setColor("Color", ColorRGBA.Red);
+        //p.getPlayerGeo().setMaterial(red);
+        explosion(p.getLocalTranslation(),5.0f);
+        rootNode.detachChild(p.getPlayerNode());
+        bulletAppState.getPhysicsSpace().remove(p.getPlayerControl());
+        p.setAlive(false);
     }
 }

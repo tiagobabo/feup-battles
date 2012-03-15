@@ -26,6 +26,7 @@ public class Player {
     private String playerName;
     private Node playerNode;
     private HitPointsBox hpBox;
+    private boolean alive = true;
    
 
     public Player(String name, Material playerMaterial, Vector3f initialPosition) {
@@ -154,6 +155,20 @@ public class Player {
      */
     public void setPlayerNode(Node playerNode) {
         this.playerNode = playerNode;
+    }
+
+    /**
+     * @return the alive
+     */
+    public boolean isAlive() {
+        return alive;
+    }
+
+    /**
+     * @param alive the alive to set
+     */
+    public void setAlive(boolean alive) {
+        this.alive = alive;
     }
 
    

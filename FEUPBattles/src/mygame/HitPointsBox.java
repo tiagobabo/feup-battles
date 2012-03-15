@@ -123,4 +123,8 @@ public class HitPointsBox {
         }
 
     }
+    
+    public float getCurrentLife(){
+        return currentLife;
+    }
 }
