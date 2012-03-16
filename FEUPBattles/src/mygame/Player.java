@@ -27,6 +27,7 @@ public class Player {
     private Node playerNode;
     private HitPointsBox hpBox;
     private boolean alive = true;
+    private RigidBodyControl ball;
    
 
     public Player(String name, Material playerMaterial, Vector3f initialPosition) {
@@ -169,6 +170,20 @@ public class Player {
      */
     public void setAlive(boolean alive) {
         this.alive = alive;
+    }
+
+    /**
+     * @return the ball
+     */
+    public RigidBodyControl getBall() {
+        return ball;
+    }
+
+    /**
+     * @param ball the ball to set
+     */
+    public void setBall(RigidBodyControl ball) {
+        this.ball = ball;
     }
 
    
