@@ -1,5 +1,6 @@
 package mygame;
 
+import com.bulletphysics.collision.shapes.CollisionShape;
 import com.jme3.bullet.BulletAppState;
 import com.jme3.bullet.collision.PhysicsCollisionEvent;
 import com.jme3.bullet.collision.PhysicsCollisionListener;
@@ -15,25 +16,37 @@ import com.jme3.scene.shape.Box;
 import com.jme3.scene.shape.Sphere;
 import com.jme3.scene.shape.Sphere.TextureMode;
 import com.jme3.app.SimpleApplication;
+import com.jme3.bullet.util.CollisionShapeFactory;
 import com.jme3.effect.ParticleEmitter;
 import com.jme3.effect.ParticleMesh.Type;
 import com.jme3.effect.shapes.EmitterSphereShape;
 import com.jme3.font.BitmapText;
+import com.jme3.input.ChaseCamera;
 import com.jme3.light.AmbientLight;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.FastMath;
 import com.jme3.math.Vector3f;
+import com.jme3.renderer.Camera;
 import com.jme3.renderer.queue.RenderQueue.ShadowMode;
 import com.jme3.scene.Node;
 import com.jme3.shadow.BasicShadowRenderer;
+import com.jme3.terrain.geomipmap.TerrainLodControl;
+import com.jme3.terrain.geomipmap.TerrainQuad;
+import com.jme3.terrain.heightmap.AbstractHeightMap;
+import com.jme3.terrain.heightmap.ImageBasedHeightMap;
+import com.jme3.texture.Texture;
+import com.jme3.texture.Texture.WrapMode;
+import com.jme3.util.SkyFactory;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import jme3tools.converters.ImageToAwt;
 
 public class Main extends SimpleApplication implements PhysicsCollisionListener {
 
@@ -64,6 +77,11 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
     float time = 0f;
     public ArrayList< Future<Node>> tasks = new ArrayList< Future<Node>>();
     BasicShadowRenderer bsr;
+    
+     
+  private RigidBodyControl landscape;
+  private TerrainQuad terrain;
+  private Material mat_terrain;
 
     public static void main(String[] args) {
         Main app = new Main();
@@ -240,29 +258,34 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         stateManager.attach(bulletAppState);
         //bulletAppState.getPhysicsSpace().setGravity(new Vector3f(0f, -1f, 0f));
         //bulletAppState.getPhysicsSpace().setAccuracy(0.005f);
-        cam.setLocation(new Vector3f(15f, 20f, 60f));
-        //cam.lookAt(new Vector3f(1, 1, 0), Vector3f.UNIT_Y);
+        flyCam.setMoveSpeed(50);
+        cam.setLocation(new Vector3f(-2.5f, 25f, -87));
+        cam.lookAtDirection(new Vector3f(0f, -0.55f, -0.84f), Vector3f.UNIT_Y);
+
+        //cam.setDirection(new Vector3f(0.026962247, -0.3055602, -0.9517908));
 
         //Objetos básicos
         Box b = new Box(Vector3f.ZERO, 1, 1, 1);
         Box b2 = new Box(Vector3f.ZERO, 10, 10, 10);
         Material mat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
         mat.setColor("Color", ColorRGBA.Blue);
+        
 
         Material mat2 = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md");
         mat2.setBoolean("m_UseMaterialColors", true);
-        mat2.setColor("m_Ambient", ColorRGBA.Green);
-        mat2.setColor("m_Diffuse", ColorRGBA.Green);
+        mat2.setColor("m_Ambient", ColorRGBA.White);
+        mat2.setColor("m_Diffuse", ColorRGBA.White);
         mat2.setColor("m_Specular", ColorRGBA.White);
         mat2.setFloat("m_Shininess", 12);
-
+        mat2.setTexture("DiffuseMap", assetManager.loadTexture("parede.jpg"));
+        mat2.setTexture("NormalMap", assetManager.loadTexture("parede.jpg"));
         //Player 1
-        Vector3f p1_pos = new Vector3f(-5.0f, 1f, 0f);
+        Vector3f p1_pos = new Vector3f(-20f, -9f, -140f);
         player1 = new Player("player 1", mat, p1_pos);
         rootNode.attachChild(player1.getPlayerNode());
 
         //Player 2
-        Vector3f p2_pos = new Vector3f(30.0f, 1f, 0f);
+        Vector3f p2_pos = new Vector3f(15.0f, -9f, -140f);
         player2 = new Player("player 2", mat, p2_pos);
         rootNode.attachChild(player2.getPlayerNode());
 
@@ -270,14 +293,14 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         Node platforms = new Node();
 
         //Platform 1
-        Vector3f plat1_pos = new Vector3f(0, -10, 0);
+        Vector3f plat1_pos = new Vector3f(15f, -20f, -140f);
         Geometry plat1 = new Geometry("Plat1", b2);
         plat1.setLocalTranslation(plat1_pos);
         plat1.setMaterial(mat2);
         platforms.attachChild(plat1);
 
         //Platform 2
-        Vector3f plat2_pos = new Vector3f(30, -10, 0);
+        Vector3f plat2_pos = new Vector3f(-20f, -20, -140f);
         Geometry plat2 = new Geometry("Plat2", b2);
         plat2.setLocalTranslation(plat2_pos);
         plat2.setMaterial(mat2);
@@ -297,31 +320,103 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         plat2_rb.setRestitution(0.7f);
         plat1_rb.setKinematic(true);
         plat2_rb.setKinematic(true);
-
+        
         bulletAppState.getPhysicsSpace().add(player1.getPlayerControl());
         bulletAppState.getPhysicsSpace().add(player2.getPlayerControl());
         bulletAppState.getPhysicsSpace().add(plat1_rb);
         bulletAppState.getPhysicsSpace().add(plat2_rb);
         bulletAppState.getPhysicsSpace().addCollisionListener(this);
-        bulletAppState.getPhysicsSpace().enableDebug(assetManager);
+        //bulletAppState.getPhysicsSpace().enableDebug(assetManager);
 
         //sombras
         bsr = new BasicShadowRenderer(assetManager, 1024);
         bsr.setDirection(new Vector3f(-1, -10, -1).normalizeLocal()); // light direction
         viewPort.addProcessor(bsr);
-
+        
         AmbientLight al = new AmbientLight();
         al.setColor(ColorRGBA.White.mult(1.3f));
         rootNode.addLight(al);
-
+        
         platforms.setShadowMode(ShadowMode.Receive);
-
+        
         guiNode.detachAllChildren();
         initKeys();
         initHPs();
         initPowerBar();
         initReloads();
         initInfo();
+
+
+        /** 1. Create terrain material and load four textures into it. */
+        mat_terrain = new Material(assetManager,
+                "Common/MatDefs/Terrain/Terrain.j3md");
+
+        /** 1.1) Add ALPHA map (for red-blue-green coded splat textures) */
+        mat_terrain.setTexture("Alpha", assetManager.loadTexture(
+                "Textures/Terrain/splat/alphamap.png"));
+
+        /** 1.2) Add GRASS texture into the red layer (Tex1). */
+        Texture grass = assetManager.loadTexture(
+                "Textures/Terrain/splat/grass.jpg");
+        grass.setWrap(WrapMode.Repeat);
+        mat_terrain.setTexture("Tex1", grass);
+        mat_terrain.setFloat("Tex1Scale", 64f);
+
+        /** 1.3) Add DIRT texture into the green layer (Tex2) */
+        Texture dirt = assetManager.loadTexture(
+                "Textures/Terrain/splat/dirt.jpg");
+        dirt.setWrap(WrapMode.Repeat);
+        mat_terrain.setTexture("Tex2", dirt);
+        mat_terrain.setFloat("Tex2Scale", 32f);
+
+        /** 1.4) Add ROAD texture into the blue layer (Tex3) */
+        Texture rock = assetManager.loadTexture(
+                "Textures/Terrain/splat/road.jpg");
+        rock.setWrap(WrapMode.Repeat);
+        mat_terrain.setTexture("Tex3", rock);
+        mat_terrain.setFloat("Tex3Scale", 128f);
+
+        /** 2. Create the height map */
+        AbstractHeightMap heightmap = null;
+        Texture heightMapImage = assetManager.loadTexture(
+                "Textures/Terrain/splat/mountains512.png");
+        
+        heightmap = new ImageBasedHeightMap(heightMapImage.getImage());
+        heightmap.load();
+
+        /** 3. We have prepared material and heightmap. 
+         * Now we create the actual terrain:
+         * 3.1) Create a TerrainQuad and name it "my terrain".
+         * 3.2) A good value for terrain tiles is 64x64 -- so we supply 64+1=65.
+         * 3.3) We prepared a heightmap of size 512x512 -- so we supply 512+1=513.
+         * 3.4) As LOD step scale we supply Vector3f(1,1,1).
+         * 3.5) We supply the prepared heightmap itself.
+         */
+        terrain = new TerrainQuad("my terrain", 65, 513, heightmap.getHeightMap());
+
+        /** 4. We give the terrain its material, position & scale it, and attach it. */
+        terrain.setMaterial(mat_terrain);
+        terrain.setLocalTranslation(0, -100, 0);
+        terrain.setLocalScale(2f, 1f, 2f);
+        rootNode.attachChild(terrain);
+
+        /** 5. The LOD (level of detail) depends on were the camera is: */
+        List<Camera> cameras = new ArrayList<Camera>();
+        cameras.add(getCamera());
+        TerrainLodControl control = new TerrainLodControl(terrain, cameras);
+        terrain.addControl(control);
+
+        /** 6. Add physics: */
+        // We set up collision detection for the scene by creating a
+        // compound collision shape and a static RigidBodyControl with mass zero.*/
+        com.jme3.bullet.collision.shapes.CollisionShape terrainShape =
+                CollisionShapeFactory.createMeshShape((Node) terrain);
+        landscape = new RigidBodyControl(terrainShape, 0);
+        terrain.addControl(landscape);
+        
+        rootNode.attachChild(SkyFactory.createSky(
+                assetManager, "sky.png", true).scale(0.5f));
+        
     }
     private AnalogListener analogListener = new AnalogListener() {
 
@@ -468,7 +563,12 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         ball_geo.addControl(ball_phy);
         bulletAppState.getPhysicsSpace().add(ball_phy);
         ball_phy.setRestitution(0.7f);
-        ball_phy.setLinearVelocity(new Vector3f(d * power / 20, power / 40, 0));
+        ball_phy.setLinearVelocity(new Vector3f(d * power / 20, power / 20, 0));
+        
+        
+        // flyCam.setEnabled(false);
+        //ChaseCamera chaseCam = new ChaseCamera(cam, ball_geo, inputManager);
+        
         return ball_phy;
     }
 
