@@ -69,7 +69,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
     long player1_power = 0;
     long player2_power = 0;
     float powerScale = 5.0f;
-    float controlForce = 10.0f;
+    float controlForce = 0.1f;
     boolean player1_shoot = false, player2_shoot = false;
     boolean player1_reload = false, player2_reload = false;
     boolean firstPlayer = true;
@@ -266,7 +266,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
 
         //Objetos básicos
         Box b = new Box(Vector3f.ZERO, 1, 1, 1);
-        Box b2 = new Box(Vector3f.ZERO, 10, 10, 10);
+        Box b2 = new Box(Vector3f.ZERO, 10, 10, 2);
         Material mat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
         mat.setColor("Color", ColorRGBA.Blue);
         
@@ -406,13 +406,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         TerrainLodControl control = new TerrainLodControl(terrain, cameras);
         terrain.addControl(control);
 
-        /** 6. Add physics: */
-        // We set up collision detection for the scene by creating a
-        // compound collision shape and a static RigidBodyControl with mass zero.*/
-        com.jme3.bullet.collision.shapes.CollisionShape terrainShape =
-                CollisionShapeFactory.createMeshShape((Node) terrain);
-        landscape = new RigidBodyControl(terrainShape, 0);
-        terrain.addControl(landscape);
+        
         
         rootNode.attachChild(SkyFactory.createSky(
                 assetManager, "sky.png", true).scale(0.5f));
@@ -426,14 +420,14 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
             if(player1.isAlive()){
                 if (name.equals("P1_Left")) {
                     if(player1.getBall() != null) 
-                        player1.getBall().getObjectId().applyCentralForce(new javax.vecmath.Vector3f(-controlForce, 0.0f, 0.0f));
+                        player1.getBall().getObjectId().applyCentralImpulse(new javax.vecmath.Vector3f(-controlForce, 0.0f, 0.0f));
                     else{
                         Vector3f temp = new Vector3f(player1_pos.x - velocity, player1_pos.y, player1_pos.z);
                         player1.setLocalTranslation(temp);
                     }
                 } else if (name.equals("P1_Right")) {
                     if(player1.getBall() != null) 
-                        player1.getBall().getObjectId().applyCentralForce(new javax.vecmath.Vector3f(controlForce, 0.0f, 0.0f));
+                        player1.getBall().getObjectId().applyCentralImpulse(new javax.vecmath.Vector3f(controlForce, 0.0f, 0.0f));
                     else{
                         Vector3f temp = new Vector3f(player1_pos.x + velocity, player1_pos.y, player1_pos.z);
                         player1.setLocalTranslation(temp);
@@ -441,14 +435,14 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
                     
                 } else if (name.equals("P1_Up")) {
                     if(player1.getBall() != null) 
-                        player1.getBall().getObjectId().applyCentralForce(new javax.vecmath.Vector3f(0.0f, 0.0f, -controlForce));
+                        player1.getBall().getObjectId().applyCentralImpulse(new javax.vecmath.Vector3f(0.0f, 0.0f, -controlForce));
                     else{
                         Vector3f temp = new Vector3f(player1_pos.x, player1_pos.y, player1_pos.z - velocity);
                         player1.setLocalTranslation(temp);
                     }
                 } else if (name.equals("P1_Down")) {
                     if(player1.getBall() != null) 
-                        player1.getBall().getObjectId().applyCentralForce(new javax.vecmath.Vector3f(0.0f, 0.0f, controlForce));
+                        player1.getBall().getObjectId().applyCentralImpulse(new javax.vecmath.Vector3f(0.0f, 0.0f, controlForce));
                     else{
                         Vector3f temp = new Vector3f(player1_pos.x, player1_pos.y, player1_pos.z + velocity);
                         player1.setLocalTranslation(temp);
@@ -459,28 +453,28 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
             if(player2.isAlive()){
                 if (name.equals("P2_Left")) {
                     if(player2.getBall() != null) 
-                        player2.getBall().getObjectId().applyCentralForce(new javax.vecmath.Vector3f(-controlForce, 0.0f, 0.0f));
+                        player2.getBall().getObjectId().applyCentralImpulse(new javax.vecmath.Vector3f(-controlForce, 0.0f, 0.0f));
                     else{
                         Vector3f temp = new Vector3f(player2_pos.x - velocity, player2_pos.y, player2_pos.z);
                         player2.setLocalTranslation(temp);
                     }
                 } else if (name.equals("P2_Right")) {
                     if(player2.getBall() != null) 
-                        player2.getBall().getObjectId().applyCentralForce(new javax.vecmath.Vector3f(controlForce, 0.0f, 0.0f));
+                        player2.getBall().getObjectId().applyCentralImpulse(new javax.vecmath.Vector3f(controlForce, 0.0f, 0.0f));
                     else{
                         Vector3f temp = new Vector3f(player2_pos.x + velocity, player2_pos.y, player2_pos.z);
                         player2.setLocalTranslation(temp);
                     }
                 } else if (name.equals("P2_Up")) {
                     if(player2.getBall() != null) 
-                        player2.getBall().getObjectId().applyCentralForce(new javax.vecmath.Vector3f(0.0f, 0.0f, -controlForce));
+                        player2.getBall().getObjectId().applyCentralImpulse(new javax.vecmath.Vector3f(0.0f, 0.0f, -controlForce));
                     else{
                         Vector3f temp = new Vector3f(player2_pos.x, player2_pos.y, player2_pos.z - velocity);
                         player2.setLocalTranslation(temp);
                     }
                 } else if (name.equals("P2_Down")) {
                     if(player2.getBall() != null) 
-                        player2.getBall().getObjectId().applyCentralForce(new javax.vecmath.Vector3f(0.0f, 0.0f, controlForce));
+                        player2.getBall().getObjectId().applyCentralImpulse(new javax.vecmath.Vector3f(0.0f, 0.0f, controlForce));
                     else{
                         Vector3f temp = new Vector3f(player2_pos.x, player2_pos.y, player2_pos.z + velocity);
                         player2.setLocalTranslation(temp);
@@ -501,8 +495,8 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         inputManager.addMapping("P2_Down", new KeyTrigger(KeyInput.KEY_K));
         inputManager.addMapping("P1_Shoot", new KeyTrigger(KeyInput.KEY_SPACE));
         inputManager.addMapping("P2_Shoot", new KeyTrigger(KeyInput.KEY_P));
-        inputManager.addListener(analogListener, new String[]{"P1_Left", "P1_Right", "P1_Up", "P1_Down",
-                    "P2_Left", "P2_Right", "P2_Up", "P2_Down"});
+        inputManager.addListener(analogListener, new String[]{"P1_Left", "P1_Right",
+                    "P2_Left", "P2_Right"});
         inputManager.addListener(actionListener, new String[]{"P1_Shoot", "P2_Shoot"});
 
     }
@@ -535,13 +529,13 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
             }
         }
     };
-
+     Geometry ball_geo = null;
     private RigidBodyControl makeBall(float power, Geometry geom, int d) {
 
         Sphere sphere = new Sphere(32, 32, 0.4f, true, false);
         sphere.setTextureMode(TextureMode.Projected);
 
-        Geometry ball_geo = new Geometry("cannon ball", sphere);
+        ball_geo = new Geometry("cannon ball", sphere);
         Material mat = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md");
         mat.setBoolean("m_UseMaterialColors", true);
         mat.setColor("m_Ambient", ColorRGBA.Orange);
@@ -675,11 +669,19 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
             bp2.increasePower();
         }
         
-        if(player1.getBall() != null && player1.getBall().getPhysicsLocation().getY()<=0){
+        if(player1.getBall() != null && player1.getBall().getPhysicsLocation().getY()<=-10.0f){
+            explosion( ball_geo.getLocalTranslation(),0.5f);
+            rootNode.detachChild(ball_geo);
+
+            bulletAppState.getPhysicsSpace().remove(player1.getBall());
             player1.setBall(null);
             changePlayer();
         }
-        if(player2.getBall() != null && player2.getBall().getPhysicsLocation().getY()<=0){
+        if(player2.getBall() != null && player2.getBall().getPhysicsLocation().getY()<=-10.0f){
+            explosion( ball_geo.getLocalTranslation(),0.5f);
+            rootNode.detachChild(ball_geo);
+
+            bulletAppState.getPhysicsSpace().remove(player2.getBall());
             player2.setBall(null);
             changePlayer();
         }
