@@ -24,7 +24,7 @@ class ExplosionCleaner
     {
         try {
             // sleep for 2 seconds
-            Thread.sleep(2 * 1000);
+            Thread.sleep(1000);
         } catch (InterruptedException ex) {
             Logger.getLogger(ExplosionCleaner.class.getName()).log(Level.SEVERE, null, ex);
         }

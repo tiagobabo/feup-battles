@@ -52,7 +52,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
 
     static final float RELOAD_TIME = 0.5f;
     private BulletAppState bulletAppState;
-    float velocity = 0.01f;
+    float velocity = 0.05f;
     Player player1;
     Player player2;
     private static final int COUNT_FACTOR = 1;
@@ -565,12 +565,12 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         
         return ball_phy;
     }
-
+ParticleEmitter flame = null, flash = null, spark = null, roundspark = null, smoketrail = null, debris = null,
+                shockwave = null;
     public void explosion(Vector3f pos, float explosionSize) {
 
         Node explosionEffect = new Node("explosionFX");
-        ParticleEmitter flame = null, flash = null, spark = null, roundspark = null, smoketrail = null, debris = null,
-                shockwave = null;
+        
         flame = createFlame(flame);
         explosionEffect.attachChild(flame);
 
@@ -604,6 +604,8 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         smoketrail.emitAllParticles();
         debris.emitAllParticles();
         shockwave.emitAllParticles();
+        
+       
 
         final ExecutorService service;
         final Future<Node> task;
@@ -652,6 +654,11 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         while (tasks.size() > 0 && tasks.get(i).isDone()) {
             try {
                 rootNode.detachChild(tasks.get(i).get());
+                flash.killAllParticles();
+                spark.killAllParticles();
+                smoketrail.killAllParticles();
+                debris.killAllParticles();
+                shockwave.killAllParticles();
             } catch (InterruptedException ex) {
                 Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
             } catch (ExecutionException ex) {
