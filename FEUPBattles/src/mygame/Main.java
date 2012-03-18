@@ -16,6 +16,7 @@ import com.jme3.scene.shape.Box;
 import com.jme3.scene.shape.Sphere;
 import com.jme3.scene.shape.Sphere.TextureMode;
 import com.jme3.app.SimpleApplication;
+import com.jme3.audio.AudioNode;
 import com.jme3.bullet.util.CollisionShapeFactory;
 import com.jme3.effect.ParticleEmitter;
 import com.jme3.effect.ParticleMesh.Type;
@@ -411,6 +412,10 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         rootNode.attachChild(SkyFactory.createSky(
                 assetManager, "sky2.jpg", true));
         
+        AudioNode back = new AudioNode(assetManager, "back.wav");
+        back.setLooping(true);
+        back.play();
+        
     }
     private AnalogListener analogListener = new AnalogListener() {
 
@@ -559,7 +564,8 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         ball_phy.setRestitution(0.7f);
         ball_phy.setLinearVelocity(new Vector3f(d * power / 20, power / 20, 0));
         
-        
+         AudioNode boom = new AudioNode(assetManager, "shoot.wav");
+        boom.play();
         // flyCam.setEnabled(false);
         //ChaseCamera chaseCam = new ChaseCamera(cam, ball_geo, inputManager);
         
@@ -604,8 +610,8 @@ ParticleEmitter flame = null, flash = null, spark = null, roundspark = null, smo
         smoketrail.emitAllParticles();
         debris.emitAllParticles();
         shockwave.emitAllParticles();
-        
-       
+        AudioNode boom = new AudioNode(assetManager, "boom.wav");
+        boom.play();
 
         final ExecutorService service;
         final Future<Node> task;
