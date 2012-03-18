@@ -409,7 +409,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         
         
         rootNode.attachChild(SkyFactory.createSky(
-                assetManager, "sky.png", true).scale(0.5f));
+                assetManager, "sky2.jpg", true));
         
     }
     private AnalogListener analogListener = new AnalogListener() {
