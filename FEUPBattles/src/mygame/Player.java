@@ -7,6 +7,7 @@ package mygame;
 
 import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.material.Material;
+import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
@@ -239,5 +240,20 @@ public class Player {
         this.swapped = swapped;
     }
 
-   
+    public void setImmune(int immune) {
+        switch(immune) {
+            case 1:
+                this.immune = true;
+                this.playerGeo.getMaterial().setColor("Color", ColorRGBA.Red);
+                break;
+            case 0:
+                this.immune = true;
+                this.playerGeo.getMaterial().setColor("Color", ColorRGBA.Blue);
+                break;
+            default:
+                break;
+        }
+    }
+    
+    
 }

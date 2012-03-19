@@ -273,6 +273,8 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         Box b2 = new Box(Vector3f.ZERO, 10, 10, 2);
         Material mat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
         mat.setColor("Color", ColorRGBA.Blue);
+        Material matp2 = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
+        matp2.setColor("Color", ColorRGBA.Blue);
         
 
         Material mat2 = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md");
@@ -294,7 +296,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         //Player 2
         Vector3f p2_pos = new Vector3f(15.0f, -9f, -140f);
         SuperPower sp2 = new InformaticSuperPower();
-        player2 = new Player("player 2", mat, p2_pos, sp2);
+        player2 = new Player("player 2", matp2, p2_pos, sp2);
         Keys k1 = new Keys(KeyInput.KEY_J,KeyInput.KEY_L,KeyInput.KEY_P,KeyInput.KEY_M);
         player2.setKeys(k1);
         rootNode.attachChild(player2.getPlayerNode());

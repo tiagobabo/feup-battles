@@ -4,6 +4,8 @@
  */
 package mygame.superPower;
 
+import com.jme3.material.Material;
+
 /**
  *
  * @author helder
@@ -16,11 +18,15 @@ public class CivilSuperPower extends SuperPower{
     }
     public void usePower(int playerNumber) {
         switch(playerNumber){
-            case 1: if (!mygame.Main.player1.immune) mygame.Main.player1.immune = true;
-                    System.out.println("p1 immune");
+            case 1: if (!mygame.Main.player1.immune) { 
+                        mygame.Main.player1.setImmune(1);
+                        System.out.println("p1 immune");
+                    }
                     break;
-            case 2: if (!mygame.Main.player2.immune) mygame.Main.player2.immune = true;
-                    System.out.println("p2 immune");
+            case 2: if (!mygame.Main.player2.immune) {
+                        mygame.Main.player2.setImmune(1);            
+                        System.out.println("p2 immune");
+                    }
                     break;
             default:
                     break;
@@ -28,11 +34,15 @@ public class CivilSuperPower extends SuperPower{
     }
     public void cancelSuperPower(int playerNumber){
         switch(playerNumber){
-            case 1: if (mygame.Main.player1.immune) mygame.Main.player1.immune = false;
-                    System.out.println("p1 not immune");
+            case 1: if (mygame.Main.player1.immune) {
+                        mygame.Main.player1.setImmune(0);     
+                        System.out.println("p1 not immune");
+                    }
                     break;
-            case 2: if (mygame.Main.player2.immune) mygame.Main.player2.immune = false;
-                    System.out.println("p2 not immune");
+            case 2: if (mygame.Main.player2.immune) {
+                        mygame.Main.player2.setImmune(0);     
+                        System.out.println("p2 not immune");
+                    }
                     break;
             default:
                     break;
