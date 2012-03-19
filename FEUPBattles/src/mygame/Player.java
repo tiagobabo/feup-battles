@@ -32,12 +32,13 @@ public class Player {
     private boolean alive = true;
     private RigidBodyControl ball;
     private Keys keys;
-    private SuperPower sp = new InformaticSuperPower();
+    private SuperPower sp;
     private int swapped = 1;
+    public boolean immune = false;
     
    
 
-    public Player(String name, Material playerMaterial, Vector3f initialPosition) {
+    public Player(String name, Material playerMaterial, Vector3f initialPosition, SuperPower sp) {
         playerBox = new Box(Vector3f.ZERO, 1, 1, 1);
         playerGeo = new Geometry(name, playerBox);
         playerGeo.setLocalTranslation(initialPosition);
@@ -47,6 +48,7 @@ public class Player {
         playerControl.setKinematic(true);
         playerName = name;
         playerNode = new Node(name);
+        this.sp = sp;
         playerNode.attachChild(playerGeo);
      
 

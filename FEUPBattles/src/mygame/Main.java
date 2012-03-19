@@ -48,6 +48,9 @@ import java.util.concurrent.Future;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import jme3tools.converters.ImageToAwt;
+import mygame.superPower.CivilSuperPower;
+import mygame.superPower.InformaticSuperPower;
+import mygame.superPower.SuperPower;
 
 public class Main extends SimpleApplication implements PhysicsCollisionListener {
 
@@ -282,14 +285,16 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         mat2.setTexture("NormalMap", assetManager.loadTexture("parede.jpg"));
         //Player 1
         Vector3f p1_pos = new Vector3f(-20f, -9f, -140f);
-        player1 = new Player("player 1", mat, p1_pos);
+        SuperPower sp1 = new CivilSuperPower();
+        player1 = new Player("player 1", mat, p1_pos, sp1);
         Keys k = new Keys(KeyInput.KEY_F,KeyInput.KEY_H,KeyInput.KEY_SPACE,KeyInput.KEY_V);
         player1.setKeys(k);
         rootNode.attachChild(player1.getPlayerNode());
 
         //Player 2
         Vector3f p2_pos = new Vector3f(15.0f, -9f, -140f);
-        player2 = new Player("player 2", mat, p2_pos);
+        SuperPower sp2 = new InformaticSuperPower();
+        player2 = new Player("player 2", mat, p2_pos, sp2);
         Keys k1 = new Keys(KeyInput.KEY_J,KeyInput.KEY_L,KeyInput.KEY_P,KeyInput.KEY_M);
         player2.setKeys(k1);
         rootNode.attachChild(player2.getPlayerNode());
@@ -386,7 +391,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         Texture heightMapImage = assetManager.loadTexture(
                 "Textures/Terrain/splat/mountains512.png");
         
-        heightmap = new ImageBasedHeightMap(heightMapImage.getImage());
+        heightmap = new ImageBasedHeightMap(ImageToAwt.convert(heightMapImage.getImage(), false, true, 0), 0.25f);
         heightmap.load();
 
         /** 3. We have prepared material and heightmap. 
@@ -769,7 +774,7 @@ ParticleEmitter flame = null, flash = null, spark = null, roundspark = null, smo
             p = player2;
         }
 
-        if (p != null && cannon != null) {
+        if (p != null && cannon != null && !p.immune) {
 
             if (rootNode.hasChild(cannon)) {
                 if(firstPlayer){
