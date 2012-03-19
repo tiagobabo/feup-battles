@@ -13,5 +13,6 @@ import mygame.Player;
 public interface SuperPower {
     
     public void usePower( int playerNumber);
+    public void cancelSuperPower(int playerNumber);
     
 }

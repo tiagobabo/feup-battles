@@ -24,5 +24,17 @@ public class InformaticSuperPower implements SuperPower{
                     break;
         }
     }
+    public void cancelSuperPower(int playerNumber){
+        switch(playerNumber){
+            case 1: mygame.Main.player2.swapKeys();
+                    System.out.println("Swapping p2 keys");
+                    break;
+            case 2: mygame.Main.player1.swapKeys();
+                     System.out.println("Swapping p1 keys");
+                    break;
+            default:
+                    break;
+        }
+    }
     
 }

@@ -11,6 +11,7 @@ import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.shape.Box;
+import mygame.superPower.CancelSuperPower;
 import mygame.superPower.InformaticSuperPower;
 import mygame.superPower.SuperPower;
 
@@ -206,6 +207,7 @@ public class Player {
     }
     public void useSuperPower(int pnum){
         this.sp.usePower(pnum);
+        new CancelSuperPower(sp,5,pnum).start();
         
     }
 
