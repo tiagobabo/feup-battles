@@ -247,7 +247,7 @@ public class Player {
                 this.playerGeo.getMaterial().setColor("Color", ColorRGBA.Red);
                 break;
             case 0:
-                this.immune = true;
+                this.immune = false;
                 this.playerGeo.getMaterial().setColor("Color", ColorRGBA.Blue);
                 break;
             default:
