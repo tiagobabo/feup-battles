@@ -290,7 +290,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         //Player 2
         Vector3f p2_pos = new Vector3f(15.0f, -9f, -140f);
         player2 = new Player("player 2", mat, p2_pos);
-        Keys k1 = new Keys(KeyInput.KEY_J,KeyInput.KEY_L,KeyInput.KEY_P,KeyInput.KEY_RSHIFT);
+        Keys k1 = new Keys(KeyInput.KEY_J,KeyInput.KEY_L,KeyInput.KEY_P,KeyInput.KEY_M);
         player2.setKeys(k1);
         rootNode.attachChild(player2.getPlayerNode());
 
@@ -518,7 +518,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
     private ActionListener actionListener = new ActionListener() {
 
         public void onAction(String name, boolean keyPressed, float tpf) {
-            if(firstPlayer && player1.getBall() == null){
+            if(firstPlayer && player1.getBall() == null && player1.isAlive()){
                 if (name.equals("P1_Shoot") && !keyPressed && !player1_reload) {
                     if (bp1.getCurrentPower() > 1) {
                         player1.setBall(makeBall(bp1.getCurrentPower() * powerScale, player1.getPlayerGeo(), 1));
@@ -528,12 +528,9 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
                     }
                 } else if (name.equals("P1_Shoot") && !player1_reload) {
                     player1_shoot = true;
-                }else if(name.equals("P1_SP") && !keyPressed){
-                    player1.useSuperPower(1);
-                    System.out.println("PLAYER 1 SP");
                 }
             }
-            else if(!firstPlayer && player2.getBall() == null){
+            else if(!firstPlayer && player2.getBall() == null && player2.isAlive()){
                 if (name.equals("P2_Shoot") && !keyPressed && !player2_reload) {
                     if (bp2.getCurrentPower() > 1) {
                         player2.setBall(makeBall(bp2.getCurrentPower() * powerScale, player2.getPlayerGeo(), -1));
@@ -543,11 +540,18 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
                     }
                 } else if (name.equals("P2_Shoot") && !player2_reload) {
                     player2_shoot = true;
-                }else if(name.equals("P2_SP") && !keyPressed){
-                    player1.useSuperPower(1);
-                    System.out.println("PLAYER 2 SP");
-                }
+                } 
             }
+            if(name.equals("P1_SP") && !keyPressed){
+                    System.out.println("PLAYER 1 SP");
+                    player1.useSuperPower(1);
+                    
+            }
+            if(name.equals("P2_SP") && !keyPressed){
+                     System.out.println("PLAYER 2 SP");
+                    player2.useSuperPower(2);
+                   
+                }
         }
     };
      Geometry ball_geo = null;

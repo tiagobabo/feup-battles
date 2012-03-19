@@ -207,7 +207,7 @@ public class Player {
     }
     public void useSuperPower(int pnum){
         this.sp.usePower(pnum);
-        new CancelSuperPower(sp,5,pnum).start();
+        new CancelSuperPower(sp,sp.getDuration(),pnum).start();
         
     }
 

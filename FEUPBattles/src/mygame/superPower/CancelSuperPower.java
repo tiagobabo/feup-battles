@@ -23,6 +23,7 @@ public class CancelSuperPower extends Thread {
      this.waitTime = waitTime;
      pNum = playerNum;
     }
+    @Override
     public void run() {
         try {
             Thread.sleep(waitTime*1000);

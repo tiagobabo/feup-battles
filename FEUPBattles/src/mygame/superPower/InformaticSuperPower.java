@@ -10,8 +10,12 @@ package mygame.superPower;
  *
  * @author ZePedro
  */
-public class InformaticSuperPower implements SuperPower{
+public class InformaticSuperPower extends SuperPower{
 
+    public InformaticSuperPower(){
+        manaCost = 1;
+        duration = 5;
+    }
     public void usePower(int playerNumber) {
         switch(playerNumber){
             case 1: mygame.Main.player2.swapKeys();

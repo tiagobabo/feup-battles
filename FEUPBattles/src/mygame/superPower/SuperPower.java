@@ -4,15 +4,45 @@
  */
 package mygame.superPower;
 
-import mygame.Player;
+
 
 /**
  *
  * @author ZePedro
  */
-public interface SuperPower {
+public abstract class SuperPower {
     
-    public void usePower( int playerNumber);
-    public void cancelSuperPower(int playerNumber);
+    protected int manaCost;
+    protected int duration;
+    public abstract void usePower( int playerNumber);
+    public abstract void cancelSuperPower(int playerNumber);
+
+    /**
+     * @return the manaCost
+     */
+    public int getManaCost() {
+        return manaCost;
+    }
+
+    /**
+     * @param manaCost the manaCost to set
+     */
+    public void setManaCost(int manaCost) {
+        this.manaCost = manaCost;
+    }
+
+    /**
+     * @return the duration
+     */
+    public int getDuration() {
+        return duration;
+    }
+
+    /**
+     * @param duration the duration to set
+     */
+    public void setDuration(int duration) {
+        this.duration = duration;
+    }
     
 }
