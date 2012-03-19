@@ -11,6 +11,8 @@ import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.shape.Box;
+import mygame.superPower.InformaticSuperPower;
+import mygame.superPower.SuperPower;
 
 /**
  *
@@ -28,6 +30,10 @@ public class Player {
     private HitPointsBox hpBox;
     private boolean alive = true;
     private RigidBodyControl ball;
+    private Keys keys;
+    private SuperPower sp = new InformaticSuperPower();
+    private int swapped = 1;
+    
    
 
     public Player(String name, Material playerMaterial, Vector3f initialPosition) {
@@ -184,6 +190,49 @@ public class Player {
      */
     public void setBall(RigidBodyControl ball) {
         this.ball = ball;
+    }
+    
+    public int getLeftKey(){
+        return keys.getLeftKey();
+    }
+    public int getRightKey(){
+        return keys.getRightKey();
+    }
+    public int getFireKey(){
+        return keys.getFireKey();
+    }
+    public int getSuperPowerKey(){
+        return keys.getSuperPowerKey();
+    }
+    public void useSuperPower(int pnum){
+        this.sp.usePower(pnum);
+        
+    }
+
+    /**
+     * @param keys the keys to set
+     */
+    public void setKeys(Keys keys) {
+        this.keys = keys;
+    }
+
+    public void swapKeys() {
+        setSwapped(getSwapped() * -1);
+        
+    }
+
+    /**
+     * @return the swapped
+     */
+    public int getSwapped() {
+        return swapped;
+    }
+
+    /**
+     * @param swapped the swapped to set
+     */
+    public void setSwapped(int swapped) {
+        this.swapped = swapped;
     }
 
    

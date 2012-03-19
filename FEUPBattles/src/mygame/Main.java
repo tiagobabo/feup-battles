@@ -54,8 +54,8 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
     static final float RELOAD_TIME = 0.5f;
     private BulletAppState bulletAppState;
     float velocity = 0.05f;
-    Player player1;
-    Player player2;
+    public static Player player1;
+    public static Player player2;
     private static final int COUNT_FACTOR = 1;
     private static final float COUNT_FACTOR_F = 1f;
     private static final boolean POINT_SPRITE = true;
@@ -283,11 +283,15 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         //Player 1
         Vector3f p1_pos = new Vector3f(-20f, -9f, -140f);
         player1 = new Player("player 1", mat, p1_pos);
+        Keys k = new Keys(KeyInput.KEY_F,KeyInput.KEY_H,KeyInput.KEY_SPACE,KeyInput.KEY_V);
+        player1.setKeys(k);
         rootNode.attachChild(player1.getPlayerNode());
 
         //Player 2
         Vector3f p2_pos = new Vector3f(15.0f, -9f, -140f);
         player2 = new Player("player 2", mat, p2_pos);
+        Keys k1 = new Keys(KeyInput.KEY_J,KeyInput.KEY_L,KeyInput.KEY_P,KeyInput.KEY_RSHIFT);
+        player2.setKeys(k1);
         rootNode.attachChild(player2.getPlayerNode());
 
 
@@ -425,16 +429,16 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
             if(player1.isAlive()){
                 if (name.equals("P1_Left")) {
                     if(player1.getBall() != null) 
-                        player1.getBall().getObjectId().applyCentralImpulse(new javax.vecmath.Vector3f(-controlForce, 0.0f, 0.0f));
+                        player1.getBall().getObjectId().applyCentralImpulse(new javax.vecmath.Vector3f(-controlForce*player1.getSwapped(), 0.0f, 0.0f));
                     else{
-                        Vector3f temp = new Vector3f(player1_pos.x - velocity, player1_pos.y, player1_pos.z);
+                        Vector3f temp = new Vector3f(player1_pos.x - velocity*player1.getSwapped(), player1_pos.y, player1_pos.z);
                         player1.setLocalTranslation(temp);
                     }
                 } else if (name.equals("P1_Right")) {
                     if(player1.getBall() != null) 
-                        player1.getBall().getObjectId().applyCentralImpulse(new javax.vecmath.Vector3f(controlForce, 0.0f, 0.0f));
+                        player1.getBall().getObjectId().applyCentralImpulse(new javax.vecmath.Vector3f(controlForce*player1.getSwapped(), 0.0f, 0.0f));
                     else{
-                        Vector3f temp = new Vector3f(player1_pos.x + velocity, player1_pos.y, player1_pos.z);
+                        Vector3f temp = new Vector3f(player1_pos.x + velocity*player1.getSwapped(), player1_pos.y, player1_pos.z);
                         player1.setLocalTranslation(temp);
                     }
                     
@@ -442,67 +446,73 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
                     if(player1.getBall() != null) 
                         player1.getBall().getObjectId().applyCentralImpulse(new javax.vecmath.Vector3f(0.0f, 0.0f, -controlForce));
                     else{
-                        Vector3f temp = new Vector3f(player1_pos.x, player1_pos.y, player1_pos.z - velocity);
+                        Vector3f temp = new Vector3f(player1_pos.x, player1_pos.y, player1_pos.z - velocity*player1.getSwapped());
                         player1.setLocalTranslation(temp);
                     }
                 } else if (name.equals("P1_Down")) {
                     if(player1.getBall() != null) 
-                        player1.getBall().getObjectId().applyCentralImpulse(new javax.vecmath.Vector3f(0.0f, 0.0f, controlForce));
+                        player1.getBall().getObjectId().applyCentralImpulse(new javax.vecmath.Vector3f(0.0f, 0.0f, controlForce*player1.getSwapped()));
                     else{
-                        Vector3f temp = new Vector3f(player1_pos.x, player1_pos.y, player1_pos.z + velocity);
+                        Vector3f temp = new Vector3f(player1_pos.x, player1_pos.y, player1_pos.z + velocity*player1.getSwapped());
                         player1.setLocalTranslation(temp);
                     }
+                }else if (name.equals("P1_SP")){
+                    player1.useSuperPower(1);
+                    System.out.println("P1 used SP");
                 }
             }
             
             if(player2.isAlive()){
                 if (name.equals("P2_Left")) {
                     if(player2.getBall() != null) 
-                        player2.getBall().getObjectId().applyCentralImpulse(new javax.vecmath.Vector3f(-controlForce, 0.0f, 0.0f));
+                        player2.getBall().getObjectId().applyCentralImpulse(new javax.vecmath.Vector3f(-controlForce*player2.getSwapped(), 0.0f, 0.0f));
                     else{
-                        Vector3f temp = new Vector3f(player2_pos.x - velocity, player2_pos.y, player2_pos.z);
+                        Vector3f temp = new Vector3f(player2_pos.x - velocity*player2.getSwapped(), player2_pos.y, player2_pos.z);
                         player2.setLocalTranslation(temp);
                     }
                 } else if (name.equals("P2_Right")) {
                     if(player2.getBall() != null) 
-                        player2.getBall().getObjectId().applyCentralImpulse(new javax.vecmath.Vector3f(controlForce, 0.0f, 0.0f));
+                        player2.getBall().getObjectId().applyCentralImpulse(new javax.vecmath.Vector3f(controlForce*player2.getSwapped(), 0.0f, 0.0f));
                     else{
-                        Vector3f temp = new Vector3f(player2_pos.x + velocity, player2_pos.y, player2_pos.z);
+                        Vector3f temp = new Vector3f(player2_pos.x + velocity*player2.getSwapped(), player2_pos.y, player2_pos.z);
                         player2.setLocalTranslation(temp);
                     }
                 } else if (name.equals("P2_Up")) {
                     if(player2.getBall() != null) 
-                        player2.getBall().getObjectId().applyCentralImpulse(new javax.vecmath.Vector3f(0.0f, 0.0f, -controlForce));
+                        player2.getBall().getObjectId().applyCentralImpulse(new javax.vecmath.Vector3f(0.0f, 0.0f, -controlForce*player2.getSwapped()));
                     else{
-                        Vector3f temp = new Vector3f(player2_pos.x, player2_pos.y, player2_pos.z - velocity);
+                        Vector3f temp = new Vector3f(player2_pos.x, player2_pos.y, player2_pos.z - velocity*player2.getSwapped());
                         player2.setLocalTranslation(temp);
                     }
                 } else if (name.equals("P2_Down")) {
                     if(player2.getBall() != null) 
-                        player2.getBall().getObjectId().applyCentralImpulse(new javax.vecmath.Vector3f(0.0f, 0.0f, controlForce));
+                        player2.getBall().getObjectId().applyCentralImpulse(new javax.vecmath.Vector3f(0.0f, 0.0f, controlForce*player2.getSwapped()));
                     else{
-                        Vector3f temp = new Vector3f(player2_pos.x, player2_pos.y, player2_pos.z + velocity);
+                        Vector3f temp = new Vector3f(player2_pos.x, player2_pos.y, player2_pos.z + velocity*player2.getSwapped());
                         player2.setLocalTranslation(temp);
                     }
-                }
+                } 
             }
         }
     };
 
     private void initKeys() {
-        inputManager.addMapping("P1_Left", new KeyTrigger(KeyInput.KEY_F));
-        inputManager.addMapping("P1_Right", new KeyTrigger(KeyInput.KEY_H));
+        
+        inputManager.addMapping("P1_Left", new KeyTrigger(player1.getLeftKey()));
+        inputManager.addMapping("P1_Right", new KeyTrigger(player1.getRightKey()));
         inputManager.addMapping("P1_Up", new KeyTrigger(KeyInput.KEY_T));
         inputManager.addMapping("P1_Down", new KeyTrigger(KeyInput.KEY_G));
-        inputManager.addMapping("P2_Left", new KeyTrigger(KeyInput.KEY_J));
-        inputManager.addMapping("P2_Right", new KeyTrigger(KeyInput.KEY_L));
+        inputManager.addMapping("P2_Left", new KeyTrigger(player2.getLeftKey()));
+        inputManager.addMapping("P2_Right", new KeyTrigger(player2.getRightKey()));
         inputManager.addMapping("P2_Up", new KeyTrigger(KeyInput.KEY_I));
         inputManager.addMapping("P2_Down", new KeyTrigger(KeyInput.KEY_K));
-        inputManager.addMapping("P1_Shoot", new KeyTrigger(KeyInput.KEY_SPACE));
-        inputManager.addMapping("P2_Shoot", new KeyTrigger(KeyInput.KEY_P));
+        inputManager.addMapping("P1_SP", new KeyTrigger(player1.getSuperPowerKey()));
+        inputManager.addMapping("P2_SP", new KeyTrigger(player2.getSuperPowerKey()));
+        inputManager.addMapping("P1_Shoot", new KeyTrigger(player1.getFireKey()));
+        inputManager.addMapping("P2_Shoot", new KeyTrigger(player2.getFireKey()));
         inputManager.addListener(analogListener, new String[]{"P1_Left", "P1_Right",
                     "P2_Left", "P2_Right"});
-        inputManager.addListener(actionListener, new String[]{"P1_Shoot", "P2_Shoot"});
+        inputManager.addListener(actionListener, new String[]{"P1_Shoot", "P2_Shoot","P1_SP","P2_SP"});
 
     }
     private ActionListener actionListener = new ActionListener() {
@@ -518,6 +528,9 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
                     }
                 } else if (name.equals("P1_Shoot") && !player1_reload) {
                     player1_shoot = true;
+                }else if(name.equals("P1_SP") && !keyPressed){
+                    player1.useSuperPower(1);
+                    System.out.println("PLAYER 1 SP");
                 }
             }
             else if(!firstPlayer && player2.getBall() == null){
@@ -530,6 +543,9 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
                     }
                 } else if (name.equals("P2_Shoot") && !player2_reload) {
                     player2_shoot = true;
+                }else if(name.equals("P2_SP") && !keyPressed){
+                    player1.useSuperPower(1);
+                    System.out.println("PLAYER 2 SP");
                 }
             }
         }
@@ -820,6 +836,8 @@ ParticleEmitter flame = null, flash = null, spark = null, roundspark = null, smo
         else
             info.setText("Player 2");
     }
+   
+    
 }
 
     
