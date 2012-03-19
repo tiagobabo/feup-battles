@@ -13,7 +13,6 @@ import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.shape.Box;
 import mygame.superPower.CancelSuperPower;
-import mygame.superPower.InformaticSuperPower;
 import mygame.superPower.SuperPower;
 
 /**
@@ -24,12 +23,12 @@ public class Player {
 
     private Geometry playerGeo;
     private int hitPoints = 10;
+    private int manaPoints = 10;
     private RigidBodyControl playerControl;
     private float mass = 2.0f;
     private Box playerBox;
     private String playerName;
     private Node playerNode;
-    private HitPointsBox hpBox;
     private boolean alive = true;
     private RigidBodyControl ball;
     private Keys keys;
@@ -51,16 +50,8 @@ public class Player {
         playerNode = new Node(name);
         this.sp = sp;
         playerNode.attachChild(playerGeo);
-     
-
-
     }
-    public void addHitPointBox(HitPointsBox hpb){
-        this.hpBox = hpb;
-        playerNode.attachChild(hpBox.getHpNode());
-    };
     
-
     /**
      * @return the hitPoints
      */
@@ -253,6 +244,21 @@ public class Player {
             default:
                 break;
         }
+    }
+
+    /**
+     * @return the manaPoints
+     */
+    public int getManaPoints() {
+        return manaPoints;
+    }
+
+    /**
+     * @param manaPoints the manaPoints to set
+     */
+    public void setManaPoints(int manaPoints) {
+        if(manaPoints >= 0)
+            this.manaPoints = manaPoints;
     }
     
     

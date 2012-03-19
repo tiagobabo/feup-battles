@@ -65,6 +65,8 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
     private static final Type EMITTER_TYPE = POINT_SPRITE ? Type.Point : Type.Triangle;
     HitPointsBox hp1;
     HitPointsBox hp2;
+    public static HitPointsBox mana1;
+    public static HitPointsBox mana2;
     BallPowerBox bp1;
     BallPowerBox bp2;
     BitmapText info;
@@ -354,6 +356,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         guiNode.detachAllChildren();
         initKeys();
         initHPs();
+        initManaBars();
         initPowerBar();
         initReloads();
         initInfo();
@@ -663,6 +666,23 @@ ParticleEmitter flame = null, flash = null, spark = null, roundspark = null, smo
         guiNode.attachChild(hp1.getHpNode());
         guiNode.attachChild(hp2.getHpNode());
     }
+    
+    public void initManaBars() {
+
+        Material black = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
+        black.setColor("Color", ColorRGBA.Black);
+        Material blue = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
+        blue.setColor("Color", ColorRGBA.Blue);
+        Vector3f leftPosition = new Vector3f(10, settings.getHeight() - 40, 0);
+        Vector3f rightPosition = new Vector3f(settings.getWidth() - 200 - 20, settings.getHeight() - 40, 0);
+        mana1 = new HitPointsBox("mana1b", leftPosition, blue, black);
+        mana2 = new HitPointsBox("mana2b", rightPosition, blue, black);
+
+        guiNode.attachChild(mana1.getHpNode());
+        guiNode.attachChild(mana2.getHpNode());
+    }
+    
+    
 
     private void initPowerBar() {
         Material green = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
@@ -754,6 +774,7 @@ ParticleEmitter flame = null, flash = null, spark = null, roundspark = null, smo
 
     @Override
     public void simpleRender(RenderManager rm) {
+        
     }
 
     public void collision(PhysicsCollisionEvent pce) {

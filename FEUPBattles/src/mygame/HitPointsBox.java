@@ -121,7 +121,6 @@ public class HitPointsBox {
             currentLife = currentLife * scale;
             System.out.println(currentLife);
         }
-
     }
     
     public float getCurrentLife(){
