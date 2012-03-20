@@ -396,7 +396,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         Texture heightMapImage = assetManager.loadTexture(
                 "Textures/Terrain/splat/mountains512.png");
         
-        heightmap = new ImageBasedHeightMap(ImageToAwt.convert(heightMapImage.getImage(), false, true, 0), 0.25f);
+        heightmap = new ImageBasedHeightMap(heightMapImage.getImage());
         heightmap.load();
 
         /** 3. We have prepared material and heightmap. 
@@ -769,6 +769,11 @@ ParticleEmitter flame = null, flash = null, spark = null, roundspark = null, smo
                 reloadP2.setLocalTranslation(settings.getWidth() - reloadP2.getLineWidth() - 20, settings.getHeight() - reloadP2.getLineHeight() - 20, 0); // position
             }
         }
+         if (time > 3 / speed ){
+            time = 0;
+            mana1.loseLife(-1);
+            mana2.loseLife(-1);
+         }
 
     }
 

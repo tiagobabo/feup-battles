@@ -117,13 +117,20 @@ public class HitPointsBox {
     public void loseLife(int lifeLost) {
         if (currentLife > 0) {
             float scale = 1 - 20 * lifeLost / currentLife;
-            greenHpGeometry.scale(scale, 1.0f, 1.0f);
-            currentLife = currentLife * scale;
+            if (currentLife == 200) {
+                if (scale <= 1) {
+                    greenHpGeometry.scale(scale, 1.0f, 1.0f);
+                    currentLife = currentLife * scale;
+                }
+            } else {
+                greenHpGeometry.scale(scale, 1.0f, 1.0f);
+                currentLife = currentLife * scale;
+            }
             System.out.println(currentLife);
         }
     }
-    
-    public float getCurrentLife(){
+
+    public float getCurrentLife() {
         return currentLife;
     }
 }
