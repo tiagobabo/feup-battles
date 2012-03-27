@@ -729,16 +729,16 @@ ParticleEmitter flame = null, flash = null, spark = null, roundspark = null, smo
             bp2.increasePower();
         }
         
-        if(player1.getBall() != null && player1.getBall().getPhysicsLocation().getY()<=-10.0f){
+        if(player1.getBall() != null && player1.getBall().getPhysicsLocation().getY()<=-20.0f){
             explosion( ball_geo.getLocalTranslation(),0.5f);
-            rootNode.detachChild(ball_geo);
+            //rootNode.detachChild(ball_geo);
 
             bulletAppState.getPhysicsSpace().remove(player1.getBall());
             player1.setBall(null);
             changePlayer();
         }
-        if(player2.getBall() != null && player2.getBall().getPhysicsLocation().getY()<=-10.0f){
-            explosion( ball_geo.getLocalTranslation(),0.5f);
+        if(player2.getBall() != null && player2.getBall().getPhysicsLocation().getY()<=-20.0f){
+            //explosion( ball_geo.getLocalTranslation(),0.5f);
             rootNode.detachChild(ball_geo);
 
             bulletAppState.getPhysicsSpace().remove(player2.getBall());
@@ -800,9 +800,16 @@ ParticleEmitter flame = null, flash = null, spark = null, roundspark = null, smo
         if (pce.getNodeA().getName().equals(player1.getPlayerName()) || pce.getNodeB().getName().equals(player1.getPlayerName())) {
             p = player1;
         }
-
-        if (pce.getNodeA().getName().equals(player2.getPlayerName()) || pce.getNodeB().getName().equals(player2.getPlayerName())) {
+        else if (pce.getNodeA().getName().equals(player2.getPlayerName()) || pce.getNodeB().getName().equals(player2.getPlayerName())) {
             p = player2;
+        }
+        else {
+            explosion(cannon.getLocalTranslation(),0.01f);
+            rootNode.detachChild(cannon);
+            bulletAppState.getPhysicsSpace().remove(cannon.getControl(0));
+            if(firstPlayer) player1.setBall(null);
+            else player2.setBall(null);
+            changePlayer();
         }
 
         if (p != null && cannon != null && !p.immune) {
