@@ -28,10 +28,12 @@ import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.FastMath;
 import com.jme3.math.Vector3f;
+import com.jme3.niftygui.NiftyJmeDisplay;
 import com.jme3.renderer.Camera;
 import com.jme3.renderer.queue.RenderQueue.ShadowMode;
 import com.jme3.scene.Node;
 import com.jme3.shadow.BasicShadowRenderer;
+import com.jme3.system.AppSettings;
 import com.jme3.terrain.geomipmap.TerrainLodControl;
 import com.jme3.terrain.geomipmap.TerrainQuad;
 import com.jme3.terrain.heightmap.AbstractHeightMap;
@@ -39,6 +41,12 @@ import com.jme3.terrain.heightmap.ImageBasedHeightMap;
 import com.jme3.texture.Texture;
 import com.jme3.texture.Texture.WrapMode;
 import com.jme3.util.SkyFactory;
+import de.lessvoid.nifty.Nifty;
+import de.lessvoid.nifty.builder.LayerBuilder;
+import de.lessvoid.nifty.builder.PanelBuilder;
+import de.lessvoid.nifty.builder.ScreenBuilder;
+import de.lessvoid.nifty.builder.TextBuilder;
+import de.lessvoid.nifty.controls.button.builder.ButtonBuilder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -93,11 +101,17 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
   private RigidBodyControl landscape;
   private TerrainQuad terrain;
   private Material mat_terrain;
+  static private Main app;
 
     public static void main(String[] args) {
-        Main app = new Main();
+        app = new Main();
+        AppSettings settings = new AppSettings(true);
+        settings.setResolution(640, 480);
+        app.setShowSettings(false); // splashscreen
+        app.setSettings(settings);
         app.start();
     }
+    private boolean inGame = false;
 
     private ParticleEmitter createFlame(ParticleEmitter flame) {
         flame = new ParticleEmitter("Flame", EMITTER_TYPE, 32 * COUNT_FACTOR);
@@ -264,6 +278,152 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
     @Override
     public void simpleInitApp() {
         
+        app.setDisplayFps(false);
+        app.setDisplayStatView(false);
+
+        NiftyJmeDisplay niftyDisplay = new NiftyJmeDisplay(
+                assetManager, inputManager, audioRenderer, guiViewPort);
+        Nifty nifty = niftyDisplay.getNifty();
+        guiViewPort.addProcessor(niftyDisplay);
+        flyCam.setDragToRotate(true);
+
+        nifty.loadStyleFile("nifty-default-styles.xml");
+        nifty.loadControlFile("nifty-default-controls.xml");
+
+
+        // <screen>
+        nifty.addScreen("start", new ScreenBuilder("start") {
+
+            {
+                controller(new MyStartScreen(app));
+
+
+                layer(new LayerBuilder("foreground") {
+
+                    {
+                        childLayoutVertical();
+
+                        // panel added
+                        panel(new PanelBuilder("panel_top") {
+
+                            {
+                                childLayoutCenter();
+                                alignCenter();
+                                height("25%");
+                                width("75%");
+
+                                // add text
+                                text(new TextBuilder() {
+
+                                    {
+                                        text("FEUP Battles");
+                                        //font("Interface/Fonts/Default.fnt");
+                                        height("100%");
+                                        width("100%");
+                                    }
+                                });
+
+                            }
+                        });
+
+                        panel(new PanelBuilder("panel_mid") {
+
+                            {
+                                childLayoutCenter();
+                                alignCenter();
+                                height("50%");
+                                width("75%");
+
+                                // add text
+                                text(new TextBuilder() {
+
+                                    {
+                                        text("Here goes some text describing the game and the rules and stuff. "
+                                                + "Incidentally, the text is quite long and needs to wrap at the end of lines. "
+                                                + "Here goes some text describing the game and the rules and stuff. "
+                                                + "Incidentally, the text is quite long and needs to wrap at the end of lines. "
+                                                + "Here goes some text describing the game and the rules and stuff. "
+                                                + "Incidentally, the text is quite long and needs to wrap at the end of lines. ");
+                                        font("Interface/Fonts/Default.fnt");
+                                        wrap(true);
+                                        height("100%");
+                                        width("100%");
+                                    }
+                                });
+
+                            }
+                        });
+
+                        panel(new PanelBuilder("panel_bottom") {
+
+                            {
+                                childLayoutHorizontal();
+                                alignCenter();
+                                height("25%");
+                                width("75%");
+
+                                panel(new PanelBuilder("panel_bottom_left") {
+
+                                    {
+                                        childLayoutCenter();
+                                        valignCenter();
+                                        height("50%");
+                                        width("50%");
+
+                                        // add button control
+                                        control(new ButtonBuilder("StartButton", "Start") {
+
+                                            {
+                                                alignCenter();
+                                                valignCenter();
+                                                height("50%");
+                                                width("50%");
+                                                visibleToMouse(true);
+                                                interactOnClick("startGame(hud)");
+                                            }
+                                        });
+
+                                    }
+                                });
+
+                                panel(new PanelBuilder("panel_bottom_right") {
+
+                                    {
+                                        childLayoutCenter();
+                                        valignCenter();
+                                        height("50%");
+                                        width("50%");
+
+                                        // add button control
+                                        control(new ButtonBuilder("QuitButton", "Quit") {
+
+                                            {
+                                                alignCenter();
+                                                valignCenter();
+                                                height("50%");
+                                                width("50%");
+                                                visibleToMouse(true);
+                                                interactOnClick("quitGame()");
+                                            }
+                                        });
+
+                                    }
+                                });
+                            }
+                        }); // panel added
+                    }
+                });
+
+            }
+        }.build(nifty));
+
+        nifty.gotoScreen("start");        
+        
+        
+        
+    }
+
+    public void startGame() {
         rootNode.setShadowMode(ShadowMode.Off);
         bulletAppState = new BulletAppState();
         stateManager.attach(bulletAppState);
@@ -431,7 +591,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         AudioNode back = new AudioNode(assetManager, "back.wav");
         back.setLooping(true);
         back.play();
-        
+        inGame = true;
     }
     private AnalogListener analogListener = new AnalogListener() {
 
@@ -716,7 +876,9 @@ ParticleEmitter flame = null, flash = null, spark = null, roundspark = null, smo
 
     @Override
     public void simpleUpdate(float tpf) {
-        time += tpf / speed;
+        
+        if(inGame)
+        {
 
         int i = 0;
         while (tasks.size() > 0 && tasks.get(i).isDone()) {
@@ -792,6 +954,7 @@ ParticleEmitter flame = null, flash = null, spark = null, roundspark = null, smo
          if (mana2.getCurrentMana()<mana2.getMaxMana()){
              mana2.regainMana();
          }
+        }
 
     }
 
