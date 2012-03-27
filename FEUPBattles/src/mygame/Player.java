@@ -31,7 +31,7 @@ public class Player {
     private RigidBodyControl ball;
     private Keys keys;
     private SuperPower sp;
-    private float sizeX =3;
+    private float sizeX =1;
     private float sizeY =1;
     private float sizeZ =1;
     
