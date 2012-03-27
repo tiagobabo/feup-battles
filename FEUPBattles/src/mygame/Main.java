@@ -83,6 +83,11 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
     float time = 0f;
     public ArrayList< Future<Node>> tasks = new ArrayList< Future<Node>>();
     BasicShadowRenderer bsr;
+    public float boxX = 10.f;
+    public float boxY = 10.0f;
+    public float boxZ = 2.0f;
+    public Vector3f plat1_pos = new Vector3f(15f, -20f, -140f);
+    public Vector3f plat2_pos = new Vector3f(-20f, -20f, -140f);
     
      
   private RigidBodyControl landscape;
@@ -271,8 +276,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         //cam.setDirection(new Vector3f(0.026962247, -0.3055602, -0.9517908));
 
         //Objetos básicos
-        Box b = new Box(Vector3f.ZERO, 1, 1, 1);
-        Box b2 = new Box(Vector3f.ZERO, 10, 10, 2);
+        Box b2 = new Box(Vector3f.ZERO, boxX, boxY, boxZ);
         Material mat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
         mat.setColor("Color", ColorRGBA.Blue);
         Material matp2 = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
@@ -305,16 +309,14 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
 
 
         Node platforms = new Node();
-
+        
         //Platform 1
-        Vector3f plat1_pos = new Vector3f(15f, -20f, -140f);
         Geometry plat1 = new Geometry("Plat1", b2);
         plat1.setLocalTranslation(plat1_pos);
         plat1.setMaterial(mat2);
         platforms.attachChild(plat1);
-
+        
         //Platform 2
-        Vector3f plat2_pos = new Vector3f(-20f, -20, -140f);
         Geometry plat2 = new Geometry("Plat2", b2);
         plat2.setLocalTranslation(plat2_pos);
         plat2.setMaterial(mat2);
@@ -437,14 +439,14 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
             Vector3f player1_pos = player1.getLocalTranslation();
             Vector3f player2_pos = player2.getLocalTranslation();
             if(player1.isAlive()){
-                if (name.equals("P1_Left")) {
+                if (name.equals("P1_Left") && player1.getPlayerControl().getPhysicsLocation().x > (plat2_pos.x - boxX + 1)) {
                     if(player1.getBall() != null) 
                         player1.getBall().getObjectId().applyCentralImpulse(new javax.vecmath.Vector3f(-controlForce*player1.getSwapped(), 0.0f, 0.0f));
                     else{
                         Vector3f temp = new Vector3f(player1_pos.x - velocity*player1.getSwapped(), player1_pos.y, player1_pos.z);
                         player1.setLocalTranslation(temp);
                     }
-                } else if (name.equals("P1_Right")) {
+                } else if (name.equals("P1_Right") && player1.getPlayerControl().getPhysicsLocation().x < (plat2_pos.x + boxX - 1)) {
                     if(player1.getBall() != null) 
                         player1.getBall().getObjectId().applyCentralImpulse(new javax.vecmath.Vector3f(controlForce*player1.getSwapped(), 0.0f, 0.0f));
                     else{
@@ -470,14 +472,14 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
             }
             
             if(player2.isAlive()){
-                if (name.equals("P2_Left")) {
+                if (name.equals("P2_Left") && player2.getPlayerControl().getPhysicsLocation().x > (plat1_pos.x - boxX + 1)) {
                     if(player2.getBall() != null) 
                         player2.getBall().getObjectId().applyCentralImpulse(new javax.vecmath.Vector3f(-controlForce*player2.getSwapped(), 0.0f, 0.0f));
                     else{
                         Vector3f temp = new Vector3f(player2_pos.x - velocity*player2.getSwapped(), player2_pos.y, player2_pos.z);
                         player2.setLocalTranslation(temp);
                     }
-                } else if (name.equals("P2_Right")) {
+                } else if (name.equals("P2_Right") && player2.getPlayerControl().getPhysicsLocation().x < (plat1_pos.x + boxX - 1)) {
                     if(player2.getBall() != null) 
                         player2.getBall().getObjectId().applyCentralImpulse(new javax.vecmath.Vector3f(controlForce*player2.getSwapped(), 0.0f, 0.0f));
                     else{
