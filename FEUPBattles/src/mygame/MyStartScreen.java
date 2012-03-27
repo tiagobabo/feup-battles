@@ -19,16 +19,12 @@ public class MyStartScreen extends AbstractAppState implements ScreenController 
   private Screen screen;
   private Main main;
 
-  /** custom methods */
-  public MyStartScreen() {
-    /** You custom constructor, can accept arguments */
-  }
-
-    MyStartScreen(Main app) {
+  MyStartScreen(Main app) {
         this.main = app;
     }
 
-  public void startGame(String nextScreen) {
+  public void startGame() {
+    System.out.println("ola");
     nifty.exit();
     main.startGame();
   }
