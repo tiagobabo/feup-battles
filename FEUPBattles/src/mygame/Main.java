@@ -287,140 +287,14 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         guiViewPort.addProcessor(niftyDisplay);
         flyCam.setDragToRotate(true);
 
-        nifty.loadStyleFile("nifty-default-styles.xml");
-        nifty.loadControlFile("nifty-default-controls.xml");
+        //nifty.loadStyleFile("nifty-default-styles.xml");
+        //nifty.loadControlFile("nifty-default-controls.xml");
 
-
-        // <screen>
-        nifty.addScreen("start", new ScreenBuilder("start") {
-
-            {
-                controller(new MyStartScreen(app));
-
-
-                layer(new LayerBuilder("foreground") {
-
-                    {
-                        childLayoutVertical();
-
-                        // panel added
-                        panel(new PanelBuilder("panel_top") {
-
-                            {
-                                childLayoutCenter();
-                                alignCenter();
-                                height("25%");
-                                width("75%");
-
-                                // add text
-                                text(new TextBuilder() {
-
-                                    {
-                                        text("FEUP Battles");
-                                        //font("Interface/Fonts/Default.fnt");
-                                        height("100%");
-                                        width("100%");
-                                    }
-                                });
-
-                            }
-                        });
-
-                        panel(new PanelBuilder("panel_mid") {
-
-                            {
-                                childLayoutCenter();
-                                alignCenter();
-                                height("50%");
-                                width("75%");
-
-                                // add text
-                                text(new TextBuilder() {
-
-                                    {
-                                        text("Here goes some text describing the game and the rules and stuff. "
-                                                + "Incidentally, the text is quite long and needs to wrap at the end of lines. "
-                                                + "Here goes some text describing the game and the rules and stuff. "
-                                                + "Incidentally, the text is quite long and needs to wrap at the end of lines. "
-                                                + "Here goes some text describing the game and the rules and stuff. "
-                                                + "Incidentally, the text is quite long and needs to wrap at the end of lines. ");
-                                        font("Interface/Fonts/Default.fnt");
-                                        wrap(true);
-                                        height("100%");
-                                        width("100%");
-                                    }
-                                });
-
-                            }
-                        });
-
-                        panel(new PanelBuilder("panel_bottom") {
-
-                            {
-                                childLayoutHorizontal();
-                                alignCenter();
-                                height("25%");
-                                width("75%");
-
-                                panel(new PanelBuilder("panel_bottom_left") {
-
-                                    {
-                                        childLayoutCenter();
-                                        valignCenter();
-                                        height("50%");
-                                        width("50%");
-
-                                        // add button control
-                                        control(new ButtonBuilder("StartButton", "Start") {
-
-                                            {
-                                                alignCenter();
-                                                valignCenter();
-                                                height("50%");
-                                                width("50%");
-                                                visibleToMouse(true);
-                                                interactOnClick("startGame(hud)");
-                                            }
-                                        });
-
-                                    }
-                                });
-
-                                panel(new PanelBuilder("panel_bottom_right") {
-
-                                    {
-                                        childLayoutCenter();
-                                        valignCenter();
-                                        height("50%");
-                                        width("50%");
-
-                                        // add button control
-                                        control(new ButtonBuilder("QuitButton", "Quit") {
-
-                                            {
-                                                alignCenter();
-                                                valignCenter();
-                                                height("50%");
-                                                width("50%");
-                                                visibleToMouse(true);
-                                                interactOnClick("quitGame()");
-                                            }
-                                        });
-
-                                    }
-                                });
-                            }
-                        }); // panel added
-                    }
-                });
-
-            }
-        }.build(nifty));
-
-        nifty.gotoScreen("start");        
+        nifty.fromXml("homeScreen.xml", "start", new MyStartScreen(app));
         
-        
-        
+
+        //nifty.gotoScreen("start");        
+ 
     }
 
     public void startGame() {
