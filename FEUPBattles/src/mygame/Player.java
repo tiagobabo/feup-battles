@@ -31,13 +31,17 @@ public class Player {
     private RigidBodyControl ball;
     private Keys keys;
     private SuperPower sp;
+    private float sizeX =1;
+    private float sizeY =1;
+    private float sizeZ =1;
+    
     private int swapped = 1;
     public boolean immune = false;
     
    
 
     public Player(String name, Material playerMaterial, Vector3f initialPosition, SuperPower sp) {
-        playerBox = new Box(Vector3f.ZERO, 1, 1, 1);
+        playerBox = new Box(Vector3f.ZERO, getSizeX(), getSizeY(), getSizeZ());
         playerGeo = new Geometry(name, playerBox);
         playerGeo.setLocalTranslation(initialPosition);
         playerGeo.setMaterial(playerMaterial);
@@ -232,6 +236,28 @@ public class Player {
     public boolean isSuperPowerInUse(){
         return this.sp.isInUse();
     }
-    
+
+    /**
+     * @return the sizeX
+     */
+    public float getSizeX() {
+        return sizeX;
+    }
+
+    /**
+     * @return the sizeY
+     */
+    public float getSizeY() {
+        return sizeY;
+    }
+
+
+    /**
+     * @return the sizeZ
+     */
+    public float getSizeZ() {
+        return sizeZ;
+    }
+
     
 }
