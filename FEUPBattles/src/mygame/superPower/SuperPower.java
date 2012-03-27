@@ -16,6 +16,7 @@ public abstract class SuperPower {
     protected int duration;
     public abstract void usePower( int playerNumber);
     public abstract void cancelSuperPower(int playerNumber);
+    private boolean inUse = false;
 
     /**
      * @return the manaCost
@@ -43,6 +44,20 @@ public abstract class SuperPower {
      */
     public void setDuration(int duration) {
         this.duration = duration;
+    }
+
+    /**
+     * @return the inUse
+     */
+    public boolean isInUse() {
+        return inUse;
+    }
+
+    /**
+     * @param inUse the inUse to set
+     */
+    public void setInUse(boolean inUse) {
+        this.inUse = inUse;
     }
     
 }

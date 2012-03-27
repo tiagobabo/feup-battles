@@ -267,7 +267,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         flyCam.setMoveSpeed(50);
         cam.setLocation(new Vector3f(-2.5f, 25f, -87));
         cam.lookAtDirection(new Vector3f(0f, -0.55f, -0.84f), Vector3f.UNIT_Y);
-
+        flyCam.setEnabled(false);
         //cam.setDirection(new Vector3f(0.026962247, -0.3055602, -0.9517908));
 
         //Objetos básicos
@@ -291,7 +291,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         Vector3f p1_pos = new Vector3f(-20f, -9f, -140f);
         SuperPower sp1 = new CivilSuperPower();
         player1 = new Player("player 1", mat, p1_pos, sp1);
-        Keys k = new Keys(KeyInput.KEY_F,KeyInput.KEY_H,KeyInput.KEY_SPACE,KeyInput.KEY_V);
+        Keys k = new Keys(KeyInput.KEY_A,KeyInput.KEY_D,KeyInput.KEY_LCONTROL,KeyInput.KEY_LSHIFT);
         player1.setKeys(k);
         rootNode.attachChild(player1.getPlayerNode());
 
@@ -299,7 +299,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         Vector3f p2_pos = new Vector3f(15.0f, -9f, -140f);
         SuperPower sp2 = new InformaticSuperPower();
         player2 = new Player("player 2", matp2, p2_pos, sp2);
-        Keys k1 = new Keys(KeyInput.KEY_J,KeyInput.KEY_L,KeyInput.KEY_P,KeyInput.KEY_M);
+        Keys k1 = new Keys(KeyInput.KEY_LEFT,KeyInput.KEY_RIGHT,KeyInput.KEY_RCONTROL,KeyInput.KEY_RSHIFT);
         player2.setKeys(k1);
         rootNode.attachChild(player2.getPlayerNode());
 
@@ -466,9 +466,6 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
                         Vector3f temp = new Vector3f(player1_pos.x, player1_pos.y, player1_pos.z + velocity*player1.getSwapped());
                         player1.setLocalTranslation(temp);
                     }
-                }else if (name.equals("P1_SP")){
-                    player1.useSuperPower(1);
-                    System.out.println("P1 used SP");
                 }
             }
             
@@ -553,13 +550,17 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
                 } 
             }
             if(name.equals("P1_SP") && !keyPressed){
+                if(!player1.isSuperPowerInUse()){
                     System.out.println("PLAYER 1 SP");
                     player1.useSuperPower(1);
+                }
                     
             }
             if(name.equals("P2_SP") && !keyPressed){
+                 if(!player2.isSuperPowerInUse()){
                      System.out.println("PLAYER 2 SP");
                     player2.useSuperPower(2);
+                 }
                    
                 }
         }
@@ -596,7 +597,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         
          AudioNode boom = new AudioNode(assetManager, "shoot.wav");
         boom.play();
-        // flyCam.setEnabled(false);
+       
         //ChaseCamera chaseCam = new ChaseCamera(cam, ball_geo, inputManager);
         
         return ball_phy;

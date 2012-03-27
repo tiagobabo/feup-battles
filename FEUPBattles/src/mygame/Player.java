@@ -183,6 +183,7 @@ public class Player {
         return keys.getSuperPowerKey();
     }
     public void useSuperPower(int pnum){
+        this.sp.setInUse(true);
         this.sp.usePower(pnum);
         new CancelSuperPower(sp,sp.getDuration(),pnum).start();
         
@@ -227,6 +228,9 @@ public class Player {
             default:
                 break;
         }
+    }
+    public boolean isSuperPowerInUse(){
+        return this.sp.isInUse();
     }
     
     

@@ -17,6 +17,7 @@ public class InformaticSuperPower extends SuperPower{
         duration = 3;
     }
     public void usePower(int playerNumber) {
+       
         switch(playerNumber){
             case 1: 
                 if(mygame.Main.player2.getSwapped() == 1 && mygame.Main.mana1.getCurrentMana() >= this.manaCost) {
@@ -35,8 +36,10 @@ public class InformaticSuperPower extends SuperPower{
             default:
                     break;
         }
+        
     }
     public void cancelSuperPower(int playerNumber){
+       
         switch(playerNumber){
             case 1: mygame.Main.player2.swapKeys();
                     System.out.println("Swapping p2 keys back to normal");
@@ -47,6 +50,8 @@ public class InformaticSuperPower extends SuperPower{
             default:
                     break;
         }
+        
     }
+    
     
 }
