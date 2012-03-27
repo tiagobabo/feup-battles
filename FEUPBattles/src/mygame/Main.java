@@ -91,7 +91,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
     float time = 0f;
     public ArrayList< Future<Node>> tasks = new ArrayList< Future<Node>>();
     BasicShadowRenderer bsr;
-    public float boxX = 15.0f;
+    public float boxX = 10.0f;
     public float boxY = 10.0f;
     public float boxZ = 2.0f;
     public Vector3f plat1_pos = new Vector3f(15f, -20f, -140f);
