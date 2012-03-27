@@ -22,8 +22,6 @@ import mygame.superPower.SuperPower;
 public class Player {
 
     private Geometry playerGeo;
-    private int hitPoints = 10;
-    private int manaPoints = 10;
     private RigidBodyControl playerControl;
     private float mass = 2.0f;
     private Box playerBox;
@@ -50,21 +48,6 @@ public class Player {
         playerNode = new Node(name);
         this.sp = sp;
         playerNode.attachChild(playerGeo);
-    }
-    
-    /**
-     * @return the hitPoints
-     */
-    public int getHitPoints() {
-        return hitPoints;
-    }
-
-    /**
-     * @param hitPoints the hitPoints to set
-     */
-    public void setHitPoints(int hitPoints) {
-        if(hitPoints >= 0)
-            this.hitPoints = hitPoints;
     }
 
     /**
@@ -244,21 +227,6 @@ public class Player {
             default:
                 break;
         }
-    }
-
-    /**
-     * @return the manaPoints
-     */
-    public int getManaPoints() {
-        return manaPoints;
-    }
-
-    /**
-     * @param manaPoints the manaPoints to set
-     */
-    public void setManaPoints(int manaPoints) {
-        if(manaPoints >= 0)
-            this.manaPoints = manaPoints;
     }
     
     

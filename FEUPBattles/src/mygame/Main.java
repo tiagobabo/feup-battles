@@ -65,8 +65,8 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
     private static final Type EMITTER_TYPE = POINT_SPRITE ? Type.Point : Type.Triangle;
     HitPointsBox hp1;
     HitPointsBox hp2;
-    public static HitPointsBox mana1;
-    public static HitPointsBox mana2;
+    public static ManaBox mana1;
+    public static ManaBox mana2;
     BallPowerBox bp1;
     BallPowerBox bp2;
     BitmapText info;
@@ -675,11 +675,11 @@ ParticleEmitter flame = null, flash = null, spark = null, roundspark = null, smo
         blue.setColor("Color", ColorRGBA.Blue);
         Vector3f leftPosition = new Vector3f(10, settings.getHeight() - 40, 0);
         Vector3f rightPosition = new Vector3f(settings.getWidth() - 200 - 20, settings.getHeight() - 40, 0);
-        mana1 = new HitPointsBox("mana1b", leftPosition, blue, black);
-        mana2 = new HitPointsBox("mana2b", rightPosition, blue, black);
+        mana1 = new ManaBox("mana1b", leftPosition, blue, black);
+        mana2 = new ManaBox("mana2b", rightPosition, blue, black);
 
-        guiNode.attachChild(mana1.getHpNode());
-        guiNode.attachChild(mana2.getHpNode());
+        guiNode.attachChild(mana1.getManaNode());
+        guiNode.attachChild(mana2.getManaNode());
     }
     
     
@@ -769,10 +769,13 @@ ParticleEmitter flame = null, flash = null, spark = null, roundspark = null, smo
                 reloadP2.setLocalTranslation(settings.getWidth() - reloadP2.getLineWidth() - 20, settings.getHeight() - reloadP2.getLineHeight() - 20, 0); // position
             }
         }
-         if (time > 3 / speed ){
-            time = 0;
-            mana1.loseLife(-1);
-            mana2.loseLife(-1);
+        
+        
+         if (mana1.getCurrentMana()<mana1.getMaxMana()){
+            mana1.regainMana();
+         }
+         if (mana2.getCurrentMana()<mana2.getMaxMana()){
+             mana2.regainMana();
          }
 
     }
@@ -814,19 +817,20 @@ ParticleEmitter flame = null, flash = null, spark = null, roundspark = null, smo
                     changePlayer();
                 }
                 
-                p.setHitPoints(p.getHitPoints() - 1);
                 if (p.equals(player1)) {
                     hp1.loseLife(1);
-                    if(player1.getHitPoints()==0){
+                    System.out.println(p.getPlayerName() + " GOT HIT!\n HITPOINTS LEFT:" + hp1.getCurrentLife());
+                    if(hp1.getCurrentLife()==0){
                         death(player1);
                     }
                 } else {
                     hp2.loseLife(1);
-                    if(player2.getHitPoints()==0){
+                    System.out.println(p.getPlayerName() + " GOT HIT!\n HITPOINTS LEFT:" + hp2.getCurrentLife());
+                    if(hp1.getCurrentLife()==0){
                         death(player2);
                     }
                 }
-                System.out.println(p.getPlayerName() + " GOT HIT!\n HITPOINTS LEFT:" + p.getHitPoints());
+                
                 explosion(cannon.getLocalTranslation(),0.5f);
                 rootNode.detachChild(cannon);
 
