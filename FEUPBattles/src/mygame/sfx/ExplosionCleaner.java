@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package mygame;
+package mygame.sfx;
 
 import com.jme3.scene.Node;
 import java.util.concurrent.Callable;
@@ -13,7 +13,7 @@ import java.util.logging.Logger;
  *
  * @author helder
  */
-class ExplosionCleaner
+public class ExplosionCleaner
     implements Callable<Node>
 {
     Node clean;
