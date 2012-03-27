@@ -775,9 +775,8 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
             }
 
             if (player1.getBall() != null && player1.getBall().getPhysicsLocation().getY() <= -20.0f) {
-                explosion(ball_geo.getLocalTranslation(), 0.5f);
-                //rootNode.detachChild(ball_geo);
-
+                //explosion(ball_geo.getLocalTranslation(), 0.5f);
+                rootNode.detachChild(ball_geo);
                 bulletAppState.getPhysicsSpace().remove(player1.getBall());
                 player1.setBall(null);
                 changePlayer();
@@ -785,7 +784,6 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
             if (player2.getBall() != null && player2.getBall().getPhysicsLocation().getY() <= -20.0f) {
                 //explosion( ball_geo.getLocalTranslation(),0.5f);
                 rootNode.detachChild(ball_geo);
-
                 bulletAppState.getPhysicsSpace().remove(player2.getBall());
                 player2.setBall(null);
                 changePlayer();
