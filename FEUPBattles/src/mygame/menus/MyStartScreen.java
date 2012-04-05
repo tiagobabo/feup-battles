@@ -1,4 +1,4 @@
-package mygame;
+package mygame.menus;
 
 import com.jme3.app.Application;
 import com.jme3.app.state.AbstractAppState;
@@ -8,6 +8,7 @@ import de.lessvoid.nifty.elements.Element;
 import de.lessvoid.nifty.elements.render.TextRenderer;
 import de.lessvoid.nifty.screen.Screen;
 import de.lessvoid.nifty.screen.ScreenController;
+import mygame.Main;
 
 /**
  *
@@ -19,7 +20,7 @@ public class MyStartScreen extends AbstractAppState implements ScreenController 
   private Screen screen;
   private Main main;
 
-  MyStartScreen(Main app) {
+  public MyStartScreen(Main app) {
         this.main = app;
     }
 
