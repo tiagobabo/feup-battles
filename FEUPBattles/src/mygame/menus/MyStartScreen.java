@@ -28,8 +28,13 @@ public class MyStartScreen extends AbstractAppState implements ScreenController 
     nifty.exit();
     main.startGame();
   }
+  
+  public void go(String screen) { 
+    nifty.gotoScreen(screen);
+  }
 
   public void quitGame() {
+    main.stop();
     app.stop();
   }
 
