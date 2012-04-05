@@ -24,8 +24,7 @@ public class MyStartScreen extends AbstractAppState implements ScreenController 
         this.main = app;
     }
 
-  public void startGame() {
-    System.out.println("ola");
+  public void startGame() { 
     nifty.exit();
     main.startGame();
   }

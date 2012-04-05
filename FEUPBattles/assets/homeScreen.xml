@@ -3,7 +3,7 @@
        xsi:schemaLocation="http://nifty-gui.sourceforge.net/nifty.xsd http://nifty-gui.sourceforge.net/nifty.xsd">
   <useStyles filename="nifty-default-styles.xml" />
   <useControls filename="nifty-default-controls.xml" />
-  <screen id="start" controller="mygame.MyStartScreen">
+  <screen id="start" controller="mygame.menus.MyStartScreen">
  
     <layer id="foreground" childLayout="vertical">
       <panel id="panel_top" height="25%" width="75%" align="center" childLayout="center">  

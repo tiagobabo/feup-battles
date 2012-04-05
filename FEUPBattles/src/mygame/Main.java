@@ -1,8 +1,6 @@
 package mygame;
 
 import mygame.menus.MyStartScreen;
-import mygame.sfx.ExplosionCleaner;
-import com.bulletphysics.collision.shapes.CollisionShape;
 import com.jme3.bullet.BulletAppState;
 import com.jme3.bullet.collision.PhysicsCollisionEvent;
 import com.jme3.bullet.collision.PhysicsCollisionListener;
@@ -19,16 +17,12 @@ import com.jme3.scene.shape.Sphere;
 import com.jme3.scene.shape.Sphere.TextureMode;
 import com.jme3.app.SimpleApplication;
 import com.jme3.audio.AudioNode;
-import com.jme3.bullet.util.CollisionShapeFactory;
 import com.jme3.effect.ParticleEmitter;
 import com.jme3.effect.ParticleMesh.Type;
-import com.jme3.effect.shapes.EmitterSphereShape;
 import com.jme3.font.BitmapText;
-import com.jme3.input.ChaseCamera;
 import com.jme3.light.AmbientLight;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
-import com.jme3.math.FastMath;
 import com.jme3.math.Vector3f;
 import com.jme3.niftygui.NiftyJmeDisplay;
 import com.jme3.renderer.Camera;
@@ -44,11 +38,6 @@ import com.jme3.texture.Texture;
 import com.jme3.texture.Texture.WrapMode;
 import com.jme3.util.SkyFactory;
 import de.lessvoid.nifty.Nifty;
-import de.lessvoid.nifty.builder.LayerBuilder;
-import de.lessvoid.nifty.builder.PanelBuilder;
-import de.lessvoid.nifty.builder.ScreenBuilder;
-import de.lessvoid.nifty.builder.TextBuilder;
-import de.lessvoid.nifty.controls.button.builder.ButtonBuilder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -303,7 +292,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
 
         AudioNode back = new AudioNode(assetManager, "back.wav");
         back.setLooping(true);
-        back.play();
+        //back.play();
         inGame = true;
     }
     private AnalogListener analogListener = new AnalogListener() {
