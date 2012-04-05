@@ -158,21 +158,133 @@ visibleToMouse="true">
         <layer id="foreground" childLayout="vertical">
             <panel id="panel_bottom" height="40%" width="75%" align="center" childLayout="horizontal"> 
             </panel>
-         <panel id = "loadingpanel" childLayout="vertical" align="center" valign="center" height="10%" width="70%">
-             <control id="loadingtext" name="label" align="center" 
+            <panel id = "loadingpanel" childLayout="vertical" align="center" valign="center" height="10%" width="70%">
+                <control id="loadingtext" name="label" align="center" 
                          text="                                                                              " font="Interface/Fonts/Default.fnt"/>
-            <control id ="loadingbar" name="loadingbar" align="center" valign="center" width="100%" height="100%" />
-         </panel>
-         </layer>
+                <control id ="loadingbar" name="loadingbar" align="center" valign="center" width="100%" height="100%" />
+            </panel>
+        </layer>
     </screen>
     
-     <controlDefinition name = "loadingbar" controller = "mygame.menus.MyStartScreen">
+    <controlDefinition name = "loadingbar" controller = "mygame.menus.MyStartScreen">
         <image filename="border.png" childLayout="absolute" 
                imageMode="resize:15,2,15,15,15,2,15,2,15,2,15,15">
             <image id="progressbar" x="0" y="0" filename="inner.png" width="32px" height="100%"
                    imageMode="resize:15,2,15,15,15,2,15,2,15,2,15,15" />
         </image>
     </controlDefinition>
+
+    <screen id="startScreen" controller="mygame.menus.MyStartScreen">
+        <layer id="background" childLayout="center" backgroundColor="#000f">
+            <effect>
+                <onEndScreen name="fade" startColor="#ffff" endColor="#0000" length="500" startDelay="1500" post="false" inherit="true" alternateEnable="exit"/>
+            </effect>
+            <panel id="panel" childLayout="center" backgroundImage="intro-background.png" width="100%" height="100%">
+                <effect>
+                    <onStartScreen name="fade" startColor="#fff0" endColor="#ffff" length="1000" post="false"/> 
+                </effect>
+                <panel align="center" valign="center" childLayout="vertical">
+                    <effect>
+                        <onEndScreen name="fade" startColor="#ffff" endColor="#0000" length="500" startDelay="1500" post="false" inherit="true"/>
+                    </effect>
+                    <image align="center" valign="center" filename="intro-quote.png">
+                        <effect>
+                            <onStartScreen name="fade" startColor="#0000" endColor="#000f" length="500" startDelay="1500" post="false"/>
+                        </effect>
+                    </image> 
+                    <image x="240px" y="400px" filename="intro-logo.png" align="center">
+                        <effect>
+                            <onStartScreen name="move" timeType="exp" factor="3.5" direction="top" mode="in" length="500" startDelay="3000" />
+                            <onEndScreen name="imageSize" startSize="1.0" endSize="2.0" length="1000" startDelay="2500" alternateDisable="exit" />
+                        </effect>
+                    </image>
+                </panel>
+            </panel>
+        </layer>
     
+        <layer id="background2" childLayout="center">
+            <effect>
+                <onStartScreen name="imageSize" startSize="2.0" endSize="1.0" length="250" startDelay="6000" />
+                <onStartScreen name="fade" start="#0" end="#f" length="250" startDelay="6000" />
+            </effect>
+            <image filename="background.png"></image>
+        </layer>
+        
+        <layer id="foreground" childLayout="vertical">
+            <effect>
+                <onStartScreen name="fade" start="#0" end="#f" length="250" startDelay="6000" />
+            </effect>
+            <panel id="panel_top" height="25%" width="75%" align="center" childLayout="center">  
+                <text text="FEUP Battles" font="Interface/Fonts/Default.fnt" width="100%" height="100%" />
+              
+                <effect>
+                    <onStartScreen name="fade" start="#0" end="#f" length="250" startDelay="6000" />
+                </effect>
+            </panel>
+            
+            <panel id="panel_mid" height="10%" width="75%" align="center" childLayout="center">     
+                
+                <effect>
+                    <onStartScreen name="fade" start="#0" end="#f" length="250" startDelay="6000" />
+                </effect>
+                <control name="button" label="New Game" id="StartButton" align="center" valign="center" 
+visibleToMouse="true"> 
+                   
+                    <effect>
+                        <onStartScreen name="fade" start="#0" end="#f" length="250" startDelay="6000" />
+                    </effect>
+                    <interact onClick="go(start_game)" />
+                </control>
+            </panel>
+            
+            <panel id="panel_mid" height="10%" width="75%" align="center" childLayout="center"> 
+                
+                <effect>
+                    <onStartScreen name="fade" start="#0" end="#f" length="250" startDelay="6000" />
+                </effect>
+                <control name="button" label="How to Play" id="HPButton" align="center" valign="center" 
+visibleToMouse="true"> 
+                   
+                    <effect>
+                        <onStartScreen name="fade" start="#0" end="#f" length="250" startDelay="6000" />
+                    </effect>
+                    <interact onClick="go(hp)" />
+                </control>
+            </panel>
+            
+            <panel id="panel_mid" height="10%" width="75%" align="center" childLayout="center">
+               
+                <effect>
+                    <onStartScreen name="fade" start="#0" end="#f" length="250" startDelay="6000" />
+                </effect>
+                <control name="button" label="About" id="AboutButton" align="center" valign="center" 
+visibleToMouse="true"> 
+                   
+                    <effect>
+                        <onStartScreen name="fade" start="#0" end="#f" length="250" startDelay="6000" />
+                    </effect>
+                    <interact onClick="go(about)" />
+                </control>
+            </panel>
+           
+            <panel id="panel_mid" height="10%" width="75%" align="center" childLayout="center">    
+                
+                <effect>
+                    <onStartScreen name="fade" start="#0" end="#f" length="250" startDelay="6000" />
+                </effect>
+                <control name="button" label="Quit" id="QuitButton" align="center" valign="center" 
+visibleToMouse="true" > 
+                   
+                    <effect>
+                        <onStartScreen name="fade" start="#0" end="#f" length="250" startDelay="6000" />
+                    </effect>
+                    <interact onClick="quitGame()"/>
+                </control>
+            </panel>
+            
+        </layer>
+        
+        
+    </screen>
 
 </nifty>

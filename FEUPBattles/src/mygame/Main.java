@@ -126,7 +126,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         //nifty.loadStyleFile("nifty-default-styles.xml");
         //nifty.loadControlFile("nifty-default-controls.xml");
         
-        nifty.fromXml("homeScreen.xml", "start", new MyStartScreen(app));
+        nifty.fromXml("homeScreen.xml", "startScreen", new MyStartScreen(app));
         
         
     }
