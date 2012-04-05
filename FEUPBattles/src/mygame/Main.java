@@ -38,8 +38,12 @@ import com.jme3.texture.Texture;
 import com.jme3.texture.Texture.WrapMode;
 import com.jme3.util.SkyFactory;
 import de.lessvoid.nifty.Nifty;
+import de.lessvoid.nifty.elements.Element;
+import de.lessvoid.nifty.elements.render.TextRenderer;
+import de.lessvoid.nifty.tools.SizeValue;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -89,6 +93,8 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
     private TerrainQuad terrain;
     private Material mat_terrain;
     static private Main app;
+    private Element progressBarElement;
+    private Nifty nifty;
 
     public static void main(String[] args) {
         app = new Main();
@@ -99,6 +105,8 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         app.start();
     }
     private boolean inGame = false;
+    private TextRenderer textRenderer;
+    public int counter = 0;
 
 
    
@@ -111,19 +119,34 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
 
         NiftyJmeDisplay niftyDisplay = new NiftyJmeDisplay(
                 assetManager, inputManager, audioRenderer, guiViewPort);
-        Nifty nifty = niftyDisplay.getNifty();
+        nifty = niftyDisplay.getNifty();
         guiViewPort.addProcessor(niftyDisplay);
         flyCam.setDragToRotate(true);
 
         //nifty.loadStyleFile("nifty-default-styles.xml");
         //nifty.loadControlFile("nifty-default-controls.xml");
-
+        
         nifty.fromXml("homeScreen.xml", "start", new MyStartScreen(app));
         
-
+        
     }
-
-    public void startGame() {
+    
+     public void setProgress(final float progress, String loadingText) {
+        final int MIN_WIDTH = 32;
+        int pixelWidth = (int) (MIN_WIDTH + (progressBarElement.getParent().getWidth() - MIN_WIDTH) * progress);
+        progressBarElement.setConstraintWidth(new SizeValue(pixelWidth + "px"));
+        progressBarElement.getParent().layoutElements();
+        textRenderer.setText(loadingText);
+        
+    }
+   public void startGame(int counter)
+   {
+        nifty.gotoScreen("loading");
+        Element element = nifty.getScreen("loading").findElementByName("loadingtext"); 
+        textRenderer = element.getRenderer(TextRenderer.class);
+        progressBarElement = nifty.getScreen("loading").findElementByName("progressbar"); 
+       if(counter == 1)
+       {
         rootNode.setShadowMode(ShadowMode.Off);
         bulletAppState = new BulletAppState();
         stateManager.attach(bulletAppState);
@@ -134,15 +157,21 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         cam.lookAtDirection(new Vector3f(0f, -0.55f, -0.84f), Vector3f.UNIT_Y);
         flyCam.setEnabled(false);
         //cam.setDirection(new Vector3f(0.026962247, -0.3055602, -0.9517908));
-
+        setProgress(0.2f, "Loading objects and materials...");
+       }
+       else if(counter == 2)
+       {
+       
         //Objetos básicos
         Box b2 = new Box(Vector3f.ZERO, boxX, boxY, boxZ);
+       
         Material mat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
         mat.setColor("Color", ColorRGBA.Blue);
         Material matp2 = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
         matp2.setColor("Color", ColorRGBA.Blue);
-
-
+        
+        
+        
         Material mat2 = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md");
         mat2.setBoolean("m_UseMaterialColors", true);
         mat2.setColor("m_Ambient", ColorRGBA.White);
@@ -151,6 +180,10 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         mat2.setFloat("m_Shininess", 12);
         mat2.setTexture("DiffuseMap", assetManager.loadTexture("parede.jpg"));
         mat2.setTexture("NormalMap", assetManager.loadTexture("parede.jpg"));
+        
+        
+        //setProgress(0.4f, "Loading players...");
+        
         //Player 1
         Vector3f p1_pos = new Vector3f(-20f, -9f, -140f);
         SuperPower sp1 = new CivilSuperPower();
@@ -179,12 +212,13 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         platforms.attachChild(plat1);
 
         //Platform 2
-        Geometry plat2 = new Geometry("Plat2", b2);
+       Geometry plat2 = new Geometry("Plat2", b2);
         plat2.setLocalTranslation(plat2_pos);
         plat2.setMaterial(mat2);
         platforms.attachChild(plat2);
         rootNode.attachChild(platforms);
-
+        
+      
         //Fisica dos objetos
         RigidBodyControl plat1_rb = new RigidBodyControl(0.0f);
         RigidBodyControl plat2_rb = new RigidBodyControl(0.0f);
@@ -205,7 +239,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         bulletAppState.getPhysicsSpace().add(plat2_rb);
         bulletAppState.getPhysicsSpace().addCollisionListener(this);
         //bulletAppState.getPhysicsSpace().enableDebug(assetManager);
-
+           
         //sombras
         bsr = new BasicShadowRenderer(assetManager, 1024);
         bsr.setDirection(new Vector3f(-1, -10, -1).normalizeLocal()); // light direction
@@ -216,15 +250,11 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         rootNode.addLight(al);
 
         platforms.setShadowMode(ShadowMode.Receive);
-
-        guiNode.detachAllChildren();
-        initKeys();
-        initHPs();
-        initManaBars();
-        initPowerBar();
-        initReloads();
-        initInfo();
-
+        setProgress(0.5f, "Loading landscapes and sky...");
+       }
+       
+       else if(counter == 3)
+       {
 
         /** 1. Create terrain material and load four textures into it. */
         mat_terrain = new Material(assetManager,
@@ -293,8 +323,24 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         AudioNode back = new AudioNode(assetManager, "back.wav");
         back.setLooping(true);
         //back.play();
-        inGame = true;
+         setProgress(0.90f, "Loading players...");
+       }
+        else if(counter == 4 )
+       {
+        guiNode.detachAllChildren();
+        initKeys();
+        initHPs();
+        initManaBars();
+        initPowerBar();
+        initReloads();
+        initInfo();
+         inGame = true;
+        nifty.exit();
+       
+       }
+       
     }
+           
     private AnalogListener analogListener = new AnalogListener() {
 
         public void onAnalog(String name, float value, float tpf) {
@@ -597,7 +643,13 @@ ParticleEmitter flame = null, flash = null, spark = null, roundspark = null, smo
 
     @Override
     public void simpleUpdate(float tpf) {
-
+        
+        
+        if(counter > 0 && counter < 5)
+        {
+            startGame(counter);
+            counter++;
+        }
 
         if (inGame) {
 
