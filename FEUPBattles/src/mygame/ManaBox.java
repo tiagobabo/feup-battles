@@ -24,7 +24,7 @@ public class ManaBox {
     private Node manaNode;
     private float currentMana = 200.0f;
     private float maxMana = 200.0f;
-    float increase = 0.05f;
+    float increase = 0.005f;
     
     public ManaBox(String name, Vector3f position, Material green, Material black) {
         manaNode = new Node("hpbNode");
