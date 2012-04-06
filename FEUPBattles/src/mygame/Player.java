@@ -5,12 +5,14 @@
 package mygame;
 
 
+import com.jme3.asset.AssetManager;
 import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.material.Material;
 
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
+import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Box;
 import mygame.superPower.*;
 
@@ -21,7 +23,7 @@ import mygame.superPower.*;
  */
 public class Player {
 
-    private Geometry playerGeo;
+    private Spatial playerGeo;
     private RigidBodyControl playerControl;
     private float mass = 2.0f;
     private Box playerBox;
@@ -42,11 +44,13 @@ public class Player {
     
    
 
-    public Player(String name, Material playerMaterial, Vector3f initialPosition, ESuperPower sp) {
-        playerBox = new Box(Vector3f.ZERO, getSizeX(), getSizeY(), getSizeZ());
-        playerGeo = new Geometry(name, playerBox);
+    public Player(String name, Material playerMaterial, Vector3f initialPosition, ESuperPower sp, AssetManager assetManager, float rot) {
+       
+        playerGeo = assetManager.loadModel("m1 abrams.j3o");
         playerGeo.setLocalTranslation(initialPosition);
-        playerGeo.setMaterial(playerMaterial);
+        playerGeo.rotate(0.0f, rot, 0.0f);
+          playerGeo.scale(1.5f);
+        //playerGeo.setMaterial(playerMaterial);
         playerControl = new RigidBodyControl(mass);
         playerGeo.addControl(playerControl);
         playerControl.setKinematic(true);
@@ -75,7 +79,7 @@ public class Player {
     /**
      * @return the playerGeo
      */
-    public Geometry getPlayerGeo() {
+    public Spatial getPlayerGeo() {
         return playerGeo;
     }
 

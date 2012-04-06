@@ -21,6 +21,7 @@ import com.jme3.effect.ParticleEmitter;
 import com.jme3.effect.ParticleMesh.Type;
 import com.jme3.font.BitmapText;
 import com.jme3.light.AmbientLight;
+import com.jme3.light.DirectionalLight;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
@@ -190,7 +191,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         //Player 1
         Vector3f p1_pos = new Vector3f(-20f, -9f, -140f);
         SuperPower sp1 = new CivilSuperPower();
-        player1 = new Player("player 1", mat, p1_pos, p1Selected);
+        player1 = new Player("player 1", mat, p1_pos, p1Selected, assetManager, 1.57f);
         Keys k = new Keys(KeyInput.KEY_A, KeyInput.KEY_D, KeyInput.KEY_LCONTROL, KeyInput.KEY_LSHIFT);
         player1.setKeys(k);
         rootNode.attachChild(player1.getPlayerNode());
@@ -198,7 +199,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         //Player 2
         Vector3f p2_pos = new Vector3f(15.0f, -9f, -140f);
         SuperPower sp2 = new InformaticSuperPower();
-        player2 = new Player("player 2", matp2, p2_pos, p2Selected);
+        player2 = new Player("player 2", matp2, p2_pos, p2Selected, assetManager, -1.57f);
 
         Keys k1 = new Keys(KeyInput.KEY_LEFT,KeyInput.KEY_RIGHT,KeyInput.KEY_RMENU,KeyInput.KEY_RSHIFT);
 
@@ -326,7 +327,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         AudioNode back = new AudioNode(assetManager, "back.wav");
         back.setLooping(true);
         //back.play();
-         setProgress(0.90f, "Loading players...");
+         setProgress(0.90f, "Loading sun and screen info...");
        }
         else if(counter == 4 )
        {
@@ -340,7 +341,10 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         initHudImgs();
          inGame = true;
         nifty.exit();
-       
+        DirectionalLight sun = new DirectionalLight();
+        sun.setColor(ColorRGBA.White);
+        sun.setDirection(new Vector3f(-.5f,-.5f,-.5f).normalizeLocal());
+        rootNode.addLight(sun);
        }
        
     }
@@ -492,7 +496,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
     };
     Geometry ball_geo = null;
 
-    private RigidBodyControl makeBall(float power, Geometry geom, int d) {
+    private RigidBodyControl makeBall(float power, Spatial geom, int d) {
 
         Sphere sphere = new Sphere(32, 32, 0.4f, true, false);
         sphere.setTextureMode(TextureMode.Projected);
@@ -512,7 +516,10 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         rootNode.attachChild(ball_geo);
 
         Vector3f v = geom.getLocalTranslation();
-        ball_geo.setLocalTranslation(new Vector3f(v.x, v.y + 1.5f, v.z));
+        if(d == 1)
+            ball_geo.setLocalTranslation(new Vector3f(v.x+4.5f, v.y + 2.2f, v.z));
+        else
+            ball_geo.setLocalTranslation(new Vector3f(v.x-4.5f, v.y + 2.2f, v.z));
 
         RigidBodyControl ball_phy = new RigidBodyControl(1f);
 
