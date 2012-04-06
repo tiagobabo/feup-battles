@@ -710,6 +710,7 @@ ParticleEmitter flame = null, flash = null, spark = null, roundspark = null, smo
                 rootNode.detachChild(ball_geo);
                 bulletAppState.getPhysicsSpace().remove(player1.getBall());
                 player1.setBall(null);
+                bp1.resetPower();
                 changePlayer();
             }
             if (player2.getBall() != null && player2.getBall().getPhysicsLocation().getY() <= -20.0f) {
@@ -717,6 +718,7 @@ ParticleEmitter flame = null, flash = null, spark = null, roundspark = null, smo
                 rootNode.detachChild(ball_geo);
                 bulletAppState.getPhysicsSpace().remove(player2.getBall());
                 player2.setBall(null);
+                bp2.resetPower();
                 changePlayer();
             }
 
