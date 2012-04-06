@@ -132,11 +132,11 @@ visibleToMouse="true">
                 
             </panel>
             
-             <panel id="panel_mid" height="40%" width="75%" align="center" childLayout="horizontal">   
+             <panel id="panel_mid" height="30%" width="75%" align="center" childLayout="horizontal">   
               <panel id="panel_mid" height="100%" width="50%" align="left" childLayout="vertical"> 
                     <text text="Informática" align= "center" font="Interface/Fonts/Default.fnt"  height="10%"/>
                     <text text="Poder Especial - Trocar Teclas" align= "center" font="Interface/Fonts/Default.fnt" height="10%" />
-                    <text text="Apos a destruicao do mundo,"  font="Interface/Fonts/Default.fnt" height="10%" wrap ="true"align= "center"/>
+                    <text text="Apos a destruicao do mundo,"  font="Interface/Fonts/Default.fnt" height="10%" wrap ="true" align= "center"/>
                     <text text="os informaticos continuam a ter "  font="Interface/Fonts/Default.fnt"  height="10%" align= "center"/>
                     <text text="uma posicao de poder e "  font="Interface/Fonts/Default.fnt"  height="10%" align= "center"/>
                     <text text="chegaram a esta competicao " font="Interface/Fonts/Default.fnt"  height="10%" align= "center"/>
@@ -150,22 +150,24 @@ visibleToMouse="true">
                     <text text="os informaticos continuam a ter "  font="Interface/Fonts/Default.fnt"  height="10%" align= "center"/>
                     <text text="uma posicao de poder e chegaram "  font="Interface/Fonts/Default.fnt"  height="10%" align= "center"/>
                     <text text="a esta competicao com uma maquina " font="Interface/Fonts/Default.fnt"  height="10%" align= "center"/>
-                    <text text="que lanca a confusao nos seus " font="Interface/Fonts/Default.fnt"  height="10%"align= "center" />
+                    <text text="que lanca a confusao nos seus " font="Interface/Fonts/Default.fnt"  height="10%" align= "center" />
                     <text text="adversarios" font="Interface/Fonts/Default.fnt"  height="10%" align= "center" />
 
                </panel>
              </panel>
               
-             <panel id="panel_mid" height="10%" width="75%" align="center" childLayout="vertical">   
              
-                <panel id="panel_mid"  heigth="50%" align="center" childLayout="center">       
+             
+                <panel id="panel_mid"  heigth="0%" align="center" childLayout="center">       
                     <control name="button" label="Start" id="StartButton" align="right" valign="center" 
     visibleToMouse="true"> 
                         <interact onClick="startGame()" />
                     </control>
                 </panel>
                 
-                <panel id="panel_mid"  heigth="50%" align="center" childLayout="center">       
+                <panel id="dummy" height="5%"></panel>
+                
+                <panel id="panel_mid"  heigth="0%" align="center" childLayout="center">       
                      <control name="button" label="Back" id="BackButton" align="left"  valign="center" 
     visibleToMouse="true"> 
                         <interact onClick="go(start)" />
@@ -173,7 +175,7 @@ visibleToMouse="true">
                 </panel>
                 
                 
-            </panel>
+           
             
            
 
