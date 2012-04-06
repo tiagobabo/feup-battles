@@ -108,11 +108,8 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
     private boolean inGame = false;
     private TextRenderer textRenderer;
     public int counter = 0;
-
     public ESuperPower p1Selected = ESuperPower.None;
     public ESuperPower p2Selected = ESuperPower.None;
-
-   
 
     @Override
     public void simpleInitApp() {
@@ -128,222 +125,213 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
 
         //nifty.loadStyleFile("nifty-default-styles.xml");
         //nifty.loadControlFile("nifty-default-controls.xml");
-        
+
         nifty.fromXml("homeScreen.xml", "startScreen", new MyStartScreen(app));
-        
-        
+
+
     }
-    
-     public void setProgress(final float progress, String loadingText) {
+
+    public void setProgress(final float progress, String loadingText) {
         final int MIN_WIDTH = 32;
         int pixelWidth = (int) (MIN_WIDTH + (progressBarElement.getParent().getWidth() - MIN_WIDTH) * progress);
         progressBarElement.setConstraintWidth(new SizeValue(pixelWidth + "px"));
         progressBarElement.getParent().layoutElements();
         textRenderer.setText(loadingText);
-        
+
     }
-   public void startGame(int counter)
-   {
+
+    public void startGame(int counter) {
         nifty.gotoScreen("loading");
-        Element element = nifty.getScreen("loading").findElementByName("loadingtext"); 
+        Element element = nifty.getScreen("loading").findElementByName("loadingtext");
         textRenderer = element.getRenderer(TextRenderer.class);
-        progressBarElement = nifty.getScreen("loading").findElementByName("progressbar"); 
-       if(counter == 1)
-       {
-        rootNode.setShadowMode(ShadowMode.Off);
-        bulletAppState = new BulletAppState();
-        stateManager.attach(bulletAppState);
-        //bulletAppState.getPhysicsSpace().setGravity(new Vector3f(0f, -1f, 0f));
-        //bulletAppState.getPhysicsSpace().setAccuracy(0.005f);
-        flyCam.setMoveSpeed(50);
-        cam.setLocation(new Vector3f(-2.5f, 25f, -87));
-        cam.lookAtDirection(new Vector3f(0f, -0.55f, -0.84f), Vector3f.UNIT_Y);
-        flyCam.setEnabled(false);
-        //cam.setDirection(new Vector3f(0.026962247, -0.3055602, -0.9517908));
-        setProgress(0.2f, "Loading objects and materials...");
-       }
-       else if(counter == 2)
-       {
-       
-        //Objetos básicos
-        Box b2 = new Box(Vector3f.ZERO, boxX, boxY, boxZ);
-       
-        Material mat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
-        mat.setColor("Color", ColorRGBA.Blue);
-        Material matp2 = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
-        matp2.setColor("Color", ColorRGBA.Blue);
-        
-        
-        
-        Material mat2 = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md");
-        mat2.setBoolean("m_UseMaterialColors", true);
-        mat2.setColor("m_Ambient", ColorRGBA.White);
-        mat2.setColor("m_Diffuse", ColorRGBA.White);
-        mat2.setColor("m_Specular", ColorRGBA.White);
-        mat2.setFloat("m_Shininess", 12);
-        mat2.setTexture("DiffuseMap", assetManager.loadTexture("parede.jpg"));
-        mat2.setTexture("NormalMap", assetManager.loadTexture("parede.jpg"));
-        
-        
-        //setProgress(0.4f, "Loading players...");
-        
-        //Player 1
-        Vector3f p1_pos = new Vector3f(-20f, -9f, -140f);
-        SuperPower sp1 = new CivilSuperPower();
-        player1 = new Player("player 1", mat, p1_pos, p1Selected);
-        Keys k = new Keys(KeyInput.KEY_A, KeyInput.KEY_D, KeyInput.KEY_LCONTROL, KeyInput.KEY_LSHIFT);
-        player1.setKeys(k);
-        rootNode.attachChild(player1.getPlayerNode());
+        progressBarElement = nifty.getScreen("loading").findElementByName("progressbar");
+        if (counter == 1) {
+            rootNode.setShadowMode(ShadowMode.Off);
+            bulletAppState = new BulletAppState();
+            stateManager.attach(bulletAppState);
+            //bulletAppState.getPhysicsSpace().setGravity(new Vector3f(0f, -1f, 0f));
+            //bulletAppState.getPhysicsSpace().setAccuracy(0.005f);
+            flyCam.setMoveSpeed(50);
+            cam.setLocation(new Vector3f(-2.5f, 25f, -87));
+            cam.lookAtDirection(new Vector3f(0f, -0.55f, -0.84f), Vector3f.UNIT_Y);
+            flyCam.setEnabled(false);
+            //cam.setDirection(new Vector3f(0.026962247, -0.3055602, -0.9517908));
+            setProgress(0.2f, "Loading objects and materials...");
+        } else if (counter == 2) {
 
-        //Player 2
-        Vector3f p2_pos = new Vector3f(15.0f, -9f, -140f);
-        SuperPower sp2 = new InformaticSuperPower();
-        player2 = new Player("player 2", matp2, p2_pos, p2Selected);
+            //Objetos básicos
+            Box b2 = new Box(Vector3f.ZERO, boxX, boxY, boxZ);
 
-        Keys k1 = new Keys(KeyInput.KEY_LEFT,KeyInput.KEY_RIGHT,KeyInput.KEY_RMENU,KeyInput.KEY_RSHIFT);
-
-        player2.setKeys(k1);
-        rootNode.attachChild(player2.getPlayerNode());
-
-
-        Node platforms = new Node();
-
-        //Platform 1
-        Geometry plat1 = new Geometry("Plat1", b2);
-        plat1.setLocalTranslation(plat1_pos);
-        plat1.setMaterial(mat2);
-        platforms.attachChild(plat1);
-
-        //Platform 2
-       Geometry plat2 = new Geometry("Plat2", b2);
-        plat2.setLocalTranslation(plat2_pos);
-        plat2.setMaterial(mat2);
-        platforms.attachChild(plat2);
-        rootNode.attachChild(platforms);
-        
-      
-        //Fisica dos objetos
-        RigidBodyControl plat1_rb = new RigidBodyControl(0.0f);
-        RigidBodyControl plat2_rb = new RigidBodyControl(0.0f);
-
-        //Associacao da fisica
-        plat1.addControl(plat1_rb);
-        plat2.addControl(plat2_rb);
-
-
-        plat1_rb.setRestitution(0.7f);
-        plat2_rb.setRestitution(0.7f);
-        plat1_rb.setKinematic(true);
-        plat2_rb.setKinematic(true);
-
-        bulletAppState.getPhysicsSpace().add(player1.getPlayerControl());
-        bulletAppState.getPhysicsSpace().add(player2.getPlayerControl());
-        bulletAppState.getPhysicsSpace().add(plat1_rb);
-        bulletAppState.getPhysicsSpace().add(plat2_rb);
-        bulletAppState.getPhysicsSpace().addCollisionListener(this);
-        //bulletAppState.getPhysicsSpace().enableDebug(assetManager);
-           
-        //sombras
-        bsr = new BasicShadowRenderer(assetManager, 1024);
-        bsr.setDirection(new Vector3f(-1, -10, -1).normalizeLocal()); // light direction
-        viewPort.addProcessor(bsr);
-
-        AmbientLight al = new AmbientLight();
-        al.setColor(ColorRGBA.White.mult(1.3f));
-        rootNode.addLight(al);
-
-        platforms.setShadowMode(ShadowMode.Receive);
-        setProgress(0.5f, "Loading landscapes and sky...");
-       }
-       
-       else if(counter == 3)
-       {
-
-        /** 1. Create terrain material and load four textures into it. */
-        mat_terrain = new Material(assetManager,
-                "Common/MatDefs/Terrain/Terrain.j3md");
-
-        /** 1.1) Add ALPHA map (for red-blue-green coded splat textures) */
-        mat_terrain.setTexture("Alpha", assetManager.loadTexture(
-                "Textures/Terrain/splat/alphamap.png"));
-
-        /** 1.2) Add GRASS texture into the red layer (Tex1). */
-        Texture grass = assetManager.loadTexture(
-                "Textures/Terrain/splat/grass.jpg");
-        grass.setWrap(WrapMode.Repeat);
-        mat_terrain.setTexture("Tex1", grass);
-        mat_terrain.setFloat("Tex1Scale", 64f);
-
-        /** 1.3) Add DIRT texture into the green layer (Tex2) */
-        Texture dirt = assetManager.loadTexture(
-                "Textures/Terrain/splat/dirt.jpg");
-        dirt.setWrap(WrapMode.Repeat);
-        mat_terrain.setTexture("Tex2", dirt);
-        mat_terrain.setFloat("Tex2Scale", 32f);
-
-        /** 1.4) Add ROAD texture into the blue layer (Tex3) */
-        Texture rock = assetManager.loadTexture(
-                "Textures/Terrain/splat/road.jpg");
-        rock.setWrap(WrapMode.Repeat);
-        mat_terrain.setTexture("Tex3", rock);
-        mat_terrain.setFloat("Tex3Scale", 128f);
-
-        /** 2. Create the height map */
-        AbstractHeightMap heightmap = null;
-        Texture heightMapImage = assetManager.loadTexture(
-                "Textures/Terrain/splat/mountains512.png");
-
-        heightmap = new ImageBasedHeightMap(heightMapImage.getImage());
-        heightmap.load();
-
-        /** 3. We have prepared material and heightmap. 
-         * Now we create the actual terrain:
-         * 3.1) Create a TerrainQuad and name it "my terrain".
-         * 3.2) A good value for terrain tiles is 64x64 -- so we supply 64+1=65.
-         * 3.3) We prepared a heightmap of size 512x512 -- so we supply 512+1=513.
-         * 3.4) As LOD step scale we supply Vector3f(1,1,1).
-         * 3.5) We supply the prepared heightmap itself.
-         */
-        terrain = new TerrainQuad("my terrain", 65, 513, heightmap.getHeightMap());
-
-        /** 4. We give the terrain its material, position & scale it, and attach it. */
-        terrain.setMaterial(mat_terrain);
-        terrain.setLocalTranslation(0, -100, 0);
-        terrain.setLocalScale(2f, 1f, 2f);
-        rootNode.attachChild(terrain);
-
-        /** 5. The LOD (level of detail) depends on were the camera is: */
-        List<Camera> cameras = new ArrayList<Camera>();
-        cameras.add(getCamera());
-        TerrainLodControl control = new TerrainLodControl(terrain, cameras);
-        terrain.addControl(control);
+            Material mat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
+            mat.setColor("Color", ColorRGBA.Blue);
+            Material matp2 = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
+            matp2.setColor("Color", ColorRGBA.Blue);
 
 
 
-        rootNode.attachChild(SkyFactory.createSky(
-                assetManager, "sky2.jpg", true));
+            Material mat2 = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md");
+            mat2.setBoolean("m_UseMaterialColors", true);
+            mat2.setColor("m_Ambient", ColorRGBA.White);
+            mat2.setColor("m_Diffuse", ColorRGBA.White);
+            mat2.setColor("m_Specular", ColorRGBA.White);
+            mat2.setFloat("m_Shininess", 12);
+            mat2.setTexture("DiffuseMap", assetManager.loadTexture("parede.jpg"));
+            mat2.setTexture("NormalMap", assetManager.loadTexture("parede.jpg"));
 
-        AudioNode back = new AudioNode(assetManager, "back.wav");
-        back.setLooping(true);
-        //back.play();
-         setProgress(0.90f, "Loading players...");
-       }
-        else if(counter == 4 )
-       {
-        guiNode.detachAllChildren();
-        initKeys();
-        initHPs();
-        initManaBars();
-        initPowerBar();
-        initReloads();
-        initInfo();
-         inGame = true;
-        nifty.exit();
-       
-       }
-       
+
+            //setProgress(0.4f, "Loading players...");
+
+            //Player 1
+            Vector3f p1_pos = new Vector3f(-20f, -9f, -140f);
+            SuperPower sp1 = new CivilSuperPower();
+            player1 = new Player("player 1", mat, p1_pos, p1Selected);
+            Keys k = new Keys(KeyInput.KEY_A, KeyInput.KEY_D, KeyInput.KEY_LCONTROL, KeyInput.KEY_LSHIFT);
+            player1.setKeys(k);
+            rootNode.attachChild(player1.getPlayerNode());
+
+            //Player 2
+            Vector3f p2_pos = new Vector3f(15.0f, -9f, -140f);
+            SuperPower sp2 = new InformaticSuperPower();
+            player2 = new Player("player 2", matp2, p2_pos, p2Selected);
+
+            Keys k1 = new Keys(KeyInput.KEY_LEFT, KeyInput.KEY_RIGHT, KeyInput.KEY_RMENU, KeyInput.KEY_RSHIFT);
+
+            player2.setKeys(k1);
+            rootNode.attachChild(player2.getPlayerNode());
+
+
+            Node platforms = new Node();
+
+            //Platform 1
+            Geometry plat1 = new Geometry("Plat1", b2);
+            plat1.setLocalTranslation(plat1_pos);
+            plat1.setMaterial(mat2);
+            platforms.attachChild(plat1);
+
+            //Platform 2
+            Geometry plat2 = new Geometry("Plat2", b2);
+            plat2.setLocalTranslation(plat2_pos);
+            plat2.setMaterial(mat2);
+            platforms.attachChild(plat2);
+            rootNode.attachChild(platforms);
+
+
+            //Fisica dos objetos
+            RigidBodyControl plat1_rb = new RigidBodyControl(0.0f);
+            RigidBodyControl plat2_rb = new RigidBodyControl(0.0f);
+
+            //Associacao da fisica
+            plat1.addControl(plat1_rb);
+            plat2.addControl(plat2_rb);
+
+
+            plat1_rb.setRestitution(0.7f);
+            plat2_rb.setRestitution(0.7f);
+            plat1_rb.setKinematic(true);
+            plat2_rb.setKinematic(true);
+
+            bulletAppState.getPhysicsSpace().add(player1.getPlayerControl());
+            bulletAppState.getPhysicsSpace().add(player2.getPlayerControl());
+            bulletAppState.getPhysicsSpace().add(plat1_rb);
+            bulletAppState.getPhysicsSpace().add(plat2_rb);
+            bulletAppState.getPhysicsSpace().addCollisionListener(this);
+            //bulletAppState.getPhysicsSpace().enableDebug(assetManager);
+
+            //sombras
+            bsr = new BasicShadowRenderer(assetManager, 1024);
+            bsr.setDirection(new Vector3f(-1, -10, -1).normalizeLocal()); // light direction
+            viewPort.addProcessor(bsr);
+
+            AmbientLight al = new AmbientLight();
+            al.setColor(ColorRGBA.White.mult(1.3f));
+            rootNode.addLight(al);
+
+            platforms.setShadowMode(ShadowMode.Receive);
+            setProgress(0.5f, "Loading landscapes and sky...");
+        } else if (counter == 3) {
+
+            /** 1. Create terrain material and load four textures into it. */
+            mat_terrain = new Material(assetManager,
+                    "Common/MatDefs/Terrain/Terrain.j3md");
+
+            /** 1.1) Add ALPHA map (for red-blue-green coded splat textures) */
+            mat_terrain.setTexture("Alpha", assetManager.loadTexture(
+                    "Textures/Terrain/splat/alphamap.png"));
+
+            /** 1.2) Add GRASS texture into the red layer (Tex1). */
+            Texture grass = assetManager.loadTexture(
+                    "Textures/Terrain/splat/grass.jpg");
+            grass.setWrap(WrapMode.Repeat);
+            mat_terrain.setTexture("Tex1", grass);
+            mat_terrain.setFloat("Tex1Scale", 64f);
+
+            /** 1.3) Add DIRT texture into the green layer (Tex2) */
+            Texture dirt = assetManager.loadTexture(
+                    "Textures/Terrain/splat/dirt.jpg");
+            dirt.setWrap(WrapMode.Repeat);
+            mat_terrain.setTexture("Tex2", dirt);
+            mat_terrain.setFloat("Tex2Scale", 32f);
+
+            /** 1.4) Add ROAD texture into the blue layer (Tex3) */
+            Texture rock = assetManager.loadTexture(
+                    "Textures/Terrain/splat/road.jpg");
+            rock.setWrap(WrapMode.Repeat);
+            mat_terrain.setTexture("Tex3", rock);
+            mat_terrain.setFloat("Tex3Scale", 128f);
+
+            /** 2. Create the height map */
+            AbstractHeightMap heightmap = null;
+            Texture heightMapImage = assetManager.loadTexture(
+                    "Textures/Terrain/splat/mountains512.png");
+
+            heightmap = new ImageBasedHeightMap(heightMapImage.getImage());
+            heightmap.load();
+
+            /** 3. We have prepared material and heightmap. 
+             * Now we create the actual terrain:
+             * 3.1) Create a TerrainQuad and name it "my terrain".
+             * 3.2) A good value for terrain tiles is 64x64 -- so we supply 64+1=65.
+             * 3.3) We prepared a heightmap of size 512x512 -- so we supply 512+1=513.
+             * 3.4) As LOD step scale we supply Vector3f(1,1,1).
+             * 3.5) We supply the prepared heightmap itself.
+             */
+            terrain = new TerrainQuad("my terrain", 65, 513, heightmap.getHeightMap());
+
+            /** 4. We give the terrain its material, position & scale it, and attach it. */
+            terrain.setMaterial(mat_terrain);
+            terrain.setLocalTranslation(0, -100, 0);
+            terrain.setLocalScale(2f, 1f, 2f);
+            rootNode.attachChild(terrain);
+
+            /** 5. The LOD (level of detail) depends on were the camera is: */
+            List<Camera> cameras = new ArrayList<Camera>();
+            cameras.add(getCamera());
+            TerrainLodControl control = new TerrainLodControl(terrain, cameras);
+            terrain.addControl(control);
+
+
+
+            rootNode.attachChild(SkyFactory.createSky(
+                    assetManager, "sky2.jpg", true));
+
+            AudioNode back = new AudioNode(assetManager, "back.wav");
+            back.setLooping(true);
+            //back.play();
+            setProgress(0.90f, "Loading players...");
+        } else if (counter == 4) {
+            guiNode.detachAllChildren();
+            initKeys();
+            initHPs();
+            initManaBars();
+            initPowerBar();
+            initReloads();
+            initInfo();
+            inGame = true;
+            nifty.exit();
+
+        }
+
     }
-           
     private AnalogListener analogListener = new AnalogListener() {
 
         public void onAnalog(String name, float value, float tpf) {
@@ -451,57 +439,66 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
     private ActionListener actionListener = new ActionListener() {
 
         public void onAction(String name, boolean keyPressed, float tpf) {
-            
-            if (name.equals("Pause")) {
-                NiftyJmeDisplay niftyDisplay = new NiftyJmeDisplay(
-                assetManager, inputManager, audioRenderer, guiViewPort);
-                nifty = niftyDisplay.getNifty();
-                guiViewPort.addProcessor(niftyDisplay);
-                flyCam.setDragToRotate(true);
 
-                //nifty.loadStyleFile("nifty-default-styles.xml");
-                //nifty.loadControlFile("nifty-default-controls.xml");
+            if (name.equals("Pause") && inGame) {
+
+                guiNode.detachAllChildren();
                 
                 nifty.fromXml("pauseScreen.xml", "pauseScreen", new PauseScreen(app));
+                inGame = false;
                 return;
-            }
-            
-            if (firstPlayer && player1.getBall() == null && player1.isAlive()) {
-                if (name.equals("P1_Shoot") && !keyPressed && !player1_reload) {
-                    if (bp1.getCurrentPower() > 1) {
-                        player1.setBall(makeBall(bp1.getCurrentPower() * powerScale, player1.getPlayerGeo(), 1));
-                        player1_reload = true;
-                        player1_shoot = false;
-                        p1_reloadTime = RELOAD_TIME;
-                    }
-                } else if (name.equals("P1_Shoot") && !player1_reload) {
-                    player1_shoot = true;
-                }
-            } else if (!firstPlayer && player2.getBall() == null && player2.isAlive()) {
-                if (name.equals("P2_Shoot") && !keyPressed && !player2_reload) {
-                    if (bp2.getCurrentPower() > 1) {
-                        player2.setBall(makeBall(bp2.getCurrentPower() * powerScale, player2.getPlayerGeo(), -1));
-                        player2_reload = true;
-                        player2_shoot = false;
-                        p2_reloadTime = RELOAD_TIME;
-                    }
-                } else if (name.equals("P2_Shoot") && !player2_reload) {
-                    player2_shoot = true;
-                }
-            }
-            if (name.equals("P1_SP") && !keyPressed) {
-                if (!player1.isSuperPowerInUse()) {
-                    System.out.println("PLAYER 1 SP");
-                    player1.useSuperPower(1);
-                }
+            } else if (name.equals("Pause") && !inGame) {
 
-            }
-            if (name.equals("P2_SP") && !keyPressed) {
-                if (!player2.isSuperPowerInUse()) {
-                    System.out.println("PLAYER 2 SP");
-                    player2.useSuperPower(2);
-                }
+                nifty.exit();
+                guiNode.detachAllChildren();
+                initKeys();
+                initHPs();
+                initManaBars();
+                initPowerBar();
+                initReloads();
+                initInfo();
+                inGame = true;
+                return;
 
+            } else {
+
+                if (firstPlayer && player1.getBall() == null && player1.isAlive()) {
+                    if (name.equals("P1_Shoot") && !keyPressed && !player1_reload) {
+                        if (bp1.getCurrentPower() > 1) {
+                            player1.setBall(makeBall(bp1.getCurrentPower() * powerScale, player1.getPlayerGeo(), 1));
+                            player1_reload = true;
+                            player1_shoot = false;
+                            p1_reloadTime = RELOAD_TIME;
+                        }
+                    } else if (name.equals("P1_Shoot") && !player1_reload) {
+                        player1_shoot = true;
+                    }
+                } else if (!firstPlayer && player2.getBall() == null && player2.isAlive()) {
+                    if (name.equals("P2_Shoot") && !keyPressed && !player2_reload) {
+                        if (bp2.getCurrentPower() > 1) {
+                            player2.setBall(makeBall(bp2.getCurrentPower() * powerScale, player2.getPlayerGeo(), -1));
+                            player2_reload = true;
+                            player2_shoot = false;
+                            p2_reloadTime = RELOAD_TIME;
+                        }
+                    } else if (name.equals("P2_Shoot") && !player2_reload) {
+                        player2_shoot = true;
+                    }
+                }
+                if (name.equals("P1_SP") && !keyPressed) {
+                    if (!player1.isSuperPowerInUse()) {
+                        System.out.println("PLAYER 1 SP");
+                        player1.useSuperPower(1);
+                    }
+
+                }
+                if (name.equals("P2_SP") && !keyPressed) {
+                    if (!player2.isSuperPowerInUse()) {
+                        System.out.println("PLAYER 2 SP");
+                        player2.useSuperPower(2);
+                    }
+
+                }
             }
         }
     };
@@ -543,49 +540,49 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
 
         return ball_phy;
     }
+    ParticleEmitter flame = null, flash = null, spark = null, roundspark = null, smoketrail = null, debris = null,
+            shockwave = null;
 
-ParticleEmitter flame = null, flash = null, spark = null, roundspark = null, smoketrail = null, debris = null,
-                shockwave = null;
-    
-    private Material createMat(String m,String texture){
+    private Material createMat(String m, String texture) {
         Material mat = new Material(assetManager, m);
         mat.setTexture("Texture", assetManager.loadTexture(texture));
         mat.setBoolean("PointSprite", POINT_SPRITE);
         return mat;
     }
+
     public void explosion(Vector3f pos, float explosionSize) {
 
         Node explosionEffect = new Node("explosionFX");
-        
-        Material flameMat = createMat("Common/MatDefs/Misc/Particle.j3md","Effects/Explosion/flame.png");
+
+        Material flameMat = createMat("Common/MatDefs/Misc/Particle.j3md", "Effects/Explosion/flame.png");
         flame = new Flame(flameMat).getFlame();
 
         explosionEffect.attachChild(flame);
 
-        Material flashMat = createMat("Common/MatDefs/Misc/Particle.j3md","Effects/Explosion/flash.png");
+        Material flashMat = createMat("Common/MatDefs/Misc/Particle.j3md", "Effects/Explosion/flash.png");
         flash = new Flash(flashMat).getFlash();
         explosionEffect.attachChild(flash);
-        
-        Material sparkMat = createMat("Common/MatDefs/Misc/Particle.j3md","Effects/Explosion/spark.png");
+
+        Material sparkMat = createMat("Common/MatDefs/Misc/Particle.j3md", "Effects/Explosion/spark.png");
         spark = new Spark(sparkMat).getSpark();
         explosionEffect.attachChild(spark);
 
 
-        Material roundSparkMat = createMat("Common/MatDefs/Misc/Particle.j3md","Effects/Explosion/roundspark.png");
+        Material roundSparkMat = createMat("Common/MatDefs/Misc/Particle.j3md", "Effects/Explosion/roundspark.png");
         roundspark = new RoundSpark(roundSparkMat).getRoundSpark();
         explosionEffect.attachChild(roundspark);
 
-        Material smokeTrailMat = createMat("Common/MatDefs/Misc/Particle.j3md","Effects/Explosion/smoketrail.png");
+        Material smokeTrailMat = createMat("Common/MatDefs/Misc/Particle.j3md", "Effects/Explosion/smoketrail.png");
         smoketrail = new SmokeTrail(smokeTrailMat).getSmoketrail();
         explosionEffect.attachChild(smoketrail);
 
 
-        Material debrisMat = createMat("Common/MatDefs/Misc/Particle.j3md","Effects/Explosion/Debris.png");
+        Material debrisMat = createMat("Common/MatDefs/Misc/Particle.j3md", "Effects/Explosion/Debris.png");
         debris = new Debris(debrisMat).getDebris();
         explosionEffect.attachChild(debris);
 
 
-        Material shockMat = createMat("Common/MatDefs/Misc/Particle.j3md","Effects/Explosion/shockwave.png");
+        Material shockMat = createMat("Common/MatDefs/Misc/Particle.j3md", "Effects/Explosion/shockwave.png");
 
         shockwave = new ShockWave(shockMat).getShockwave();
         explosionEffect.attachChild(shockwave);
@@ -662,10 +659,9 @@ ParticleEmitter flame = null, flash = null, spark = null, roundspark = null, smo
 
     @Override
     public void simpleUpdate(float tpf) {
-        
-        
-        if(counter > 0 && counter < 5)
-        {
+
+
+        if (counter > 0 && counter < 5) {
             startGame(counter);
             counter++;
         }
@@ -675,7 +671,7 @@ ParticleEmitter flame = null, flash = null, spark = null, roundspark = null, smo
             int i = 0;
             while (tasks.size() > 0 && tasks.get(i).isDone()) {
                 try {
-                    
+
                     rootNode.detachChild(tasks.get(i).get());
                     flame.killAllParticles();
                     flash.killAllParticles();
