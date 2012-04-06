@@ -50,6 +50,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import mygame.menus.PauseScreen;
 import mygame.sfx.*;
 import mygame.superPower.*;
 
@@ -441,14 +442,30 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         inputManager.addMapping("P2_SP", new KeyTrigger(player2.getSuperPowerKey()));
         inputManager.addMapping("P1_Shoot", new KeyTrigger(player1.getFireKey()));
         inputManager.addMapping("P2_Shoot", new KeyTrigger(player2.getFireKey()));
+        inputManager.addMapping("Pause", new KeyTrigger(KeyInput.KEY_P));
         inputManager.addListener(analogListener, new String[]{"P1_Left", "P1_Right",
                     "P2_Left", "P2_Right"});
-        inputManager.addListener(actionListener, new String[]{"P1_Shoot", "P2_Shoot", "P1_SP", "P2_SP"});
+        inputManager.addListener(actionListener, new String[]{"P1_Shoot", "P2_Shoot", "P1_SP", "P2_SP", "Pause"});
 
     }
     private ActionListener actionListener = new ActionListener() {
 
         public void onAction(String name, boolean keyPressed, float tpf) {
+            
+            if (name.equals("Pause")) {
+                NiftyJmeDisplay niftyDisplay = new NiftyJmeDisplay(
+                assetManager, inputManager, audioRenderer, guiViewPort);
+                nifty = niftyDisplay.getNifty();
+                guiViewPort.addProcessor(niftyDisplay);
+                flyCam.setDragToRotate(true);
+
+                //nifty.loadStyleFile("nifty-default-styles.xml");
+                //nifty.loadControlFile("nifty-default-controls.xml");
+                
+                nifty.fromXml("pauseScreen.xml", "pauseScreen", new PauseScreen(app));
+                return;
+            }
+            
             if (firstPlayer && player1.getBall() == null && player1.isAlive()) {
                 if (name.equals("P1_Shoot") && !keyPressed && !player1_reload) {
                     if (bp1.getCurrentPower() > 1) {

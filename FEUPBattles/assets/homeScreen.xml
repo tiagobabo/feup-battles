@@ -49,6 +49,7 @@ visibleToMouse="true" >
     </screen>
     
     
+    
     <screen id="about" controller="mygame.menus.MyStartScreen">
         <layer id="background" childLayout="center">
             <image filename="background.png"></image>
