@@ -92,12 +92,12 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
    
     private TerrainQuad terrain;
     private Material mat_terrain;
-    static private Main app;
+    static public Main app;
     private Element progressBarElement;
     private Nifty nifty;
 
     public static void main(String[] args) {
-        Logger.getLogger("").setLevel(Level.OFF);
+        //Logger.getLogger("").setLevel(Level.OFF);
         app = new Main();
         AppSettings settings = new AppSettings(true);
         settings.setResolution(1024, 768);
@@ -583,7 +583,7 @@ ParticleEmitter flame = null, flash = null, spark = null, roundspark = null, smo
         Vector3f rightPosition = new Vector3f(settings.getWidth() - 200 - 20, settings.getHeight() - 20, 0);
         hp1 = new HitPointsBox("hp1b", leftPosition, green, black);
         hp2 = new HitPointsBox("hp2b", rightPosition, green, black);
-
+     
         guiNode.attachChild(hp1.getHpNode());
         guiNode.attachChild(hp2.getHpNode());
     }
