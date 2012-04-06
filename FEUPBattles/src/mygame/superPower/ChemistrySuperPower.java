@@ -4,36 +4,37 @@
  */
 package mygame.superPower;
 
-
-
-
-
 /**
  *
  * @author ZePedro
  */
-public class InformaticSuperPower extends SuperPower{
+public class ChemistrySuperPower extends SuperPower {
 
-    public InformaticSuperPower(){
+     private float newVelocity = 0.01f;
+     private float oldVelocity;
+     public ChemistrySuperPower(){
         manaCost = 10;
         duration = 3;
         superPowerImage = "keys.png";
     }
-    public void usePower(int playerNumber) {
+    
+     public void usePower(int playerNumber) {
        
         switch(playerNumber){
             case 1: 
                 if( mygame.Main.mana1.getCurrentMana() >= this.manaCost) {
-                        mygame.Main.player2.swapKeys();
+                        oldVelocity = mygame.Main.player2.getVelocity();
+                        mygame.Main.player2.setVelocity(newVelocity);
                         mygame.Main.mana1.loseMana(this.manaCost);
-                        System.out.println("Swapping p2 keys");
+                       
                 }
                     break;
             case 2: 
                  if(mygame.Main.mana2.getCurrentMana() >= this.manaCost) {
-                        mygame.Main.player1.swapKeys();
+                        oldVelocity = mygame.Main.player1.getVelocity();
+                        mygame.Main.player1.setVelocity(newVelocity);
                         mygame.Main.mana2.loseMana(this.manaCost);
-                        System.out.println("Swapping p1 keys");
+                      
                  }
                     break;
             default:
@@ -45,20 +46,15 @@ public class InformaticSuperPower extends SuperPower{
     public void cancelSuperPower(int playerNumber){
        
         switch(playerNumber){
-            case 1: mygame.Main.player2.swapKeys();
-                    System.out.println("Swapping p2 keys back to normal");
+            case 1: mygame.Main.player2.setVelocity(oldVelocity);
                     break;
-            case 2: mygame.Main.player1.swapKeys();
-                     System.out.println("Swapping p1 keys back to normal");
+            case 2: mygame.Main.player1.setVelocity(oldVelocity);
+                    
                     break;
             default:
                     break;
         }
         removeWarning( playerNumber);
     }
-
-    
-   
-    
     
 }

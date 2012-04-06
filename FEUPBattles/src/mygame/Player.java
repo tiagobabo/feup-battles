@@ -7,7 +7,7 @@ package mygame;
 
 import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.material.Material;
-import com.jme3.math.ColorRGBA;
+
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
@@ -36,7 +36,9 @@ public class Player {
     private float sizeZ =1;
     
     private int swapped = 1;
-    public boolean immune = false;
+    private boolean immune = false;
+    private float velocity = 0.05f;
+ 
     
    
 
@@ -70,6 +72,9 @@ public class Player {
                 break;
             case Civil:
                 this.sp = new CivilSuperPower();
+                break;
+            case Chemistry:
+                 this.sp = new ChemistrySuperPower();
                 break;
             case None :
             default:
@@ -278,5 +283,31 @@ public class Player {
         return sp.getSuperPowerImage();
     }
 
+    /**
+     * @return the immune
+     */
+    public boolean isImmune() {
+        return immune;
+    }
+
+    /**
+     * @return the velocity
+     */
+    public float getVelocity() {
+        return velocity;
+    }
+
+    /**
+     * @param velocity the velocity to set
+     */
+    public void setVelocity(float velocity) {
+        this.velocity = velocity;
+    }
+    
+    public float getMoveSpeed(){
+        return getVelocity() * getSwapped();
+    }
+
+    
     
 }
