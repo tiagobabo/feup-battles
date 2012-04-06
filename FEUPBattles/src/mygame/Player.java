@@ -42,21 +42,7 @@ public class Player {
     
    
 
-    public Player(String name, Material playerMaterial, Vector3f initialPosition, SuperPower sp) {
-        playerBox = new Box(Vector3f.ZERO, getSizeX(), getSizeY(), getSizeZ());
-        playerGeo = new Geometry(name, playerBox);
-        playerGeo.setLocalTranslation(initialPosition);
-        playerGeo.setMaterial(playerMaterial);
-        playerControl = new RigidBodyControl(mass);
-        playerGeo.addControl(playerControl);
-        playerControl.setKinematic(true);
-        playerName = name;
-        playerNode = new Node(name);
-        this.sp = sp;
-        playerNode.attachChild(playerGeo);
-    }
-
-     public Player(String name, Material playerMaterial, Vector3f initialPosition, ESuperPower sp) {
+    public Player(String name, Material playerMaterial, Vector3f initialPosition, ESuperPower sp) {
         playerBox = new Box(Vector3f.ZERO, getSizeX(), getSizeY(), getSizeZ());
         playerGeo = new Geometry(name, playerBox);
         playerGeo.setLocalTranslation(initialPosition);
