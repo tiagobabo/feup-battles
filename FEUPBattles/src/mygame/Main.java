@@ -762,8 +762,10 @@ ParticleEmitter flame = null, flash = null, spark = null, roundspark = null, smo
             bulletAppState.getPhysicsSpace().remove(cannon.getControl(0));
             if (firstPlayer) {
                 player1.setBall(null);
+                 bp1.resetPower();
             } else {
                 player2.setBall(null);
+                 bp2.resetPower();
             }
             changePlayer();
         }
@@ -773,9 +775,11 @@ ParticleEmitter flame = null, flash = null, spark = null, roundspark = null, smo
             if (rootNode.hasChild(cannon)) {
                 if (firstPlayer) {
                     player1.setBall(null);
+                     bp1.resetPower();
                     changePlayer();
                 } else {
-                    player2.setBall(null);
+                    player2.setBall(null); 
+                    bp2.resetPower();
                     changePlayer();
                 }
 
