@@ -97,6 +97,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
     private Nifty nifty;
 
     public static void main(String[] args) {
+        Logger.getLogger("").setLevel(Level.OFF);
         app = new Main();
         AppSettings settings = new AppSettings(true);
         settings.setResolution(640, 480);
@@ -145,6 +146,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
     }
    public void startGame(int counter)
    {
+       
         nifty.gotoScreen("loading");
         Element element = nifty.getScreen("loading").findElementByName("loadingtext"); 
         textRenderer = element.getRenderer(TextRenderer.class);
@@ -159,7 +161,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         flyCam.setMoveSpeed(50);
         cam.setLocation(new Vector3f(-2.5f, 25f, -87));
         cam.lookAtDirection(new Vector3f(0f, -0.55f, -0.84f), Vector3f.UNIT_Y);
-        //flyCam.setEnabled(false);
+        flyCam.setEnabled(false);
         //cam.setDirection(new Vector3f(0.026962247, -0.3055602, -0.9517908));
         setProgress(0.2f, "Loading objects and materials...");
        }
