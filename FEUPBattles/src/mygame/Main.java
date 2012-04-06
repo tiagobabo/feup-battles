@@ -108,6 +108,8 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
     private TextRenderer textRenderer;
     public int counter = 0;
 
+    public ESuperPower p1Selected = ESuperPower.None;
+    public ESuperPower p2Selected = ESuperPower.None;
 
    
 
@@ -187,7 +189,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         //Player 1
         Vector3f p1_pos = new Vector3f(-20f, -9f, -140f);
         SuperPower sp1 = new CivilSuperPower();
-        player1 = new Player("player 1", mat, p1_pos, sp1);
+        player1 = new Player("player 1", mat, p1_pos, p1Selected);
         Keys k = new Keys(KeyInput.KEY_A, KeyInput.KEY_D, KeyInput.KEY_LCONTROL, KeyInput.KEY_LSHIFT);
         player1.setKeys(k);
         rootNode.attachChild(player1.getPlayerNode());
@@ -195,7 +197,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         //Player 2
         Vector3f p2_pos = new Vector3f(15.0f, -9f, -140f);
         SuperPower sp2 = new InformaticSuperPower();
-        player2 = new Player("player 2", matp2, p2_pos, sp2);
+        player2 = new Player("player 2", matp2, p2_pos, p2Selected);
 
         Keys k1 = new Keys(KeyInput.KEY_LEFT,KeyInput.KEY_RIGHT,KeyInput.KEY_RMENU,KeyInput.KEY_RSHIFT);
 

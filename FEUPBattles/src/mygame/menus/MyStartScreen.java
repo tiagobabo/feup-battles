@@ -4,11 +4,14 @@ import com.jme3.app.Application;
 import com.jme3.app.state.AbstractAppState;
 import com.jme3.app.state.AppStateManager;
 import de.lessvoid.nifty.Nifty;
+import de.lessvoid.nifty.controls.ImageSelect;
+import de.lessvoid.nifty.controls.imageselect.ImageSelectControl;
 import de.lessvoid.nifty.elements.Element;
 import de.lessvoid.nifty.elements.render.TextRenderer;
 import de.lessvoid.nifty.screen.Screen;
 import de.lessvoid.nifty.screen.ScreenController;
 import mygame.Main;
+import mygame.superPower.ESuperPower;
 
 /**
  *
@@ -24,8 +27,15 @@ public class MyStartScreen extends AbstractAppState implements ScreenController 
         this.main = app;
     }
 
-  public void startGame() { 
+  public void startGame() {
+     
+    int index = nifty.getScreen("start_game").findNiftyControl("#player1", ImageSelect.class).getSelectedImageIndex();
+    main.p1Selected= ESuperPower.values()[index+1];
+    index = nifty.getScreen("start_game").findNiftyControl("#player2", ImageSelect.class).getSelectedImageIndex();
+    main.p2Selected=ESuperPower.values()[index+1];
     main.counter = 1;
+   
+    
   }
   
   public void go(String screen) { 

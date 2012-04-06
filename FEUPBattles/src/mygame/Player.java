@@ -12,8 +12,8 @@ import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.shape.Box;
-import mygame.superPower.CancelSuperPower;
-import mygame.superPower.SuperPower;
+import mygame.superPower.*;
+
 
 /**
  *
@@ -51,6 +51,33 @@ public class Player {
         playerName = name;
         playerNode = new Node(name);
         this.sp = sp;
+        playerNode.attachChild(playerGeo);
+    }
+
+     public Player(String name, Material playerMaterial, Vector3f initialPosition, ESuperPower sp) {
+        playerBox = new Box(Vector3f.ZERO, getSizeX(), getSizeY(), getSizeZ());
+        playerGeo = new Geometry(name, playerBox);
+        playerGeo.setLocalTranslation(initialPosition);
+        playerGeo.setMaterial(playerMaterial);
+        playerControl = new RigidBodyControl(mass);
+        playerGeo.addControl(playerControl);
+        playerControl.setKinematic(true);
+        playerName = name;
+        playerNode = new Node(name);
+        switch(sp){
+            case Informatic :
+                this.sp = new InformaticSuperPower();
+                break;
+            case Civil:
+                this.sp = new CivilSuperPower();
+                break;
+            case None :
+            default:
+                System.out.println("OOPS");
+             
+            
+        }
+      
         playerNode.attachChild(playerGeo);
     }
 
