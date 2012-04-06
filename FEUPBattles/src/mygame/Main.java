@@ -89,7 +89,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
     public float boxZ = 2.0f;
     public Vector3f plat1_pos = new Vector3f(15f, -20f, -140f);
     public Vector3f plat2_pos = new Vector3f(-20f, -20f, -140f);
-    private RigidBodyControl landscape;
+   
     private TerrainQuad terrain;
     private Material mat_terrain;
     static private Main app;
@@ -127,10 +127,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         Logger.getLogger("de.lessvoid.nifty").setLevel(Level.SEVERE); 
         Logger.getLogger("NiftyInputEventHandlingLog").setLevel(Level.SEVERE); 
         flyCam.setDragToRotate(true);
-
-        //nifty.loadStyleFile("nifty-default-styles.xml");
-        //nifty.loadControlFile("nifty-default-controls.xml");
-        
+        flyCam.setEnabled(false);
         nifty.fromXml("homeScreen.xml", "startScreen", new MyStartScreen(app));
         
         
@@ -156,13 +153,12 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         rootNode.setShadowMode(ShadowMode.Off);
         bulletAppState = new BulletAppState();
         stateManager.attach(bulletAppState);
-        //bulletAppState.getPhysicsSpace().setGravity(new Vector3f(0f, -1f, 0f));
-        //bulletAppState.getPhysicsSpace().setAccuracy(0.005f);
+        
         flyCam.setMoveSpeed(50);
         cam.setLocation(new Vector3f(-2.5f, 25f, -87));
         cam.lookAtDirection(new Vector3f(0f, -0.55f, -0.84f), Vector3f.UNIT_Y);
         flyCam.setEnabled(false);
-        //cam.setDirection(new Vector3f(0.026962247, -0.3055602, -0.9517908));
+
         setProgress(0.2f, "Loading objects and materials...");
        }
        else if(counter == 2)
@@ -187,20 +183,20 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         mat2.setTexture("DiffuseMap", assetManager.loadTexture("parede.jpg"));
         mat2.setTexture("NormalMap", assetManager.loadTexture("parede.jpg"));
         
-        
-        //setProgress(0.4f, "Loading players...");
-        
+                
         //Player 1
+
         Vector3f p1_pos = new Vector3f(-20f, -10.1f, -140f);
-        SuperPower sp1 = new CivilSuperPower();
+
         player1 = new Player("player 1", mat, p1_pos, p1Selected, assetManager, 1.57f);
         Keys k = new Keys(KeyInput.KEY_A, KeyInput.KEY_D, KeyInput.KEY_LCONTROL, KeyInput.KEY_LSHIFT);
         player1.setKeys(k);
         rootNode.attachChild(player1.getPlayerNode());
 
         //Player 2
+
         Vector3f p2_pos = new Vector3f(15.0f, -10.1f, -140f);
-        SuperPower sp2 = new InformaticSuperPower();
+
         player2 = new Player("player 2", matp2, p2_pos, p2Selected, assetManager, -1.57f);
 
         Keys k1 = new Keys(KeyInput.KEY_LEFT,KeyInput.KEY_RIGHT,KeyInput.KEY_RMENU,KeyInput.KEY_RSHIFT);
@@ -244,7 +240,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         bulletAppState.getPhysicsSpace().add(plat1_rb);
         bulletAppState.getPhysicsSpace().add(plat2_rb);
         bulletAppState.getPhysicsSpace().addCollisionListener(this);
-        //bulletAppState.getPhysicsSpace().enableDebug(assetManager);
+        
            
         //sombras
         bsr = new BasicShadowRenderer(assetManager, 1024);
@@ -378,21 +374,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
                         }
                     }
 
-                } else if (name.equals("P1_Up")) {
-                    if (player1.getBall() != null) {
-                        player1.getBall().getObjectId().applyCentralImpulse(new javax.vecmath.Vector3f(0.0f, 0.0f, -controlForce));
-                    } else {
-                        Vector3f temp = new Vector3f(player1_pos.x, player1_pos.y, player1_pos.z - player1.getMoveSpeed());
-                        player1.setLocalTranslation(temp);
-                    }
-                } else if (name.equals("P1_Down")) {
-                    if (player1.getBall() != null) {
-                        player1.getBall().getObjectId().applyCentralImpulse(new javax.vecmath.Vector3f(0.0f, 0.0f, controlForce * player1.getSwapped()));
-                    } else {
-                        Vector3f temp = new Vector3f(player1_pos.x, player1_pos.y, player1_pos.z + player1.getMoveSpeed());
-                        player1.setLocalTranslation(temp);
-                    }
-                }
+                } 
             }
 
             if (player2.isAlive()) {
@@ -416,21 +398,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
                             player2.setLocalTranslation(temp);
                         }
                     }
-                } else if (name.equals("P2_Up")) {
-                    if (player2.getBall() != null) {
-                        player2.getBall().getObjectId().applyCentralImpulse(new javax.vecmath.Vector3f(0.0f, 0.0f, -controlForce * player2.getSwapped()));
-                    } else {
-                        Vector3f temp = new Vector3f(player2_pos.x, player2_pos.y, player2_pos.z - player2.getMoveSpeed());
-                        player2.setLocalTranslation(temp);
-                    }
-                } else if (name.equals("P2_Down")) {
-                    if (player2.getBall() != null) {
-                        player2.getBall().getObjectId().applyCentralImpulse(new javax.vecmath.Vector3f(0.0f, 0.0f, controlForce * player2.getSwapped()));
-                    } else {
-                        Vector3f temp = new Vector3f(player2_pos.x, player2_pos.y, player2_pos.z + player2.getMoveSpeed());
-                        player2.setLocalTranslation(temp);
-                    }
-                }
+                } 
             }
         }
     };
@@ -439,12 +407,8 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
 
         inputManager.addMapping("P1_Left", new KeyTrigger(player1.getLeftKey()));
         inputManager.addMapping("P1_Right", new KeyTrigger(player1.getRightKey()));
-        inputManager.addMapping("P1_Up", new KeyTrigger(KeyInput.KEY_T));
-        inputManager.addMapping("P1_Down", new KeyTrigger(KeyInput.KEY_G));
         inputManager.addMapping("P2_Left", new KeyTrigger(player2.getLeftKey()));
         inputManager.addMapping("P2_Right", new KeyTrigger(player2.getRightKey()));
-        inputManager.addMapping("P2_Up", new KeyTrigger(KeyInput.KEY_I));
-        inputManager.addMapping("P2_Down", new KeyTrigger(KeyInput.KEY_K));
         inputManager.addMapping("P1_SP", new KeyTrigger(player1.getSuperPowerKey()));
         inputManager.addMapping("P2_SP", new KeyTrigger(player2.getSuperPowerKey()));
         inputManager.addMapping("P1_Shoot", new KeyTrigger(player1.getFireKey()));
