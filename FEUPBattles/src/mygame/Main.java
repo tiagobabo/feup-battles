@@ -159,7 +159,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         flyCam.setMoveSpeed(50);
         cam.setLocation(new Vector3f(-2.5f, 25f, -87));
         cam.lookAtDirection(new Vector3f(0f, -0.55f, -0.84f), Vector3f.UNIT_Y);
-        flyCam.setEnabled(false);
+        //flyCam.setEnabled(false);
         //cam.setDirection(new Vector3f(0.026962247, -0.3055602, -0.9517908));
         setProgress(0.2f, "Loading objects and materials...");
        }
@@ -189,7 +189,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         //setProgress(0.4f, "Loading players...");
         
         //Player 1
-        Vector3f p1_pos = new Vector3f(-20f, -9f, -140f);
+        Vector3f p1_pos = new Vector3f(-20f, -10.5f, -140f);
         SuperPower sp1 = new CivilSuperPower();
         player1 = new Player("player 1", mat, p1_pos, p1Selected, assetManager, 1.57f);
         Keys k = new Keys(KeyInput.KEY_A, KeyInput.KEY_D, KeyInput.KEY_LCONTROL, KeyInput.KEY_LSHIFT);
@@ -197,7 +197,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         rootNode.attachChild(player1.getPlayerNode());
 
         //Player 2
-        Vector3f p2_pos = new Vector3f(15.0f, -9f, -140f);
+        Vector3f p2_pos = new Vector3f(15.0f, -10.5f, -140f);
         SuperPower sp2 = new InformaticSuperPower();
         player2 = new Player("player 2", matp2, p2_pos, p2Selected, assetManager, -1.57f);
 
@@ -758,59 +758,63 @@ ParticleEmitter flame = null, flash = null, spark = null, roundspark = null, smo
             cannon = pce.getNodeB();
           
         }
+        
+        if(cannon != null)
+        {
 
-        if (pce.getNodeA().getName().equals(player1.getPlayerName()) || pce.getNodeB().getName().equals(player1.getPlayerName())) {
-            p = player1;
-        } else if (pce.getNodeA().getName().equals(player2.getPlayerName()) || pce.getNodeB().getName().equals(player2.getPlayerName())) {
-            p = player2;
-        } else {
-            explosion(cannon.getLocalTranslation(), 0.01f);
-            rootNode.detachChild(cannon);
-            bulletAppState.getPhysicsSpace().remove(cannon.getControl(0));
-            if (firstPlayer) {
-                player1.setBall(null);
-                 bp1.resetPower();
+            if (pce.getNodeA().getName().equals(player1.getPlayerName()) || pce.getNodeB().getName().equals(player1.getPlayerName())) {
+                p = player1;
+            } else if (pce.getNodeA().getName().equals(player2.getPlayerName()) || pce.getNodeB().getName().equals(player2.getPlayerName())) {
+                p = player2;
             } else {
-                player2.setBall(null);
-                 bp2.resetPower();
-            }
-            changePlayer();
-        }
-
-        if (p != null && cannon != null && !p.isImmune()) {
-
-            if (rootNode.hasChild(cannon)) {
+                explosion(cannon.getLocalTranslation(), 0.01f);
+                rootNode.detachChild(cannon);
+                bulletAppState.getPhysicsSpace().remove(cannon.getControl(0));
                 if (firstPlayer) {
                     player1.setBall(null);
                      bp1.resetPower();
-                    changePlayer();
                 } else {
-                    player2.setBall(null); 
-                    bp2.resetPower();
-                    changePlayer();
+                    player2.setBall(null);
+                     bp2.resetPower();
                 }
-
-                if (p.equals(player1)) {
-                    hp1.loseLife(1);
-                    System.out.println(p.getPlayerName() + " GOT HIT!\n HITPOINTS LEFT:" + hp1.getCurrentLife());
-                    if (hp1.getCurrentLife() == 0) {
-                        death(player1);
-                    }
-                } else {
-                    hp2.loseLife(1);
-                    System.out.println(p.getPlayerName() + " GOT HIT!\n HITPOINTS LEFT:" + hp2.getCurrentLife());
-                    if (hp1.getCurrentLife() == 0) {
-                        death(player2);
-                    }
-                }
-
-                explosion(cannon.getLocalTranslation(), 0.5f);
-                rootNode.detachChild(cannon);
-
-                bulletAppState.getPhysicsSpace().remove(cannon.getControl(0));
-
+                changePlayer();
             }
 
+            if (p != null && cannon != null && !p.isImmune()) {
+
+                if (rootNode.hasChild(cannon)) {
+                    if (firstPlayer) {
+                        player1.setBall(null);
+                         bp1.resetPower();
+                        changePlayer();
+                    } else {
+                        player2.setBall(null); 
+                        bp2.resetPower();
+                        changePlayer();
+                    }
+
+                    if (p.equals(player1)) {
+                        hp1.loseLife(1);
+                        System.out.println(p.getPlayerName() + " GOT HIT!\n HITPOINTS LEFT:" + hp1.getCurrentLife());
+                        if (hp1.getCurrentLife() == 0) {
+                            death(player1);
+                        }
+                    } else {
+                        hp2.loseLife(1);
+                        System.out.println(p.getPlayerName() + " GOT HIT!\n HITPOINTS LEFT:" + hp2.getCurrentLife());
+                        if (hp1.getCurrentLife() == 0) {
+                            death(player2);
+                        }
+                    }
+
+                    explosion(cannon.getLocalTranslation(), 0.5f);
+                    rootNode.detachChild(cannon);
+
+                    bulletAppState.getPhysicsSpace().remove(cannon.getControl(0));
+
+                }
+
+            }
         }
     }
 
