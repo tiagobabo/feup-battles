@@ -36,6 +36,7 @@ import com.jme3.terrain.heightmap.AbstractHeightMap;
 import com.jme3.terrain.heightmap.ImageBasedHeightMap;
 import com.jme3.texture.Texture;
 import com.jme3.texture.Texture.WrapMode;
+import com.jme3.ui.Picture;
 import com.jme3.util.SkyFactory;
 import de.lessvoid.nifty.Nifty;
 import de.lessvoid.nifty.elements.Element;
@@ -43,7 +44,6 @@ import de.lessvoid.nifty.elements.render.TextRenderer;
 import de.lessvoid.nifty.tools.SizeValue;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -123,6 +123,8 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
                 assetManager, inputManager, audioRenderer, guiViewPort);
         nifty = niftyDisplay.getNifty();
         guiViewPort.addProcessor(niftyDisplay);
+        Logger.getLogger("de.lessvoid.nifty").setLevel(Level.SEVERE); 
+        Logger.getLogger("NiftyInputEventHandlingLog").setLevel(Level.SEVERE); 
         flyCam.setDragToRotate(true);
 
         //nifty.loadStyleFile("nifty-default-styles.xml");
@@ -132,7 +134,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         
         
     }
-    
+   
      public void setProgress(final float progress, String loadingText) {
         final int MIN_WIDTH = 32;
         int pixelWidth = (int) (MIN_WIDTH + (progressBarElement.getParent().getWidth() - MIN_WIDTH) * progress);
@@ -336,6 +338,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         initPowerBar();
         initReloads();
         initInfo();
+        initHudImgs();
          inGame = true;
         nifty.exit();
        
@@ -626,6 +629,25 @@ ParticleEmitter flame = null, flash = null, spark = null, roundspark = null, smo
 
         guiNode.attachChild(mana1.getManaNode());
         guiNode.attachChild(mana2.getManaNode());
+    }
+   public static Picture p1Pic;
+   public static Picture p2Pic;
+    public void initHudImgs(){
+        p1Pic = new Picture("HUD Picture 1");
+        p1Pic.setImage(assetManager, player1.getSuperPowerImage(), true);
+        p1Pic.setWidth(0);
+        p1Pic.setHeight(0);
+        p1Pic.setPosition(10,settings.getHeight() - 150);
+        guiNode.attachChild(p1Pic);
+        
+        p2Pic = new Picture("HUD Picture 2");
+        p2Pic.setImage(assetManager, player2.getSuperPowerImage(), true);
+        p2Pic.setWidth(0);
+        p2Pic.setHeight(0);
+        p2Pic.setPosition(settings.getWidth() - 80 - 20,settings.getHeight() - 150);
+        guiNode.attachChild(p2Pic);
+       
+      
     }
 
     private void initPowerBar() {

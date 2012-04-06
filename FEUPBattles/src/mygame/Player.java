@@ -246,19 +246,8 @@ public class Player {
         this.swapped = swapped;
     }
 
-    public void setImmune(int immune) {
-        switch(immune) {
-            case 1:
-                this.immune = true;
-                this.playerGeo.getMaterial().setColor("Color", ColorRGBA.Red);
-                break;
-            case 0:
-                this.immune = false;
-                this.playerGeo.getMaterial().setColor("Color", ColorRGBA.Blue);
-                break;
-            default:
-                break;
-        }
+    public void setImmune(boolean immune) {
+       this.immune = immune;
     }
     public boolean isSuperPowerInUse(){
         return this.sp.isInUse();
@@ -284,6 +273,9 @@ public class Player {
      */
     public float getSizeZ() {
         return sizeZ;
+    }
+    public String getSuperPowerImage(){
+        return sp.getSuperPowerImage();
     }
 
     

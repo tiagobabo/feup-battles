@@ -4,6 +4,8 @@
  */
 package mygame.superPower;
 
+import mygame.Main;
+
 
 
 /**
@@ -16,7 +18,9 @@ public abstract class SuperPower {
     protected int duration;
     public abstract void usePower( int playerNumber);
     public abstract void cancelSuperPower(int playerNumber);
+    
     private boolean inUse = false;
+    protected String superPowerImage = null;
 
     /**
      * @return the manaCost
@@ -58,6 +62,38 @@ public abstract class SuperPower {
      */
     public void setInUse(boolean inUse) {
         this.inUse = inUse;
+    }
+
+    /**
+     * @return the superPowerImgaer
+     */
+    public String getSuperPowerImage() {
+        return superPowerImage;
+    }
+    public void warnPlayers(int playerNumber) {
+        switch(playerNumber){
+            case 1: Main.p1Pic.setHeight(80);
+                    Main.p1Pic.setWidth(80);
+                    break;
+            case 2: Main.p2Pic.setHeight(80);
+                    Main.p2Pic.setWidth(80);
+                    break;
+            default:
+                    break;
+        }
+      
+    }
+    public void removeWarning(int playerNumber) {
+       switch(playerNumber){
+            case 1: Main.p1Pic.setHeight(0);
+                    Main.p1Pic.setWidth(0);
+                    break;
+            case 2: Main.p2Pic.setHeight(0);
+                    Main.p2Pic.setWidth(0);
+                    break;
+            default:
+                    break;
+        }
     }
     
 }
