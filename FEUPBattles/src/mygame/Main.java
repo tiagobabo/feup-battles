@@ -100,7 +100,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         Logger.getLogger("").setLevel(Level.OFF);
         app = new Main();
         AppSettings settings = new AppSettings(true);
-        settings.setResolution(640, 480);
+        settings.setResolution(1024, 768);
         app.setShowSettings(false); // splashscreen
         app.setSettings(settings);
         app.start();
