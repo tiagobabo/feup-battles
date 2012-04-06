@@ -430,7 +430,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         inputManager.addMapping("P2_SP", new KeyTrigger(player2.getSuperPowerKey()));
         inputManager.addMapping("P1_Shoot", new KeyTrigger(player1.getFireKey()));
         inputManager.addMapping("P2_Shoot", new KeyTrigger(player2.getFireKey()));
-        inputManager.addMapping("Pause", new KeyTrigger(KeyInput.KEY_P));
+
         inputManager.addListener(analogListener, new String[]{"P1_Left", "P1_Right",
                     "P2_Left", "P2_Right"});
         inputManager.addListener(actionListener, new String[]{"P1_Shoot", "P2_Shoot", "P1_SP", "P2_SP", "Pause"});
