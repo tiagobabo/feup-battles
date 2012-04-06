@@ -191,7 +191,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         //setProgress(0.4f, "Loading players...");
         
         //Player 1
-        Vector3f p1_pos = new Vector3f(-20f, -10.5f, -140f);
+        Vector3f p1_pos = new Vector3f(-20f, -10.1f, -140f);
         SuperPower sp1 = new CivilSuperPower();
         player1 = new Player("player 1", mat, p1_pos, p1Selected, assetManager, 1.57f);
         Keys k = new Keys(KeyInput.KEY_A, KeyInput.KEY_D, KeyInput.KEY_LCONTROL, KeyInput.KEY_LSHIFT);
@@ -199,7 +199,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         rootNode.attachChild(player1.getPlayerNode());
 
         //Player 2
-        Vector3f p2_pos = new Vector3f(15.0f, -10.5f, -140f);
+        Vector3f p2_pos = new Vector3f(15.0f, -10.1f, -140f);
         SuperPower sp2 = new InformaticSuperPower();
         player2 = new Player("player 2", matp2, p2_pos, p2Selected, assetManager, -1.57f);
 
@@ -760,14 +760,16 @@ ParticleEmitter flame = null, flash = null, spark = null, roundspark = null, smo
             cannon = pce.getNodeB();
           
         }
-        
+
         if(cannon != null)
         {
 
             if (pce.getNodeA().getName().equals(player1.getPlayerName()) || pce.getNodeB().getName().equals(player1.getPlayerName())) {
                 p = player1;
+                System.out.println("P1");
             } else if (pce.getNodeA().getName().equals(player2.getPlayerName()) || pce.getNodeB().getName().equals(player2.getPlayerName())) {
                 p = player2;
+                System.out.println("P2");
             } else {
                 explosion(cannon.getLocalTranslation(), 0.01f);
                 rootNode.detachChild(cannon);
@@ -780,6 +782,7 @@ ParticleEmitter flame = null, flash = null, spark = null, roundspark = null, smo
                      bp2.resetPower();
                 }
                 changePlayer();
+                System.out.println("P3");
             }
 
             if (p != null && cannon != null && !p.isImmune()) {
@@ -817,7 +820,9 @@ ParticleEmitter flame = null, flash = null, spark = null, roundspark = null, smo
                 }
 
             }
+            
         }
+
     }
 
     private void initInfo() {

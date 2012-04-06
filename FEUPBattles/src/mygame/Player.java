@@ -47,6 +47,7 @@ public class Player {
     public Player(String name, Material playerMaterial, Vector3f initialPosition, ESuperPower sp, AssetManager assetManager, float rot) {
        
         playerGeo = assetManager.loadModel("m1 abrams.j3o");
+        playerGeo.setName(name);
         playerGeo.setLocalTranslation(initialPosition);
         playerGeo.rotate(0.0f, rot, 0.0f);
           playerGeo.scale(1.5f);
