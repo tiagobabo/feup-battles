@@ -29,7 +29,7 @@ public class PauseScreen extends AbstractAppState implements ScreenController {
   }
 
   public void resumeGame() {
- 
+    this.main.resumeGame();
   }
   
   public void onStartScreen() {

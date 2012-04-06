@@ -7,7 +7,7 @@ xsi:schemaLocation="http://nifty-gui.sourceforge.net/nifty.xsd http://nifty-gui.
    
     
     
-    <screen id="pauseScreen" controller="mygame.menus.MyStartScreen">
+    <screen id="pauseScreen" controller="mygame.menus.PauseScreen">
         <layer id="background" childLayout="center">
             <image filename="background.png"></image>
         </layer>

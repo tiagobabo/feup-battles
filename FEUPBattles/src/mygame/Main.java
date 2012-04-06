@@ -115,6 +115,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
     public void simpleInitApp() {
 
         app.setDisplayFps(false);
+
         app.setDisplayStatView(false);
 
         NiftyJmeDisplay niftyDisplay = new NiftyJmeDisplay(
@@ -148,6 +149,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         if (counter == 1) {
             rootNode.setShadowMode(ShadowMode.Off);
             bulletAppState = new BulletAppState();
+
             stateManager.attach(bulletAppState);
             //bulletAppState.getPhysicsSpace().setGravity(new Vector3f(0f, -1f, 0f));
             //bulletAppState.getPhysicsSpace().setAccuracy(0.005f);
@@ -416,6 +418,20 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         }
     };
 
+    public void resumeGame() {
+
+        nifty.exit();
+        bulletAppState.setEnabled(true);
+        guiNode.detachAllChildren();
+        initKeys();
+        initHPs();
+        initManaBars();
+        initPowerBar();
+        initReloads();
+        initInfo();
+        inGame = true;
+    }
+
     private void initKeys() {
 
         inputManager.addMapping("P1_Left", new KeyTrigger(player1.getLeftKey()));
@@ -430,7 +446,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         inputManager.addMapping("P2_SP", new KeyTrigger(player2.getSuperPowerKey()));
         inputManager.addMapping("P1_Shoot", new KeyTrigger(player1.getFireKey()));
         inputManager.addMapping("P2_Shoot", new KeyTrigger(player2.getFireKey()));
-
+        inputManager.addMapping("Pause", new KeyTrigger(KeyInput.KEY_P));
         inputManager.addListener(analogListener, new String[]{"P1_Left", "P1_Right",
                     "P2_Left", "P2_Right"});
         inputManager.addListener(actionListener, new String[]{"P1_Shoot", "P2_Shoot", "P1_SP", "P2_SP", "Pause"});
@@ -441,25 +457,11 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         public void onAction(String name, boolean keyPressed, float tpf) {
 
             if (name.equals("Pause") && inGame) {
-
                 guiNode.detachAllChildren();
-                
+                bulletAppState.setEnabled(false);
                 nifty.fromXml("pauseScreen.xml", "pauseScreen", new PauseScreen(app));
                 inGame = false;
                 return;
-            } else if (name.equals("Pause") && !inGame) {
-
-                nifty.exit();
-                guiNode.detachAllChildren();
-                initKeys();
-                initHPs();
-                initManaBars();
-                initPowerBar();
-                initReloads();
-                initInfo();
-                inGame = true;
-                return;
-
             } else {
 
                 if (firstPlayer && player1.getBall() == null && player1.isAlive()) {
