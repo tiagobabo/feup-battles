@@ -4,10 +4,15 @@ import com.jme3.app.Application;
 import com.jme3.app.state.AbstractAppState;
 import com.jme3.app.state.AppStateManager;
 import de.lessvoid.nifty.Nifty;
+import de.lessvoid.nifty.NiftyEventSubscriber;
+import de.lessvoid.nifty.controls.Controller;
 import de.lessvoid.nifty.controls.ImageSelect;
+import de.lessvoid.nifty.controls.ImageSelectSelectionChangedEvent;
 
 import de.lessvoid.nifty.elements.Element;
+import de.lessvoid.nifty.elements.render.ImageRenderer;
 import de.lessvoid.nifty.elements.render.TextRenderer;
+import de.lessvoid.nifty.render.NiftyImage;
 import de.lessvoid.nifty.screen.Screen;
 import de.lessvoid.nifty.screen.ScreenController;
 import mygame.Main;
@@ -22,9 +27,14 @@ public class MyStartScreen extends AbstractAppState implements ScreenController 
   private Application app;
   private Screen screen;
   private Main main;
-
+  private String[] descs = {"inf_desc.png","civil_desc.png","chem_desc.png","electro_desc.png","bio_desc.png","mec_desc.png","metal_desc.png"};
+  private NiftyImage[] descImgs ;
   public MyStartScreen(Main app) {
         this.main = app;
+       
+        descImgs  = new NiftyImage[descs.length];
+                
+        
     }
 
   public void startGame() {
@@ -55,6 +65,10 @@ public class MyStartScreen extends AbstractAppState implements ScreenController 
   public void bind(Nifty nifty, Screen screen) {
     this.nifty = nifty;
     this.screen = screen;
+    int i =0;
+    for(String s: descs){
+           descImgs[i++] =  nifty.getRenderEngine().createImage(s, false);
+        }
   }
 
   public void onStartScreen() {
@@ -75,5 +89,11 @@ public class MyStartScreen extends AbstractAppState implements ScreenController 
       Element niftyElement = nifty.getCurrentScreen().findElementByName("score");
       niftyElement.getRenderer(TextRenderer.class).setText(tpf*1000/10 + ""); // fake score
     }
+  }
+  @NiftyEventSubscriber(pattern="#player.?")
+  public void stuffChanged(String id, ImageSelectSelectionChangedEvent event ){
+
+      Element element = nifty.getScreen("start_game").findElementByName(id+"_img");
+      element.getRenderer(ImageRenderer.class).setImage(descImgs[event.getSelectedIndex()]);
   }
 }

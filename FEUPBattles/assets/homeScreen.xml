@@ -107,7 +107,7 @@ visibleToMouse="true">
                  <image filename="intro-logo.png"></image>
             </panel>
             
-            <panel id="panel_bottom" height="15%" width="75%" align="center" childLayout="horizontal"> 
+            <panel id="panel_bottom" height="5%" width="75%" align="center" childLayout="horizontal"> 
             
                 <panel id="panel_top" height="5%" width="50%" align="left" childLayout="center">  
                     <text text="Player 1" font="Interface/Fonts/Default.fnt" width="50%" height="100%" />
@@ -122,37 +122,37 @@ visibleToMouse="true">
             
             <panel id="panel_bottom" height="15%" width="75%" align="center" childLayout="horizontal"> 
             
-                <panel id="panel_mid" height="25%" width="50%" align="left" childLayout="center">       
+                <panel id="panel_mid" height="100%" width="50%" align="left" childLayout="center">       
                     <control id="#player1" name="imageSelect" width="196px" imageWidth="150px" imageHeight="150px" imageList="inf.png,civil.png,chem.png,electro.png,bio.png,mec.png,metal.png" />
                 </panel>
                
-                <panel id="panel_mid" height="25%" width="50%" align="right" childLayout="center">       
+                <panel id="panel_mid" height="100%" width="50%" align="right" childLayout="center">       
                     <control id="#player2" name="imageSelect" width="196px" imageWidth="150px" imageHeight="150px" imageList="inf.png,civil.png,chem.png,electro.png,bio.png,mec.png,metal.png" />
                 </panel>
                 
             </panel>
             
-             <panel id="panel_mid" height="30%" width="75%" align="center" childLayout="horizontal">   
-              <panel id="panel_mid" height="100%" width="50%" align="left" childLayout="vertical"> 
-                    <image filename="inf_desc.png"></image>
+             <panel id="panel_mid" height="45%" width="75%" align="center" childLayout="horizontal">   
+              <panel id="panel_mid" height="100%" width="50%" align="left" childLayout="center"> 
+                    <image id="#player1_img" filename="inf_desc.png"></image>
                </panel>
-                  <panel id="panel_mid" height="100%" width="50%" align="right" childLayout="vertical"> 
-                    <image filename="chem_desc.png"></image>
+                  <panel id="panel_mid" height="100%" width="50%" align="right" childLayout="center"> 
+                    <image id="#player2_img" filename="inf_desc.png"></image>
                </panel>
              </panel>
               
              
              
-                <panel id="panel_mid"  heigth="0%" align="center" childLayout="center">       
+                <panel id="panel_mid"  heigth="5%" align="center" childLayout="center">       
                     <control name="button" label="Start" id="StartButton" align="right" valign="center" 
     visibleToMouse="true"> 
                         <interact onClick="startGame()" />
                     </control>
                 </panel>
                 
-                <panel id="dummy" height="5%"></panel>
                 
-                <panel id="panel_mid"  heigth="0%" align="center" childLayout="center">       
+                
+                <panel id="panel_mid"  heigth="5%" align="center" childLayout="center">       
                      <control name="button" label="Back" id="BackButton" align="left"  valign="center" 
     visibleToMouse="true"> 
                         <interact onClick="go(start)" />
