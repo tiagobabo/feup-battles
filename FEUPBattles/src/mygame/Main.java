@@ -341,7 +341,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
             nifty.exit();
             DirectionalLight sun = new DirectionalLight();
             sun.setColor(ColorRGBA.White);
-            sun.setDirection(new Vector3f(-.5f, -.5f, -.5f).normalizeLocal());
+            sun.setDirection(new Vector3f(0.00555476f, -0.31822094f, -0.9480003f).normalizeLocal());
             rootNode.addLight(sun);
             
             FilterPostProcessor fpp=new FilterPostProcessor(assetManager);
