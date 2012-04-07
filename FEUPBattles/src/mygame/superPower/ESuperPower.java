@@ -4,10 +4,7 @@
  */
 package mygame.superPower;
 
-/**
- *
- * @author ZePedro
- */
+
 public enum ESuperPower {
-    None,Informatic,Civil,Chemistry
+    None,Informatic,Civil,Chemistry,Eletro
 }
