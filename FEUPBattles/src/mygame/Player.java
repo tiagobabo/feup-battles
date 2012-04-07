@@ -65,6 +65,9 @@ public class Player {
             case Eletro:
                 this.sp = new EletroSuperPower();
                 break;
+            case Bio:
+                this.sp = new BioSuperPower();
+                break;
             case None:
             default:
                 System.out.println("OOPS");

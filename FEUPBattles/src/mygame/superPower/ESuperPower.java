@@ -6,5 +6,5 @@ package mygame.superPower;
 
 
 public enum ESuperPower {
-    None,Informatic,Civil,Chemistry,Eletro
+    None,Informatic,Civil,Chemistry,Eletro,Bio
 }

@@ -37,10 +37,10 @@ public class EletroSuperPower extends SuperPower {
     }
     public void cancelSuperPower(int playerNumber){
         switch(playerNumber){
-            case 1: mygame.Main.player1.setSilenced(false);     
+            case 1: mygame.Main.player2.setSilenced(false);     
                     break;
             case 2: 
-                    mygame.Main.player2.setSilenced(false);     
+                    mygame.Main.player1.setSilenced(false);     
                     break;
             default:
                     break;

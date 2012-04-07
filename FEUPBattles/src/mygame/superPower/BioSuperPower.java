@@ -12,7 +12,7 @@ public class BioSuperPower extends SuperPower{
     
     public BioSuperPower(){
         manaCost = 50;
-        duration = 0;
+        duration = 1;
         superPowerImage = "keys.png";
     }
    
