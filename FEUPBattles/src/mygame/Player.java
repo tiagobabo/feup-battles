@@ -4,7 +4,6 @@
  */
 package mygame;
 
-
 import com.jme3.asset.AssetManager;
 import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.material.Material;
@@ -15,7 +14,6 @@ import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Box;
 import mygame.superPower.*;
-
 
 /**
  *
@@ -33,47 +31,47 @@ public class Player {
     private RigidBodyControl ball;
     private Keys keys;
     private SuperPower sp;
-    private float sizeX =1;
-    private float sizeY =1;
-    private float sizeZ =1;
-    
+    private float sizeX = 1;
+    private float sizeY = 1;
+    private float sizeZ = 1;
+    private boolean silenced = false;
     private int swapped = 1;
     private boolean immune = false;
     private float velocity = 0.05f;
- 
-    
-   
 
     public Player(String name, Material playerMaterial, Vector3f initialPosition, ESuperPower sp, AssetManager assetManager, float rot) {
-       
+
         playerGeo = assetManager.loadModel("m1 abrams.j3o");
         playerGeo.setName(name);
         playerGeo.setLocalTranslation(initialPosition);
         playerGeo.rotate(0.0f, rot, 0.0f);
-          playerGeo.scale(1.5f);
+        playerGeo.scale(1.5f);
         //playerGeo.setMaterial(playerMaterial);
         playerControl = new RigidBodyControl(mass);
         playerGeo.addControl(playerControl);
         playerControl.setKinematic(true);
         playerName = name;
         playerNode = new Node(name);
-        switch(sp){
-            case Informatic :
+        switch (sp) {
+            case Informatic:
                 this.sp = new InformaticSuperPower();
                 break;
             case Civil:
                 this.sp = new CivilSuperPower();
                 break;
             case Chemistry:
-                 this.sp = new ChemistrySuperPower();
+                this.sp = new ChemistrySuperPower();
                 break;
-            case None :
+            case Eletro:
+                this.sp = new EletroSuperPower();
+                break;
+            case None:
             default:
                 System.out.println("OOPS");
-             
-            
+
+
         }
-      
+
         playerNode.attachChild(playerGeo);
     }
 
@@ -196,24 +194,30 @@ public class Player {
     public void setBall(RigidBodyControl ball) {
         this.ball = ball;
     }
-    
-    public int getLeftKey(){
+
+    public int getLeftKey() {
         return keys.getLeftKey();
     }
-    public int getRightKey(){
+
+    public int getRightKey() {
         return keys.getRightKey();
     }
-    public int getFireKey(){
+
+    public int getFireKey() {
         return keys.getFireKey();
     }
-    public int getSuperPowerKey(){
+
+    public int getSuperPowerKey() {
         return keys.getSuperPowerKey();
     }
-    public void useSuperPower(int pnum){
-        this.sp.setInUse(true);
-        this.sp.usePower(pnum);
-        new CancelSuperPower(sp,sp.getDuration(),pnum).start();
-        
+
+    public void useSuperPower(int pnum) {
+        if (!isSilenced() && !isSuperPowerInUse()) {
+            this.sp.setInUse(true);
+            this.sp.usePower(pnum);
+            new CancelSuperPower(sp, sp.getDuration(), pnum).start();
+        }
+
     }
 
     /**
@@ -225,7 +229,7 @@ public class Player {
 
     public void swapKeys() {
         setSwapped(getSwapped() * -1);
-        
+
     }
 
     /**
@@ -243,9 +247,10 @@ public class Player {
     }
 
     public void setImmune(boolean immune) {
-       this.immune = immune;
+        this.immune = immune;
     }
-    public boolean isSuperPowerInUse(){
+
+    public boolean isSuperPowerInUse() {
         return this.sp.isInUse();
     }
 
@@ -263,14 +268,14 @@ public class Player {
         return sizeY;
     }
 
-
     /**
      * @return the sizeZ
      */
     public float getSizeZ() {
         return sizeZ;
     }
-    public String getSuperPowerImage(){
+
+    public String getSuperPowerImage() {
         return sp.getSuperPowerImage();
     }
 
@@ -294,11 +299,22 @@ public class Player {
     public void setVelocity(float velocity) {
         this.velocity = velocity;
     }
-    
-    public float getMoveSpeed(){
+
+    public float getMoveSpeed() {
         return getVelocity() * getSwapped();
     }
 
-    
-    
+    /**
+     * @return the silenced
+     */
+    public boolean isSilenced() {
+        return silenced;
+    }
+
+    /**
+     * @param silenced the silenced to set
+     */
+    public void setSilenced(boolean silenced) {
+        this.silenced = silenced;
+    }
 }
