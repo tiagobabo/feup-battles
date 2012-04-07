@@ -22,6 +22,8 @@ public class HitPointsBox {
     private Geometry blackHpGeometry;
     private Node hpNode;
     private float currentLife = 200.0f;
+    private int numHits = 10;
+    private float maxLife = 200.0f;
 
     public HitPointsBox(String name, Vector3f position, Material green, Material black) {
         hpNode = new Node("hpbNode");
@@ -116,8 +118,8 @@ public class HitPointsBox {
 
     public void loseLife(int lifeLost) {
         if (currentLife > 0) {
-            float scale = 1 - 20 * lifeLost / currentLife;
-            if (currentLife == 200) {
+            float scale = 1 - (maxLife/numHits) * lifeLost / currentLife;
+            if (currentLife == maxLife) {
                 if (scale <= 1) {
                     greenHpGeometry.scale(scale, 1.0f, 1.0f);
                     currentLife = currentLife * scale;

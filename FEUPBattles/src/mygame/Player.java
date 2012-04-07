@@ -22,8 +22,8 @@ import mygame.superPower.*;
  */
 public class Player {
 
-    private Spatial playerGeo;
-    private RigidBodyControl playerControl;
+    private Spatial[] playerGeo;
+    private RigidBodyControl[] playerControl;
     private float mass = 2.0f;
     private Box playerBox;
     private String playerName;
@@ -41,20 +41,31 @@ public class Player {
     private boolean immune = false;
     private float velocity = 0.05f;
     private int damage = 1;
+    private int model = 0;
+   
     
     private Material ballMaterial;
 
     public Player(String name, Vector3f initialPosition, ESuperPower sp, AssetManager assetManager, float rot) {
         
-        playerGeo = assetManager.loadModel("m1 abrams.j3o");
-        playerGeo.setName(name);
-        playerGeo.setLocalTranslation(initialPosition);
-        playerGeo.rotate(0.0f, rot, 0.0f);
-        playerGeo.scale(1.5f);
-        //playerGeo.setMaterial(playerMaterial);
-        playerControl = new RigidBodyControl(mass);
-        playerGeo.addControl(playerControl);
-        playerControl.setKinematic(true);
+        playerGeo = new Spatial[5];
+        playerControl = new RigidBodyControl[5];
+        
+        for(int i = 0; i < 5; i++)
+        {
+            playerGeo[i] = assetManager.loadModel("m"+(i+1)+" abrams.j3o");
+            playerGeo[i].setName(name);
+            playerGeo[i].setLocalTranslation(initialPosition);
+            playerGeo[i].rotate(0.0f, rot, 0.0f);
+            playerGeo[i].scale(1.5f);
+            //playerGeo.setMaterial(playerMaterial);
+            playerControl[i] = new RigidBodyControl(mass);
+            System.out.println(playerControl[i].toString());
+            playerGeo[i].addControl(playerControl[i]);
+            playerControl[i].setKinematic(true);
+        }
+        
+       
         playerName = name;
         playerNode = new Node(name);
         switch (sp) {
@@ -96,35 +107,21 @@ public class Player {
         ballMaterial.setColor("m_Specular", ColorRGBA.White);
         ballMaterial.setFloat("m_Shininess", 12);
         
-        playerNode.attachChild(playerGeo);
+        playerNode.attachChild(playerGeo[model]);
     }
 
     /**
      * @return the playerGeo
      */
     public Spatial getPlayerGeo() {
-        return playerGeo;
-    }
-
-    /**
-     * @param playerGeo the playerGeo to set
-     */
-    public void setPlayerGeo(Geometry playerGeo) {
-        this.playerGeo = playerGeo;
+        return playerGeo[model];
     }
 
     /**
      * @return the playerControl
      */
     public RigidBodyControl getPlayerControl() {
-        return playerControl;
-    }
-
-    /**
-     * @param playerControl the playerControl to set
-     */
-    public void setPlayerControl(RigidBodyControl playerControl) {
-        this.playerControl = playerControl;
+        return playerControl[model];
     }
 
     /**
@@ -156,11 +153,11 @@ public class Player {
     }
 
     public Vector3f getLocalTranslation() {
-        return playerGeo.getLocalTranslation();
+        return playerGeo[model].getLocalTranslation();
     }
 
     public void setLocalTranslation(Vector3f translation) {
-        playerGeo.setLocalTranslation(translation);
+        playerGeo[model].setLocalTranslation(translation);
     }
 
     /**
