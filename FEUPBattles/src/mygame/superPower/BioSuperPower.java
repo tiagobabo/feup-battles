@@ -21,14 +21,14 @@ public class BioSuperPower extends SuperPower{
         switch(playerNumber){
             case 1: 
                 if( mygame.Main.mana1.getCurrentMana() >= this.manaCost) {
-                        mygame.Main.hp1.regainHP(10);
+                        mygame.Main.hp1.regainHP(20);
                         mygame.Main.mana1.loseMana(this.manaCost);
                          warnPlayers(playerNumber);
                 }
                     break;
             case 2: 
                  if(mygame.Main.mana2.getCurrentMana() >= this.manaCost) {
-                        mygame.Main.hp2.regainHP(10);
+                        mygame.Main.hp2.regainHP(20);
                         mygame.Main.mana2.loseMana(this.manaCost);
                         warnPlayers(playerNumber);
                  }

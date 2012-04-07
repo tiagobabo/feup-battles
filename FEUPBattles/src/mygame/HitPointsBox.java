@@ -135,9 +135,11 @@ public class HitPointsBox {
     }
     
      public void regainHP(float increase){
-        float scale = (currentLife+increase)*(1/currentLife);
-        greenHpGeometry.scale(scale,1.0f,1.0f);
-        currentLife = currentLife+increase;
+         if(currentLife<200){
+            float scale = (currentLife+increase)*(1/currentLife);
+            greenHpGeometry.scale(scale,1.0f,1.0f);
+            currentLife = currentLife+increase;
+         }
         
     }
 }

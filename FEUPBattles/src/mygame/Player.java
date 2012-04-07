@@ -7,6 +7,7 @@ package mygame;
 import com.jme3.asset.AssetManager;
 import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.material.Material;
+import com.jme3.math.ColorRGBA;
 
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
@@ -28,7 +29,7 @@ public class Player {
     private String playerName;
     private Node playerNode;
     private boolean alive = true;
-    private RigidBodyControl ball;
+    private Geometry ball;
     
     private Keys keys;
     private SuperPower sp;
@@ -40,8 +41,10 @@ public class Player {
     private boolean immune = false;
     private float velocity = 0.05f;
     private int damage = 1;
+    
+    private Material ballMaterial;
 
-    public Player(String name, Material playerMaterial, Vector3f initialPosition, ESuperPower sp, AssetManager assetManager, float rot) {
+    public Player(String name, Vector3f initialPosition, ESuperPower sp, AssetManager assetManager, float rot) {
         
         playerGeo = assetManager.loadModel("m1 abrams.j3o");
         playerGeo.setName(name);
@@ -82,7 +85,13 @@ public class Player {
 
 
         }
-
+        ballMaterial = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md");
+        ballMaterial.setBoolean("m_UseMaterialColors", true);
+        ballMaterial.setColor("m_Ambient", ColorRGBA.Orange);
+        ballMaterial.setColor("m_Diffuse", ColorRGBA.Orange);
+        ballMaterial.setColor("m_Specular", ColorRGBA.White);
+        ballMaterial.setFloat("m_Shininess", 12);
+        
         playerNode.attachChild(playerGeo);
     }
 
@@ -195,14 +204,14 @@ public class Player {
     /**
      * @return the ball
      */
-    public RigidBodyControl getBall() {
+    public Geometry getBall() {
         return ball;
     }
 
     /**
      * @param ball the ball to set
      */
-    public void setBall(RigidBodyControl ball) {
+    public void setBall(Geometry ball) {
         this.ball = ball;
     }
 
@@ -341,5 +350,19 @@ public class Player {
      */
     public void setDamage(int damage) {
         this.damage = damage;
+    }
+
+    /**
+     * @return the ballMaterial
+     */
+    public Material getBallMaterial() {
+        return ballMaterial;
+    }
+
+    /**
+     * @param ballMaterial the ballMaterial to set
+     */
+    public void setBallMaterial(Material ballMaterial) {
+        this.ballMaterial = ballMaterial;
     }
 }

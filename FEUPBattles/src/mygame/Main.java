@@ -186,7 +186,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
 
             Vector3f p1_pos = new Vector3f(-20f, -10.1f, -140f);
 
-            player1 = new Player("player 1", mat, p1_pos, p1Selected, assetManager, 1.57f);
+            player1 = new Player("player 1",  p1_pos, p1Selected, assetManager, 1.57f);
             Keys k = new Keys(KeyInput.KEY_A, KeyInput.KEY_D, KeyInput.KEY_LCONTROL, KeyInput.KEY_LSHIFT);
             player1.setKeys(k);
             rootNode.attachChild(player1.getPlayerNode());
@@ -195,7 +195,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
 
             Vector3f p2_pos = new Vector3f(15.0f, -10.1f, -140f);
 
-            player2 = new Player("player 2", matp2, p2_pos, p2Selected, assetManager, -1.57f);
+            player2 = new Player("player 2",  p2_pos, p2Selected, assetManager, -1.57f);
 
             Keys k1 = new Keys(KeyInput.KEY_LEFT, KeyInput.KEY_RIGHT, KeyInput.KEY_RMENU, KeyInput.KEY_RSHIFT);
 
@@ -344,7 +344,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
             if (player1.isAlive()) {
                 if (name.equals("P1_Left")) {
                     if (player1.getBall() != null) {
-                        player1.getBall().getObjectId().applyCentralImpulse(new javax.vecmath.Vector3f(-controlForce * player1.getSwapped(), 0.0f, 0.0f));
+                        player1.getBall().getControl(RigidBodyControl.class).getObjectId().applyCentralImpulse(new javax.vecmath.Vector3f(-controlForce * player1.getSwapped(), 0.0f, 0.0f));
                     } else {
                         if ((player1.getSwapped() == 1 && player1.getPlayerControl().getPhysicsLocation().x > (plat2_pos.x - boxX + player1.getSizeX()))
                                 || (player1.getSwapped() == -1 && player1.getPlayerControl().getPhysicsLocation().x < (plat2_pos.x + boxX - player1.getSizeX()))) {
@@ -354,7 +354,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
                     }
                 } else if (name.equals("P1_Right")) {
                     if (player1.getBall() != null) {
-                        player1.getBall().getObjectId().applyCentralImpulse(new javax.vecmath.Vector3f(controlForce * player1.getSwapped(), 0.0f, 0.0f));
+                        player1.getBall().getControl(RigidBodyControl.class).getObjectId().applyCentralImpulse(new javax.vecmath.Vector3f(controlForce * player1.getSwapped(), 0.0f, 0.0f));
                     } else {
                         if ((player1.getSwapped() == 1 && player1.getPlayerControl().getPhysicsLocation().x < (plat2_pos.x + boxX - player1.getSizeX()))
                                 || (player1.getSwapped() == -1 && player1.getPlayerControl().getPhysicsLocation().x > (plat2_pos.x - boxX + player1.getSizeX()))) {
@@ -369,7 +369,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
             if (player2.isAlive()) {
                 if (name.equals("P2_Left")) {
                     if (player2.getBall() != null) {
-                        player2.getBall().getObjectId().applyCentralImpulse(new javax.vecmath.Vector3f(-controlForce * player2.getSwapped(), 0.0f, 0.0f));
+                        player2.getBall().getControl(RigidBodyControl.class).getObjectId().applyCentralImpulse(new javax.vecmath.Vector3f(-controlForce * player2.getSwapped(), 0.0f, 0.0f));
                     } else {
                         if ((player2.getSwapped() == 1 && player2.getPlayerControl().getPhysicsLocation().x > (plat1_pos.x - boxX + player2.getSizeX()))
                                 || (player2.getSwapped() == -1 && player2.getPlayerControl().getPhysicsLocation().x < (plat1_pos.x + boxX - player2.getSizeX()))) {
@@ -379,7 +379,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
                     }
                 } else if (name.equals("P2_Right")) {
                     if (player2.getBall() != null) {
-                        player2.getBall().getObjectId().applyCentralImpulse(new javax.vecmath.Vector3f(controlForce * player2.getSwapped(), 0.0f, 0.0f));
+                        player2.getBall().getControl(RigidBodyControl.class).getObjectId().applyCentralImpulse(new javax.vecmath.Vector3f(controlForce * player2.getSwapped(), 0.0f, 0.0f));
                     } else {
                         if ((player2.getSwapped() == 1 && player2.getPlayerControl().getPhysicsLocation().x < (plat1_pos.x + boxX - player2.getSizeX()))
                                 || (player2.getSwapped() == -1 && player2.getPlayerControl().getPhysicsLocation().x > (plat1_pos.x - boxX + player2.getSizeX()))) {
@@ -436,7 +436,8 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
                 if (firstPlayer && player1.getBall() == null && player1.isAlive()) {
                     if (name.equals("P1_Shoot") && !keyPressed) {
                         if (bp1.getCurrentPower() > 1) {
-                            player1.setBall(makeBall(bp1.getCurrentPower() * powerScale, player1.getPlayerGeo(), 1));
+                            player1.setBall(makeBall(bp1.getCurrentPower() * powerScale, player1.getPlayerGeo(), 1,player1.getBallMaterial()));
+                            
                             player1_shoot = false;
                         }
                     } else if (name.equals("P1_Shoot")) {
@@ -445,7 +446,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
                 } else if (!firstPlayer && player2.getBall() == null && player2.isAlive()) {
                     if (name.equals("P2_Shoot") && !keyPressed) {
                         if (bp2.getCurrentPower() > 1) {
-                            player2.setBall(makeBall(bp2.getCurrentPower() * powerScale, player2.getPlayerGeo(), -1));
+                            player2.setBall(makeBall(bp2.getCurrentPower() * powerScale, player2.getPlayerGeo(), -1,player2.getBallMaterial()));
                             player2_shoot = false;
                         }
                     } else if (name.equals("P2_Shoot")) {
@@ -463,18 +464,13 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
     };
     Geometry ball_geo = null;
 
-    private RigidBodyControl makeBall(float power, Spatial geom, int d) {
+    private Geometry makeBall(float power, Spatial geom, int d,Material mat) {
 
         Sphere sphere = new Sphere(32, 32, 0.4f, true, false);
         sphere.setTextureMode(TextureMode.Projected);
 
         ball_geo = new Geometry("cannon ball", sphere);
-        Material mat = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md");
-        mat.setBoolean("m_UseMaterialColors", true);
-        mat.setColor("m_Ambient", ColorRGBA.Orange);
-        mat.setColor("m_Diffuse", ColorRGBA.Orange);
-        mat.setColor("m_Specular", ColorRGBA.White);
-        mat.setFloat("m_Shininess", 12);
+        
 
         ball_geo.setMaterial(mat);
 
@@ -501,7 +497,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
 
         //ChaseCamera chaseCam = new ChaseCamera(cam, ball_geo, inputManager);
 
-        return ball_phy;
+        return ball_geo;
     }
     ParticleEmitter flame = null, flash = null, spark = null, roundspark = null, smoketrail = null, debris = null,
             shockwave = null;
@@ -680,7 +676,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
                 bp2.increasePower();
             }
 
-            if (player1.getBall() != null && player1.getBall().getPhysicsLocation().getY() <= -20.0f) {
+            if (player1.getBall() != null && player1.getBall().getControl(RigidBodyControl.class).getPhysicsLocation().getY() <= -20.0f) {
                 //explosion(ball_geo.getLocalTranslation(), 0.5f);
                 rootNode.detachChild(ball_geo);
                 bulletAppState.getPhysicsSpace().remove(player1.getBall());
@@ -688,7 +684,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
                 bp1.resetPower();
                 changePlayer();
             }
-            if (player2.getBall() != null && player2.getBall().getPhysicsLocation().getY() <= -20.0f) {
+            if (player2.getBall() != null && player2.getBall().getControl(RigidBodyControl.class).getPhysicsLocation().getY() <= -20.0f) {
                 //explosion( ball_geo.getLocalTranslation(),0.5f);
                 rootNode.detachChild(ball_geo);
                 bulletAppState.getPhysicsSpace().remove(player2.getBall());
