@@ -135,7 +135,19 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
 
     }
 
+    public void endGame() {
+
+        rootNode.detachAllChildren();
+        guiNode.detachAllChildren();
+        app.restart();
+        firstPlayer = true;
+        nifty.fromXml("homeScreen.xml", "start", new MyStartScreen(app));
+        
+
+    }
+
     public void startGame(int counter) {
+
 
         nifty.gotoScreen("loading");
         Element element = nifty.getScreen("loading").findElementByName("loadingtext");
@@ -162,8 +174,6 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
             Material matp2 = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
             matp2.setColor("Color", ColorRGBA.Blue);
 
-
-
             Material mat2 = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md");
             mat2.setBoolean("m_UseMaterialColors", true);
             mat2.setColor("m_Ambient", ColorRGBA.White);
@@ -172,7 +182,6 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
             mat2.setFloat("m_Shininess", 12);
             mat2.setTexture("DiffuseMap", assetManager.loadTexture("parede.jpg"));
             mat2.setTexture("NormalMap", assetManager.loadTexture("parede.jpg"));
-
 
             //Player 1
 
@@ -194,7 +203,6 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
             player2.setKeys(k1);
             rootNode.attachChild(player2.getPlayerNode());
 
-
             Node platforms = new Node();
 
             //Platform 1
@@ -210,7 +218,6 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
             platforms.attachChild(plat2);
             rootNode.attachChild(platforms);
 
-
             //Fisica dos objetos
             RigidBodyControl plat1_rb = new RigidBodyControl(0.0f);
             RigidBodyControl plat2_rb = new RigidBodyControl(0.0f);
@@ -218,7 +225,6 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
             //Associacao da fisica
             plat1.addControl(plat1_rb);
             plat2.addControl(plat2_rb);
-
 
             plat1_rb.setRestitution(0.7f);
             plat2_rb.setRestitution(0.7f);
@@ -245,15 +251,15 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
             setProgress(0.5f, "Loading landscapes and sky...");
         } else if (counter == 3) {
 
-            /** 1. Create terrain material and load four textures into it. */
+            
             mat_terrain = new Material(assetManager,
                     "Common/MatDefs/Terrain/Terrain.j3md");
 
-            /** 1.1) Add ALPHA map (for red-blue-green coded splat textures) */
+           
             mat_terrain.setTexture("Alpha", assetManager.loadTexture(
                     "Textures/Terrain/splat/alphamap.png"));
 
-            /** 1.2) Add GRASS texture into the red layer (Tex1). */
+           
             Texture grass = assetManager.loadTexture(
                     "Textures/Terrain/splat/grass.jpg");
             grass.setWrap(WrapMode.Repeat);
