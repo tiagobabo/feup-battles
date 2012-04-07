@@ -139,9 +139,10 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
 
         rootNode.detachAllChildren();
         guiNode.detachAllChildren();
+        app.restart();
         firstPlayer = true;
         nifty.fromXml("homeScreen.xml", "start", new MyStartScreen(app));
-
+        
 
     }
 
