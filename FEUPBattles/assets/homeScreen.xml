@@ -134,25 +134,10 @@ visibleToMouse="true">
             
              <panel id="panel_mid" height="30%" width="75%" align="center" childLayout="horizontal">   
               <panel id="panel_mid" height="100%" width="50%" align="left" childLayout="vertical"> 
-                    <text text="Informática" align= "center" font="Interface/Fonts/Default.fnt"  height="10%"/>
-                    <text text="Poder Especial - Trocar Teclas" align= "center" font="Interface/Fonts/Default.fnt" height="10%" />
-                    <text text="Apos a destruicao do mundo,"  font="Interface/Fonts/Default.fnt" height="10%" wrap ="true" align= "center"/>
-                    <text text="os informaticos continuam a ter "  font="Interface/Fonts/Default.fnt"  height="10%" align= "center"/>
-                    <text text="uma posicao de poder e "  font="Interface/Fonts/Default.fnt"  height="10%" align= "center"/>
-                    <text text="chegaram a esta competicao " font="Interface/Fonts/Default.fnt"  height="10%" align= "center"/>
-                    <text text="com uma maquina que lanca " font="Interface/Fonts/Default.fnt"  height="10%" align= "center"/>
-                    <text text="a confusao nos seus adversarios" font="Interface/Fonts/Default.fnt"  height="10%" align= "center"/>
+                    <image filename="inf_desc.png"></image>
                </panel>
                   <panel id="panel_mid" height="100%" width="50%" align="right" childLayout="vertical"> 
-                    <text text="Informática" align= "center" font="Interface/Fonts/Default.fnt"  height="10%" />
-                    <text text="Poder Especial - Trocar Teclas" align= "center" font="Interface/Fonts/Default.fnt" height="10%" />
-                    <text text="Apos a destruicao do mundo,"  font="Interface/Fonts/Default.fnt" height="10%" align= "center"/>
-                    <text text="os informaticos continuam a ter "  font="Interface/Fonts/Default.fnt"  height="10%" align= "center"/>
-                    <text text="uma posicao de poder e chegaram "  font="Interface/Fonts/Default.fnt"  height="10%" align= "center"/>
-                    <text text="a esta competicao com uma maquina " font="Interface/Fonts/Default.fnt"  height="10%" align= "center"/>
-                    <text text="que lanca a confusao nos seus " font="Interface/Fonts/Default.fnt"  height="10%" align= "center" />
-                    <text text="adversarios" font="Interface/Fonts/Default.fnt"  height="10%" align= "center" />
-
+                    <image filename="chem_desc.png"></image>
                </panel>
              </panel>
               
