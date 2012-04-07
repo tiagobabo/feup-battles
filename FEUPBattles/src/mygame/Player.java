@@ -29,6 +29,7 @@ public class Player {
     private Node playerNode;
     private boolean alive = true;
     private RigidBodyControl ball;
+    
     private Keys keys;
     private SuperPower sp;
     private float sizeX = 1;
@@ -40,7 +41,7 @@ public class Player {
     private float velocity = 0.05f;
 
     public Player(String name, Material playerMaterial, Vector3f initialPosition, ESuperPower sp, AssetManager assetManager, float rot) {
-
+        
         playerGeo = assetManager.loadModel("m1 abrams.j3o");
         playerGeo.setName(name);
         playerGeo.setLocalTranslation(initialPosition);
@@ -67,6 +68,9 @@ public class Player {
                 break;
             case Bio:
                 this.sp = new BioSuperPower();
+                break;
+            case Mechanics:
+                this.sp = new MechanicsSuperPower();
                 break;
             case None:
             default:
