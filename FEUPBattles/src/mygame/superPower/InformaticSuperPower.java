@@ -26,20 +26,20 @@ public class InformaticSuperPower extends SuperPower{
                 if( mygame.Main.mana1.getCurrentMana() >= this.manaCost) {
                         mygame.Main.player2.swapKeys();
                         mygame.Main.mana1.loseMana(this.manaCost);
-                        System.out.println("Swapping p2 keys");
+                        warnPlayers(playerNumber);
                 }
                     break;
             case 2: 
                  if(mygame.Main.mana2.getCurrentMana() >= this.manaCost) {
                         mygame.Main.player1.swapKeys();
                         mygame.Main.mana2.loseMana(this.manaCost);
-                        System.out.println("Swapping p1 keys");
+                        warnPlayers(playerNumber);
                  }
                     break;
             default:
                     break;
         }
-         warnPlayers(playerNumber);
+        
         
     }
     public void cancelSuperPower(int playerNumber){

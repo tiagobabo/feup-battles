@@ -38,6 +38,7 @@ public class Player {
     private int swapped = 1;
     private boolean immune = false;
     private float velocity = 0.05f;
+    private int damage = 1;
 
     public Player(String name, Material playerMaterial, Vector3f initialPosition, ESuperPower sp, AssetManager assetManager, float rot) {
 
@@ -319,5 +320,19 @@ public class Player {
      */
     public void setSilenced(boolean silenced) {
         this.silenced = silenced;
+    }
+
+    /**
+     * @return the damage
+     */
+    public int getDamage() {
+        return damage;
+    }
+
+    /**
+     * @param damage the damage to set
+     */
+    public void setDamage(int damage) {
+        this.damage = damage;
     }
 }

@@ -26,7 +26,7 @@ public class ChemistrySuperPower extends SuperPower {
                         oldVelocity = mygame.Main.player2.getVelocity();
                         mygame.Main.player2.setVelocity(newVelocity);
                         mygame.Main.mana1.loseMana(this.manaCost);
-                       
+                        warnPlayers(playerNumber);
                 }
                     break;
             case 2: 
@@ -34,13 +34,13 @@ public class ChemistrySuperPower extends SuperPower {
                         oldVelocity = mygame.Main.player1.getVelocity();
                         mygame.Main.player1.setVelocity(newVelocity);
                         mygame.Main.mana2.loseMana(this.manaCost);
-                      
+                       warnPlayers(playerNumber);
                  }
                     break;
             default:
                     break;
         }
-         warnPlayers(playerNumber);
+        
         
     }
     public void cancelSuperPower(int playerNumber){

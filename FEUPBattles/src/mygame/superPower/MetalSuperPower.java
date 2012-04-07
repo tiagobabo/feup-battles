@@ -4,31 +4,32 @@
  */
 package mygame.superPower;
 
-
-import com.jme3.math.ColorRGBA;
-import mygame.Main;
-
 /**
  *
- * @author helder
+ * @author ZePedro
  */
-public class CivilSuperPower extends SuperPower{
+public class MetalSuperPower  extends SuperPower{
     
-     public CivilSuperPower(){
-        manaCost = 50;
-        duration = 1;
+    private int newDamage = 2;
+    private int oldDamage;
+    
+    public MetalSuperPower(){
+        manaCost = 30;
+        duration = 3;
         superPowerImage = "star.png";
     }
     public void usePower(int playerNumber) {
         switch(playerNumber){
             case 1: if (this.manaCost <= mygame.Main.mana1.getCurrentMana()) { 
-                        mygame.Main.player1.setImmune(true);
+                        oldDamage = mygame.Main.player1.getDamage();
+                        mygame.Main.player1.setDamage(newDamage);
                         mygame.Main.mana1.loseMana(this.manaCost);
                         warnPlayers(playerNumber);
                     }
                     break;
             case 2: if (this.manaCost <= mygame.Main.mana2.getCurrentMana()) {
-                        mygame.Main.player2.setImmune(true);
+                        oldDamage = mygame.Main.player2.getDamage();
+                        mygame.Main.player2.setDamage(newDamage);
                         mygame.Main.mana2.loseMana(this.manaCost);
                         warnPlayers(playerNumber);
                     }
@@ -36,21 +37,18 @@ public class CivilSuperPower extends SuperPower{
             default:
                     break;
         }
-        
+       
     }
     public void cancelSuperPower(int playerNumber){
         switch(playerNumber){
-            case 1: mygame.Main.player1.setImmune(false);     
+            case 1: mygame.Main.player1.setDamage(oldDamage);    
                     break;
             case 2: 
-                    mygame.Main.player2.setImmune(false);     
+                    mygame.Main.player2.setDamage(oldDamage);     
                     break;
             default:
                     break;
         }
          removeWarning( playerNumber);
     }
-
-   
-   
 }
