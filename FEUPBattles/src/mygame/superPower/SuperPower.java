@@ -4,6 +4,7 @@
  */
 package mygame.superPower;
 
+import java.util.concurrent.Callable;
 import mygame.Main;
 
 
@@ -70,14 +71,26 @@ public abstract class SuperPower {
     public String getSuperPowerImage() {
         return superPowerImage;
     }
+    
     public void warnPlayers(int playerNumber) {
         switch(playerNumber){
-            case 1: Main.p1Pic.setHeight(80);
+            case 1: Main.app.enqueue(new Callable<Void>() {
+                public Void call() throws Exception{
+                     Main.p1Pic.setHeight(80);
                     Main.p1Pic.setWidth(80);
+                    return null;
+                }
+            });
+                    
+                   
                     break;
-            case 2: Main.p2Pic.setHeight(80);
+            case 2:  Main.app.enqueue(new Callable<Void>() {
+                public Void call() throws Exception{
+                     Main.p2Pic.setHeight(80);
                     Main.p2Pic.setWidth(80);
-                    break;
+                    return null;
+                }
+            });
             default:
                     break;
         }
@@ -85,11 +98,21 @@ public abstract class SuperPower {
     }
     public void removeWarning(int playerNumber) {
        switch(playerNumber){
-            case 1: Main.p1Pic.setHeight(0);
+            case 1: Main.app.enqueue(new Callable<Void>() {
+                public Void call() throws Exception{
+                     Main.p1Pic.setHeight(0);
                     Main.p1Pic.setWidth(0);
+                    return null;
+                }
+            });
                     break;
-            case 2: Main.p2Pic.setHeight(0);
+            case 2:  Main.app.enqueue(new Callable<Void>() {
+                public Void call() throws Exception{
+                     Main.p2Pic.setHeight(0);
                     Main.p2Pic.setWidth(0);
+                    return null;
+                }
+            });
                     break;
             default:
                     break;

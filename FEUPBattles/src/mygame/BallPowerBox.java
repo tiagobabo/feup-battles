@@ -24,7 +24,7 @@ public class BallPowerBox {
     private Material matRed;
     private float currentPower = 1.0f;
     private float barWidth = 10.0f;
-    float increase = 0.1f;
+    float increase = 0.5f;
     
     
     public BallPowerBox(String name,  Vector3f position, Material green, Material yellow, Material red){
@@ -48,7 +48,7 @@ public class BallPowerBox {
     }
 
     /**
-     * @param greenPowerQuad the greenPowerQuad to set
+     * @param greenPowedrQuad the greenPowerQuad to set
      */
     public void setGreenPowerQuad(Quad greenPowerQuad) {
         this.greenPowerQuad = greenPowerQuad;
