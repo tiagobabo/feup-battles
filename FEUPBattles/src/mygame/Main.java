@@ -853,6 +853,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
 
             if (mana1.getCurrentMana() < mana1.getMaxMana() && !firstPlayer) {
                 mana1.regainMana();
+                
             }
             if (mana2.getCurrentMana() < mana2.getMaxMana() && firstPlayer) {
                 mana2.regainMana();
