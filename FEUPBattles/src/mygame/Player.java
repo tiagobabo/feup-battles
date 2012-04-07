@@ -73,6 +73,9 @@ public class Player {
             case Mechanics:
                 this.sp = new MechanicsSuperPower();
                 break;
+            case Metal:
+                this.sp = new MetalSuperPower();
+                break;
             case None:
             default:
                 System.out.println("OOPS");
