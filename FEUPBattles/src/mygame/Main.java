@@ -96,7 +96,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         app = new Main();
         AppSettings settings = new AppSettings(true);
         settings.setResolution(1024, 768);
-        settings.setFullscreen(true);
+        //settings.setFullscreen(true);
         app.setShowSettings(false); // splashscreen
         app.setSettings(settings);
         app.start();
