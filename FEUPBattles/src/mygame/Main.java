@@ -19,6 +19,7 @@ import com.jme3.app.SimpleApplication;
 import com.jme3.audio.AudioNode;
 import com.jme3.effect.ParticleEmitter;
 import com.jme3.effect.ParticleMesh.Type;
+import com.jme3.effect.shapes.EmitterSphereShape;
 import com.jme3.font.BitmapText;
 import com.jme3.light.AmbientLight;
 import com.jme3.light.DirectionalLight;
@@ -26,6 +27,8 @@ import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
 import com.jme3.niftygui.NiftyJmeDisplay;
+import com.jme3.post.FilterPostProcessor;
+import com.jme3.post.filters.FogFilter;
 import com.jme3.renderer.Camera;
 import com.jme3.renderer.queue.RenderQueue.ShadowMode;
 import com.jme3.scene.Node;
@@ -45,6 +48,7 @@ import de.lessvoid.nifty.elements.render.TextRenderer;
 import de.lessvoid.nifty.tools.SizeValue;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -90,6 +94,8 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
     static public Main app;
     private Element progressBarElement;
     private Nifty nifty;
+    Random generator;
+    int randomFlames = 0;
 
     public static void main(String[] args) {
         //Logger.getLogger("").setLevel(Level.OFF);
@@ -123,7 +129,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         flyCam.setEnabled(false);
         nifty.fromXml("homeScreen.xml", "startScreen", new MyStartScreen(app));
 
-
+        generator = new Random();
     }
 
     public void setProgress(final float progress, String loadingText) {
@@ -159,8 +165,8 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
             stateManager.attach(bulletAppState);
 
             flyCam.setMoveSpeed(50);
-            cam.setLocation(new Vector3f(-2.5f, 25f, -87));
-            cam.lookAtDirection(new Vector3f(0f, -0.55f, -0.84f), Vector3f.UNIT_Y);
+            cam.setLocation(new Vector3f(-2.8499677f, 5.944004f, -85.42222f));
+            cam.lookAtDirection(new Vector3f(0.00555476f, -0.31822094f, -0.9480003f), Vector3f.UNIT_Y);
             flyCam.setEnabled(false);
 
             setProgress(0.2f, "Loading objects and materials...");
@@ -179,7 +185,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
             mat2.setColor("m_Ambient", ColorRGBA.White);
             mat2.setColor("m_Diffuse", ColorRGBA.White);
             mat2.setColor("m_Specular", ColorRGBA.White);
-            mat2.setFloat("m_Shininess", 12);
+            mat2.setFloat("m_Shininess", 2);
             mat2.setTexture("DiffuseMap", assetManager.loadTexture("parede.jpg"));
             mat2.setTexture("NormalMap", assetManager.loadTexture("parede.jpg"));
 
@@ -249,6 +255,9 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
 
             platforms.setShadowMode(ShadowMode.Receive);
             setProgress(0.5f, "Loading landscapes and sky...");
+            
+            scenarios();
+            
         } else if (counter == 3) {
 
             
@@ -334,9 +343,123 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
             sun.setColor(ColorRGBA.White);
             sun.setDirection(new Vector3f(-.5f, -.5f, -.5f).normalizeLocal());
             rootNode.addLight(sun);
+            
+            FilterPostProcessor fpp=new FilterPostProcessor(assetManager);
+            //fpp.setNumSamples(4);
+            FogFilter fog=new FogFilter();
+            fog.setFogColor(new ColorRGBA(0.9f, 0.9f, 0.9f, 1.0f));
+            fog.setFogDistance(700.0f);
+            fog.setFogDensity(2.5f);
+            fpp.addFilter(fog);
+        viewPort.addProcessor(fpp);
+
         }
 
     }
+    
+    private void makeFlame(Vector3f c1) {
+        ParticleEmitter flame2 = new ParticleEmitter("Flame", EMITTER_TYPE, 32 * COUNT_FACTOR);
+        flame2.setSelectRandomImage(true);
+        flame2.setStartColor(new ColorRGBA(1f, 0.4f, 0.05f, (float) (1f / COUNT_FACTOR_F)));
+        flame2.setEndColor(new ColorRGBA(.4f, .22f, .12f, 0f));
+        flame2.setStartSize(1.3f);
+        flame2.setEndSize(2f);
+        flame2.setShape(new EmitterSphereShape(Vector3f.ZERO, 1.0f));
+        flame2.setParticlesPerSec(0);
+        flame2.setGravity(0, -5, 0);
+        flame2.setLowLife(.4f);
+        flame2.setHighLife(.5f);
+        flame2.getParticleInfluencer().setInitialVelocity(new Vector3f(0, 7, 0));
+        flame2.getParticleInfluencer().setVelocityVariation(1f);
+        flame2.setImagesX(5);
+        flame2.setImagesY(5);
+        Material mat = new Material(assetManager, "Common/MatDefs/Misc/Particle.j3md");
+        mat.setTexture("Texture", assetManager.loadTexture("Effects/Explosion/flame.png"));
+        mat.setBoolean("PointSprite", POINT_SPRITE);
+        flame2.setMaterial(mat);
+        flame2.setLocalTranslation(c1.getX(), c1.getY(), c1.getZ() + 2.0f);
+        rootNode.attachChild(flame2);
+        flames.add(flame2);
+    }
+	
+	 private void scenarios() {
+        //Cenarios
+        Material mat3 = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md");
+        mat3.setBoolean("m_UseMaterialColors", true);
+        mat3.setColor("m_Ambient", ColorRGBA.White);
+        mat3.setColor("m_Diffuse", ColorRGBA.White);
+        mat3.setColor("m_Specular", ColorRGBA.White);
+        mat3.setFloat("m_Shininess", 2);
+        mat3.setTexture("DiffuseMap", assetManager.loadTexture("c1.jpg"));
+        mat3.setTexture("NormalMap", assetManager.loadTexture("c1.jpg"));
+
+
+        Material mat4 = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md");
+        mat4.setBoolean("m_UseMaterialColors", true);
+        mat4.setColor("m_Ambient", ColorRGBA.White);
+        mat4.setColor("m_Diffuse", ColorRGBA.White);
+        mat4.setColor("m_Specular", ColorRGBA.White);
+        mat4.setFloat("m_Shininess", 2);
+        mat4.setTexture("DiffuseMap", assetManager.loadTexture("c2.jpg"));
+        mat4.setTexture("NormalMap", assetManager.loadTexture("c2.jpg"));
+
+        Material mat5 = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md");
+        mat5.setBoolean("m_UseMaterialColors", true);
+        mat5.setColor("m_Ambient", ColorRGBA.White);
+        mat5.setColor("m_Diffuse", ColorRGBA.White);
+        mat5.setColor("m_Specular", ColorRGBA.White);
+        mat5.setFloat("m_Shininess", 1);
+        mat5.setTexture("DiffuseMap", assetManager.loadTexture("c3.jpg"));
+        mat5.setTexture("NormalMap", assetManager.loadTexture("c3.jpg"));
+
+        Material mat6 = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md");
+        mat6.setBoolean("m_UseMaterialColors", true);
+        mat6.setColor("m_Ambient", ColorRGBA.White);
+        mat6.setColor("m_Diffuse", ColorRGBA.White);
+        mat6.setColor("m_Specular", ColorRGBA.White);
+        mat6.setFloat("m_Shininess", 1);
+        mat6.setTexture("DiffuseMap", assetManager.loadTexture("c3.jpg"));
+        mat6.setTexture("NormalMap", assetManager.loadTexture("c3.jpg"));
+
+        Vector3f c1 = new Vector3f(-30f, -25f, -170f);
+        float scale = 1.0f;
+        float rotx = 0.0f;
+        float roty = 0.0f;
+        float rotz = 0.6f;
+        makeWall(scale, c1, mat3, mat4, rotx, roty, rotz);
+
+        c1 = new Vector3f(30f, -25f, -190f);
+        makeWall(scale, c1, mat3, mat4, rotx, roty, -0.4f);
+
+        c1 = new Vector3f(20f, -20f, -200f);
+        scale = 0.5f;
+        makeWall(scale, c1, mat5, mat4, rotx, roty, 0.5f);
+
+        c1 = new Vector3f(-20f, -20f, -200f);
+        makeWall(2.0f, c1, mat3, mat4, 0.0f, 0.0f, 0.2f);
+    }
+    ArrayList<ParticleEmitter> flames = new ArrayList<ParticleEmitter>();
+
+    private void makeWall(float scale, Vector3f c1, Material mat3, Material mat4, float rotx, float roty, float rotz) {
+        Box b3 = new Box(Vector3f.ZERO, 10.0f * scale, 10.f * scale, 0.1f * scale);
+        Geometry c1_geo = new Geometry("C1", b3);
+
+        c1_geo.setLocalTranslation(c1);
+        c1_geo.setMaterial(mat3);
+        c1_geo.rotate(rotx, roty, rotz);
+        rootNode.attachChild(c1_geo);
+
+        Box b4 = new Box(Vector3f.ZERO, 10.0f * scale, 10.f * scale, 2.0f * scale);
+        Vector3f c2 = new Vector3f(c1.getX(), c1.getY(), c1.getZ() - 2.0f * scale);
+        Geometry c2_geo = new Geometry("C1", b4);
+
+        c2_geo.setLocalTranslation(c2);
+        c2_geo.setMaterial(mat4);
+        c2_geo.rotate(rotx, roty, rotz);
+        rootNode.attachChild(c2_geo);
+        makeFlame(c1);
+    }
+    
     private AnalogListener analogListener = new AnalogListener() {
 
         public void onAnalog(String name, float value, float tpf) {
@@ -647,7 +770,14 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         }
 
         if (inGame) {
-
+            if (randomFlames == 0) {
+                for (ParticleEmitter f : flames) {
+                    if (generator.nextInt(5) == 1) {
+                        f.emitAllParticles();
+                    }
+                }
+            }
+            randomFlames = generator.nextInt(50);
             int i = 0;
             while (tasks.size() > 0 && tasks.get(i).isDone()) {
                 try {
