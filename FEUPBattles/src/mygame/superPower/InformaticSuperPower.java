@@ -15,7 +15,7 @@ package mygame.superPower;
 public class InformaticSuperPower extends SuperPower{
 
     public InformaticSuperPower(){
-        manaCost = 10;
+        manaCost = 30;
         duration = 3;
         superPowerImage = "keys.png";
     }

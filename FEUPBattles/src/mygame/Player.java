@@ -60,6 +60,7 @@ public class Player {
         switch (sp) {
             case Informatic:
                 this.sp = new InformaticSuperPower();
+     
                 break;
             case Civil:
                 this.sp = new CivilSuperPower();
@@ -85,6 +86,9 @@ public class Player {
 
 
         }
+        this.sp.setType(sp);
+        
+        
         ballMaterial = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md");
         ballMaterial.setBoolean("m_UseMaterialColors", true);
         ballMaterial.setColor("m_Ambient", ColorRGBA.Orange);
@@ -364,5 +368,9 @@ public class Player {
      */
     public void setBallMaterial(Material ballMaterial) {
         this.ballMaterial = ballMaterial;
+    }
+    
+    public SuperPower getSuperPower(){
+        return sp;
     }
 }

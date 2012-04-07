@@ -29,15 +29,15 @@ public class ManaBox {
     public ManaBox(String name, Vector3f position, Material green, Material black) {
         manaNode = new Node("hpbNode");
 
-        greenManaQuad = new Quad(getCurrentMana(), 5f);
-        greenManaGeometry = new Geometry("green" + name, getGreenManaQuad());
+        greenManaQuad = new Quad(currentMana, 5f);
+        greenManaGeometry = new Geometry("green" + name, greenManaQuad);
         greenManaGeometry.setLocalTranslation(position);
         greenManaGeometry.setMaterial(green);
 
         manaNode.attachChild(greenManaGeometry);
 
-        blackManaQuad = new Quad(20.0f, 0.5f);
-        blackManaGeometry = new Geometry("black" + name, getBlackManaQuad());
+        blackManaQuad = new Quad(currentMana, 5f);
+        blackManaGeometry = new Geometry("black" + name, blackManaQuad);
         Vector3f pos2 = new Vector3f(position);
         pos2.setZ(-1.0f);
         blackManaGeometry.setLocalTranslation(pos2);
