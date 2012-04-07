@@ -37,6 +37,16 @@ public class PauseScreen extends AbstractAppState implements ScreenController {
 
   public void onEndScreen() {
   }
+  
+  public void quitGame() {
+    main.stop();
+    app.stop();
+  }
+  
+  public void endGame() {
+    main.endGame();
+  }
+
 
   /** jME3 AppState methods */
   @Override
