@@ -66,8 +66,8 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
     public static final float COUNT_FACTOR_F = 1f;
     public static final boolean POINT_SPRITE = true;
     public static final Type EMITTER_TYPE = POINT_SPRITE ? Type.Point : Type.Triangle;
-    HitPointsBox hp1;
-    HitPointsBox hp2;
+    public static HitPointsBox hp1;
+    public static HitPointsBox hp2;
     public static ManaBox mana1;
     public static ManaBox mana2;
     BallPowerBox bp1;
