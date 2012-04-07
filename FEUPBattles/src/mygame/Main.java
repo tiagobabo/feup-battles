@@ -51,6 +51,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import mygame.menus.PauseScreen;
 import mygame.sfx.*;
 import mygame.superPower.*;
 
@@ -413,50 +414,71 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         inputManager.addMapping("P2_SP", new KeyTrigger(player2.getSuperPowerKey()));
         inputManager.addMapping("P1_Shoot", new KeyTrigger(player1.getFireKey()));
         inputManager.addMapping("P2_Shoot", new KeyTrigger(player2.getFireKey()));
+         inputManager.addMapping("Pause", new KeyTrigger(KeyInput.KEY_P));
         inputManager.addListener(analogListener, new String[]{"P1_Left", "P1_Right",
                     "P2_Left", "P2_Right"});
-        inputManager.addListener(actionListener, new String[]{"P1_Shoot", "P2_Shoot", "P1_SP", "P2_SP"});
+        inputManager.addListener(actionListener, new String[]{"P1_Shoot", "P2_Shoot", "P1_SP", "P2_SP", "Pause"});
 
     }
+    
+    public void resumeGame() {
+
+        nifty.exit();
+        bulletAppState.setEnabled(true);
+        guiNode.detachAllChildren();
+        initKeys();
+        initHPs();
+        initManaBars();
+        initPowerBar();
+        initInfo();
+        inGame = true;
+    }
+    
     private ActionListener actionListener = new ActionListener() {
 
         public void onAction(String name, boolean keyPressed, float tpf) {
-            if (firstPlayer && player1.getBall() == null && player1.isAlive()) {
-                if (name.equals("P1_Shoot") && !keyPressed ) {
-                    if (bp1.getCurrentPower() > 1) {
-                        player1.setBall(makeBall(bp1.getCurrentPower() * powerScale, player1.getPlayerGeo(), 1));
-                        
-                        player1_shoot = false;
-                      
-                    }
-                } else if (name.equals("P1_Shoot") ) {
-                    player1_shoot = true;
-                }
-            } else if (!firstPlayer && player2.getBall() == null && player2.isAlive()) {
-                if (name.equals("P2_Shoot") && !keyPressed) {
-                    if (bp2.getCurrentPower() > 1) {
-                        player2.setBall(makeBall(bp2.getCurrentPower() * powerScale, player2.getPlayerGeo(), -1));
-                       
-                        player2_shoot = false;
-                       
-                    }
-                } else if (name.equals("P2_Shoot")) {
-                    player2_shoot = true;
-                }
-            }
-            if (name.equals("P1_SP") && !keyPressed) {
-                if (!player1.isSuperPowerInUse()) {
-                    System.out.println("PLAYER 1 SP");
-                    player1.useSuperPower(1);
-                }
 
-            }
-            if (name.equals("P2_SP") && !keyPressed) {
-                if (!player2.isSuperPowerInUse()) {
-                    System.out.println("PLAYER 2 SP");
-                    player2.useSuperPower(2);
-                }
+            if (name.equals("Pause") && inGame) {
+                guiNode.detachAllChildren();
+                bulletAppState.setEnabled(false);
+                nifty.fromXml("pauseScreen.xml", "pauseScreen", new PauseScreen(app));
+                inGame = false;
+                return;
+            } else {
 
+                if (firstPlayer && player1.getBall() == null && player1.isAlive()) {
+                    if (name.equals("P1_Shoot") && !keyPressed) {
+                        if (bp1.getCurrentPower() > 1) {
+                            player1.setBall(makeBall(bp1.getCurrentPower() * powerScale, player1.getPlayerGeo(), 1));
+                            player1_shoot = false;
+                        }
+                    } else if (name.equals("P1_Shoot")) {
+                        player1_shoot = true;
+                    }
+                } else if (!firstPlayer && player2.getBall() == null && player2.isAlive()) {
+                    if (name.equals("P2_Shoot") && !keyPressed) {
+                        if (bp2.getCurrentPower() > 1) {
+                            player2.setBall(makeBall(bp2.getCurrentPower() * powerScale, player2.getPlayerGeo(), -1));
+                            player2_shoot = false;
+                        }
+                    } else if (name.equals("P2_Shoot")) {
+                        player2_shoot = true;
+                    }
+                }
+                if (name.equals("P1_SP") && !keyPressed) {
+                    if (!player1.isSuperPowerInUse()) {
+                        System.out.println("PLAYER 1 SP");
+                        player1.useSuperPower(1);
+                    }
+
+                }
+                if (name.equals("P2_SP") && !keyPressed) {
+                    if (!player2.isSuperPowerInUse()) {
+                        System.out.println("PLAYER 2 SP");
+                        player2.useSuperPower(2);
+                    }
+
+                }
             }
         }
     };
