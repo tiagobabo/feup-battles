@@ -27,7 +27,7 @@ public class MyStartScreen extends AbstractAppState implements ScreenController 
   private Application app;
   private Screen screen;
   private Main main;
-  private String[] descs = {"inf_desc.png","civil_desc.png","chem_desc.png","electro_desc.png","bio_desc.png","mec_desc.png","metal_desc.png"};
+  String[] descs = {"inf_desc.png","civil_desc.png","chem_desc.png","electro_desc.png","bio_desc.png","mec_desc.png","metal_desc.png"};
   private NiftyImage[] descImgs ;
   public MyStartScreen(Main app) {
         this.main = app;

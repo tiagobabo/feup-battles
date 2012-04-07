@@ -90,7 +90,9 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
     static public Main app;
     private Element progressBarElement;
     private Nifty nifty;
-
+    public static String[] icons = {"inf.png","civil.png","chem.png","electro.png","bio.png","mec.png","metal.png"};
+    public static String[] iconsSp = {"inf_sp.png","civil_sp.png","chem_sp.png","electro_sp.png","bio_sp.png","mec_sp.png","metal_sp.png"};
+   
     public static void main(String[] args) {
         //Logger.getLogger("").setLevel(Level.OFF);
         app = new Main();
@@ -603,21 +605,39 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
     }
     public static Picture p1Pic;
     public static Picture p2Pic;
-
+    public static Picture p1PicSp;
+    public static Picture p2PicSp;
     public void initHudImgs() {
+        
+        p1PicSp = new Picture("HUD Picture 1");
+        p1PicSp.setImage(assetManager, iconsSp[player1.getSuperPower().getType().ordinal()-1], true);
+        p1PicSp.setWidth(0);
+        p1PicSp.setHeight(0);
+        p1PicSp.setPosition(10, settings.getHeight() - 150);
+        guiNode.attachChild(p1PicSp);
+        
         p1Pic = new Picture("HUD Picture 1");
-        p1Pic.setImage(assetManager, player1.getSuperPowerImage(), true);
-        p1Pic.setWidth(0);
-        p1Pic.setHeight(0);
+        p1Pic.setImage(assetManager, icons[player1.getSuperPower().getType().ordinal()-1], true);
+        p1Pic.setWidth(80);
+        p1Pic.setHeight(80);
         p1Pic.setPosition(10, settings.getHeight() - 150);
         guiNode.attachChild(p1Pic);
-
+         
+       
+        
         p2Pic = new Picture("HUD Picture 2");
-        p2Pic.setImage(assetManager, player2.getSuperPowerImage(), true);
-        p2Pic.setWidth(0);
-        p2Pic.setHeight(0);
+        p2Pic.setImage(assetManager, icons[player2.getSuperPower().getType().ordinal()-1], true);
+        p2Pic.setWidth(80);
+        p2Pic.setHeight(80);
         p2Pic.setPosition(settings.getWidth() - 80 - 20, settings.getHeight() - 150);
         guiNode.attachChild(p2Pic);
+        
+        p2PicSp = new Picture("HUD Picture 2");
+        p2PicSp.setImage(assetManager, iconsSp[player2.getSuperPower().getType().ordinal()-1], true);
+        p2PicSp.setWidth(0);
+        p2PicSp.setHeight(0);
+        p2PicSp.setPosition(settings.getWidth() - 80 - 20, settings.getHeight() - 150);
+        guiNode.attachChild(p2PicSp);
 
 
     }
