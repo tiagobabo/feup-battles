@@ -13,7 +13,7 @@ public class ChemistrySuperPower extends SuperPower {
      private float newVelocity = 0.01f;
      private float oldVelocity;
      public ChemistrySuperPower(){
-        manaCost = 10;
+        manaCost = 30;
         duration = 3;
         superPowerImage = "keys.png";
     }

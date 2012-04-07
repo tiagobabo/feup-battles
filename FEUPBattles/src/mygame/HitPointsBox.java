@@ -33,7 +33,7 @@ public class HitPointsBox {
 
         hpNode.attachChild(greenHpGeometry);
 
-        blackHpQuad = new Quad(20.0f, 0.5f);
+        blackHpQuad = new Quad(currentLife, 5f);
         blackHpGeometry = new Geometry("black" + name, blackHpQuad);
         Vector3f pos2 = new Vector3f(position);
         pos2.setZ(-1.0f);

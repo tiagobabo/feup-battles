@@ -13,7 +13,7 @@ public class MechanicsSuperPower extends SuperPower {
      private float newVelocity = 0.10f;
      private float oldVelocity;
      public MechanicsSuperPower(){
-        manaCost = 10;
+        manaCost = 30;
         duration = 3;
         superPowerImage = "inf.png";
     }

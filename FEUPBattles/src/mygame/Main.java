@@ -916,13 +916,13 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
                     if (p.equals(player1)) {
                         hp1.loseLife(player2.getDamage());
                         System.out.println(p.getPlayerName() + " GOT HIT!\n HITPOINTS LEFT:" + hp1.getCurrentLife());
-                        if (hp1.getCurrentLife() == 0) {
+                        if (hp1.getCurrentLife() <= 0) {
                             death(player1);
                         }
                     } else {
                         hp2.loseLife(player1.getDamage());
                         System.out.println(p.getPlayerName() + " GOT HIT!\n HITPOINTS LEFT:" + hp2.getCurrentLife());
-                        if (hp1.getCurrentLife() == 0) {
+                        if (hp1.getCurrentLife() <= 0) {
                             death(player2);
                         }
                     }
