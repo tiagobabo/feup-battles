@@ -1001,6 +1001,8 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         rootNode.detachChild(p.getPlayerNode());
         bulletAppState.getPhysicsSpace().remove(p.getPlayerControl());
         p.setAlive(false);
+        inGame = false;
+        
     }
 
     private void changePlayer() {
