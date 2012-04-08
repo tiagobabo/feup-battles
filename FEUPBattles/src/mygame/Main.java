@@ -138,6 +138,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
     FilterPostProcessor fpp;
     AmbientLight al;
     DirectionalLight sun;
+    NiftyJmeDisplay niftyDisplay;
 
     @Override
     public void simpleInitApp() {
@@ -145,7 +146,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         app.setDisplayFps(false);
         app.setDisplayStatView(false);
 
-        NiftyJmeDisplay niftyDisplay = new NiftyJmeDisplay(
+        niftyDisplay = new NiftyJmeDisplay(
                 assetManager, inputManager, audioRenderer, guiViewPort);
         nifty = niftyDisplay.getNifty();
         guiViewPort.addProcessor(niftyDisplay);
@@ -659,15 +660,17 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
     };
     
     public void restartGame() {
-            guiNode.detachAllChildren();
-            guiNode.removeLight(null);
-            rootNode.detachAllChildren();
+        guiNode.detachAllChildren();
+        guiNode.removeLight(null);
+        rootNode.detachAllChildren();
+        if(winner != null)
             winner.stop();                    
-            nifty.fromXml("homeScreen.xml", "start", new MyStartScreen(app));
-            currentPlayer = 0;
-            viewPort.removeProcessor(fpp);
-            rootNode.removeLight(al);
-            rootNode.removeLight(sun);
+        currentPlayer = 0;
+        viewPort.removeProcessor(fpp);
+        rootNode.removeLight(al);
+        rootNode.removeLight(sun);
+
+        nifty.fromXml("homeScreen.xml", "start", new MyStartScreen(app));
    }
     
     Geometry ball_geo = null;

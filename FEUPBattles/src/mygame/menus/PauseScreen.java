@@ -45,7 +45,6 @@ public class PauseScreen extends AbstractAppState implements ScreenController {
   }
   
   public void endGame() {
-      nifty.exit();
       main.restartGame();
   }
 
