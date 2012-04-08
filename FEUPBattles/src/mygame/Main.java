@@ -100,6 +100,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
     Random generator;
     int randomFlames = 0;
     ArrayList<AudioNode> scenarioExplosion;
+    AudioNode backgroundMusic;
 
     public static void main(String[] args) {
         //Logger.getLogger("").setLevel(Level.OFF);
@@ -339,10 +340,9 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
             rootNode.attachChild(SkyFactory.createSky(
                     assetManager, "sky2.jpg", true));
 
-            AudioNode back = new AudioNode(assetManager, "back.wav");
-            back.setLooping(true);
-            back.play();
-            setProgress(0.90f, "Loading sun and screen info...");
+            
+           
+            setProgress(0.90f, "Loading sun, fog and screen info...");
         } else if (counter == 4) {
             guiNode.detachAllChildren();
             initKeys();
@@ -367,7 +367,9 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
             fog.setFogDensity(2.5f);
             fpp.addFilter(fog);
             viewPort.addProcessor(fpp);
-
+            backgroundMusic = new AudioNode(assetManager, "back.wav");
+            backgroundMusic.setLooping(true);
+            backgroundMusic.play();
         }
 
     }
@@ -548,16 +550,14 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
     }
 
     public void resumeGame() {
-
         nifty.exit();
         bulletAppState.setEnabled(true);
-        guiNode.detachAllChildren();
-        initKeys();
         initHPs();
         initManaBars();
         initPowerBar();
         initInfo();
         inGame = true;
+        backgroundMusic.play();
     }
     private ActionListener actionListener = new ActionListener() {
 
@@ -568,6 +568,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
                 bulletAppState.setEnabled(false);
                 nifty.fromXml("pauseScreen.xml", "pauseScreen", new PauseScreen(app));
                 inGame = false;
+                backgroundMusic.pause();
                 return;
             } else {
 

@@ -383,11 +383,6 @@ public class Player {
         playerNode.detachAllChildren();
         playerNode.attachChild(playerGeo[model]);
         playerGeo[model].setLocalTranslation(location);
-       
-       
-      
-
-
     }
 
     /**

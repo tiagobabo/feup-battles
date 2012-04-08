@@ -41,6 +41,7 @@ public class PauseScreen extends AbstractAppState implements ScreenController {
   public void quitGame() {
     main.stop();
     app.stop();
+    System.exit(1);
   }
   
   public void endGame() {
