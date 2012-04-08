@@ -45,11 +45,13 @@ public class InformaticSuperPower extends SuperPower{
     public void cancelSuperPower(int playerNumber){
        
         switch(playerNumber){
-            case 1: mygame.Main.player2.swapKeys();
-                    System.out.println("Swapping p2 keys back to normal");
+            case 1: if(mygame.Main.player2.getSwapped()==-1) 
+                        mygame.Main.player2.swapKeys();
+                   
                     break;
-            case 2: mygame.Main.player1.swapKeys();
-                     System.out.println("Swapping p1 keys back to normal");
+            case 2:if(mygame.Main.player1.getSwapped()==-1) 
+                        mygame.Main.player1.swapKeys();
+                     
                     break;
             default:
                     break;
