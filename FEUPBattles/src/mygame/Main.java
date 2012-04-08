@@ -94,11 +94,9 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
     static public Main app;
     private Element progressBarElement;
     private Nifty nifty;
-
-    public static String[] icons = {"inf.png","civil.png","chem.png","electro.png","bio.png","mec.png","metal.png"};
-    public static String[] iconsSp = {"inf_sp.png","civil_sp.png","chem_sp.png","electro_sp.png","bio_sp.png","mec_sp.png","metal_sp.png"};
-   
-
+    public static int numHits = 5;
+    public static String[] icons = {"inf.png", "civil.png", "chem.png", "electro.png", "bio.png", "mec.png", "metal.png"};
+    public static String[] iconsSp = {"inf_sp.png", "civil_sp.png", "chem_sp.png", "electro_sp.png", "bio_sp.png", "mec_sp.png", "metal_sp.png"};
     Random generator;
     int randomFlames = 0;
 
@@ -153,7 +151,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         app.restart();
         firstPlayer = true;
         nifty.fromXml("homeScreen.xml", "start", new MyStartScreen(app));
-        
+
 
     }
 
@@ -198,7 +196,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
 
             Vector3f p1_pos = new Vector3f(-20f, -10.1f, -140f);
 
-            player1 = new Player("player 1",  p1_pos, p1Selected, assetManager, 1.57f);
+            player1 = new Player("player 1", p1_pos, p1Selected, assetManager, Math.PI / 2.0f);
             Keys k = new Keys(KeyInput.KEY_A, KeyInput.KEY_D, KeyInput.KEY_LCONTROL, KeyInput.KEY_LSHIFT);
             player1.setKeys(k);
             rootNode.attachChild(player1.getPlayerNode());
@@ -207,7 +205,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
 
             Vector3f p2_pos = new Vector3f(15.0f, -10.1f, -140f);
 
-            player2 = new Player("player 2",  p2_pos, p2Selected, assetManager, -1.57f);
+            player2 = new Player("player 2", p2_pos, p2Selected, assetManager, -Math.PI / 2.0f);
 
             Keys k1 = new Keys(KeyInput.KEY_LEFT, KeyInput.KEY_RIGHT, KeyInput.KEY_RMENU, KeyInput.KEY_RSHIFT);
 
@@ -260,20 +258,20 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
 
             platforms.setShadowMode(ShadowMode.Receive);
             setProgress(0.5f, "Loading landscapes and sky...");
-            
+
             scenarios();
-            
+
         } else if (counter == 3) {
 
-            
+
             mat_terrain = new Material(assetManager,
                     "Common/MatDefs/Terrain/Terrain.j3md");
 
-           
+
             mat_terrain.setTexture("Alpha", assetManager.loadTexture(
                     "Textures/Terrain/splat/alphamap.png"));
 
-           
+
             Texture grass = assetManager.loadTexture(
                     "Textures/Terrain/splat/grass.jpg");
             grass.setWrap(WrapMode.Repeat);
@@ -348,20 +346,20 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
             sun.setColor(ColorRGBA.White);
             sun.setDirection(new Vector3f(0.00555476f, -0.31822094f, -0.9480003f).normalizeLocal());
             rootNode.addLight(sun);
-            
-            FilterPostProcessor fpp=new FilterPostProcessor(assetManager);
+
+            FilterPostProcessor fpp = new FilterPostProcessor(assetManager);
             //fpp.setNumSamples(4);
-            FogFilter fog=new FogFilter();
+            FogFilter fog = new FogFilter();
             fog.setFogColor(new ColorRGBA(0.9f, 0.9f, 0.9f, 1.0f));
             fog.setFogDistance(700.0f);
             fog.setFogDensity(2.5f);
             fpp.addFilter(fog);
-        viewPort.addProcessor(fpp);
+            viewPort.addProcessor(fpp);
 
         }
 
     }
-    
+
     private void makeFlame(Vector3f c1) {
         ParticleEmitter flame2 = new ParticleEmitter("Flame", EMITTER_TYPE, 32 * COUNT_FACTOR);
         flame2.setSelectRandomImage(true);
@@ -386,8 +384,8 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         rootNode.attachChild(flame2);
         flames.add(flame2);
     }
-	
-	 private void scenarios() {
+
+    private void scenarios() {
         //Cenarios
         Material mat3 = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md");
         mat3.setBoolean("m_UseMaterialColors", true);
@@ -464,7 +462,6 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         rootNode.attachChild(c2_geo);
         makeFlame(c1);
     }
-    
     private AnalogListener analogListener = new AnalogListener() {
 
         public void onAnalog(String name, float value, float tpf) {
@@ -565,8 +562,8 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
                 if (firstPlayer && player1.getBall() == null && player1.isAlive()) {
                     if (name.equals("P1_Shoot") && !keyPressed) {
                         if (bp1.getCurrentPower() > 1) {
-                            player1.setBall(makeBall(bp1.getCurrentPower() * powerScale, player1.getPlayerGeo(), 1,player1.getBallMaterial()));
-                            
+                            player1.setBall(makeBall(bp1.getCurrentPower() * powerScale, player1.getPlayerGeo(), 1, player1.getBallMaterial()));
+
                             player1_shoot = false;
                         }
                     } else if (name.equals("P1_Shoot")) {
@@ -575,7 +572,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
                 } else if (!firstPlayer && player2.getBall() == null && player2.isAlive()) {
                     if (name.equals("P2_Shoot") && !keyPressed) {
                         if (bp2.getCurrentPower() > 1) {
-                            player2.setBall(makeBall(bp2.getCurrentPower() * powerScale, player2.getPlayerGeo(), -1,player2.getBallMaterial()));
+                            player2.setBall(makeBall(bp2.getCurrentPower() * powerScale, player2.getPlayerGeo(), -1, player2.getBallMaterial()));
                             player2_shoot = false;
                         }
                     } else if (name.equals("P2_Shoot")) {
@@ -593,13 +590,13 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
     };
     Geometry ball_geo = null;
 
-    private Geometry makeBall(float power, Spatial geom, int d,Material mat) {
+    private Geometry makeBall(float power, Spatial geom, int d, Material mat) {
 
         Sphere sphere = new Sphere(32, 32, 0.4f, true, false);
         sphere.setTextureMode(TextureMode.Projected);
 
         ball_geo = new Geometry("cannon ball", sphere);
-        
+
 
         ball_geo.setMaterial(mat);
 
@@ -733,33 +730,34 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
     public static Picture p2Pic;
     public static Picture p1PicSp;
     public static Picture p2PicSp;
+
     public void initHudImgs() {
-        
+
         p1PicSp = new Picture("HUD Picture 1");
-        p1PicSp.setImage(assetManager, iconsSp[player1.getSuperPower().getType().ordinal()-1], true);
+        p1PicSp.setImage(assetManager, iconsSp[player1.getSuperPower().getType().ordinal() - 1], true);
         p1PicSp.setWidth(0);
         p1PicSp.setHeight(0);
         p1PicSp.setPosition(10, settings.getHeight() - 150);
         guiNode.attachChild(p1PicSp);
-        
+
         p1Pic = new Picture("HUD Picture 1");
-        p1Pic.setImage(assetManager, icons[player1.getSuperPower().getType().ordinal()-1], true);
+        p1Pic.setImage(assetManager, icons[player1.getSuperPower().getType().ordinal() - 1], true);
         p1Pic.setWidth(80);
         p1Pic.setHeight(80);
         p1Pic.setPosition(10, settings.getHeight() - 150);
         guiNode.attachChild(p1Pic);
-         
-       
-        
+
+
+
         p2Pic = new Picture("HUD Picture 2");
-        p2Pic.setImage(assetManager, icons[player2.getSuperPower().getType().ordinal()-1], true);
+        p2Pic.setImage(assetManager, icons[player2.getSuperPower().getType().ordinal() - 1], true);
         p2Pic.setWidth(80);
         p2Pic.setHeight(80);
         p2Pic.setPosition(settings.getWidth() - 80 - 20, settings.getHeight() - 150);
         guiNode.attachChild(p2Pic);
-        
+
         p2PicSp = new Picture("HUD Picture 2");
-        p2PicSp.setImage(assetManager, iconsSp[player2.getSuperPower().getType().ordinal()-1], true);
+        p2PicSp.setImage(assetManager, iconsSp[player2.getSuperPower().getType().ordinal() - 1], true);
         p2PicSp.setWidth(0);
         p2PicSp.setHeight(0);
         p2PicSp.setPosition(settings.getWidth() - 80 - 20, settings.getHeight() - 150);
@@ -857,6 +855,22 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
             if (mana2.getCurrentMana() < mana2.getMaxMana() && firstPlayer) {
                 mana2.regainMana();
             }
+            if (player1.isNeedChange()) {
+                rootNode.detachChild(player1.getPlayerGeo());
+                bulletAppState.getPhysicsSpace().remove(player1.getPlayerControl());
+                player1.changeModel(-1);
+                rootNode.attachChild(player1.getPlayerGeo());
+                bulletAppState.getPhysicsSpace().add(player1.getPlayerControl());
+                player1.setNeedChange(false);
+            }
+            if (player2.isNeedChange()) {
+                rootNode.detachChild(player2.getPlayerGeo());
+                bulletAppState.getPhysicsSpace().remove(player2.getPlayerControl());
+                player2.changeModel(-1);
+                rootNode.attachChild(player2.getPlayerGeo());
+                bulletAppState.getPhysicsSpace().add(player2.getPlayerControl());
+                  player2.setNeedChange(false);
+            }
         }
 
     }
@@ -918,12 +932,27 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
                         System.out.println(p.getPlayerName() + " GOT HIT!\n HITPOINTS LEFT:" + hp1.getCurrentLife());
                         if (hp1.getCurrentLife() <= 0) {
                             death(player1);
+                        } else {
+
+                            rootNode.detachChild(player1.getPlayerGeo());
+                            bulletAppState.getPhysicsSpace().remove(player1.getPlayerControl());
+                            player1.changeModel(1);
+                            rootNode.attachChild(player1.getPlayerGeo());
+                            bulletAppState.getPhysicsSpace().add(player1.getPlayerControl());
+
                         }
                     } else {
                         hp2.loseLife(player1.getDamage());
                         System.out.println(p.getPlayerName() + " GOT HIT!\n HITPOINTS LEFT:" + hp2.getCurrentLife());
-                        if (hp1.getCurrentLife() <= 0) {
+                        if (hp2.getCurrentLife() <= 0) {
                             death(player2);
+                        } else {
+                            rootNode.detachChild(player2.getPlayerGeo());
+                            bulletAppState.getPhysicsSpace().remove(player2.getPlayerControl());
+                            player2.changeModel(1);
+                            rootNode.attachChild(player2.getPlayerGeo());
+                            bulletAppState.getPhysicsSpace().add(player2.getPlayerControl());
+
                         }
                     }
 

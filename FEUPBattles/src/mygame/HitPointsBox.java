@@ -22,20 +22,20 @@ public class HitPointsBox {
     private Geometry blackHpGeometry;
     private Node hpNode;
     private float currentLife = 200.0f;
-    private int numHits = 10;
+ 
     private float maxLife = 200.0f;
 
     public HitPointsBox(String name, Vector3f position, Material green, Material black) {
         hpNode = new Node("hpbNode");
 
-        greenHpQuad = new Quad(currentLife, 5f);
+        greenHpQuad = new Quad(getCurrentLife(), 5f);
         greenHpGeometry = new Geometry("green" + name, greenHpQuad);
         greenHpGeometry.setLocalTranslation(position);
         greenHpGeometry.setMaterial(green);
 
         hpNode.attachChild(greenHpGeometry);
 
-        blackHpQuad = new Quad(currentLife, 5f);
+        blackHpQuad = new Quad(getCurrentLife(), 5f);
         blackHpGeometry = new Geometry("black" + name, blackHpQuad);
         Vector3f pos2 = new Vector3f(position);
         pos2.setZ(-1.0f);
@@ -117,18 +117,18 @@ public class HitPointsBox {
     }
 
     public void loseLife(int lifeLost) {
-        if (currentLife > 0) {
-            float scale = 1 - (maxLife/numHits) * lifeLost / currentLife;
-            if (currentLife == maxLife) {
+        if (getCurrentLife() > 0) {
+            float scale = 1 - (getMaxLife()/mygame.Main.numHits) * lifeLost / getCurrentLife();
+            if (Math.round(getCurrentLife()) == getMaxLife()) {
                 if (scale <= 1) {
                     greenHpGeometry.scale(scale, 1.0f, 1.0f);
-                    currentLife = currentLife * scale;
+                    currentLife = getCurrentLife() * scale;
                 }
             } else {
                 greenHpGeometry.scale(scale, 1.0f, 1.0f);
-                currentLife = currentLife * scale;
+                currentLife = getCurrentLife() * scale;
             }
-            System.out.println(currentLife);
+            System.out.println(getCurrentLife());
         }
     }
 
@@ -137,11 +137,18 @@ public class HitPointsBox {
     }
     
      public void regainHP(float increase){
-         if(currentLife<200){
-            float scale = (currentLife+increase)*(1/currentLife);
+         if(getCurrentLife()<200){
+            float scale = (getCurrentLife()+increase)*(1/getCurrentLife());
             greenHpGeometry.scale(scale,1.0f,1.0f);
-            currentLife = currentLife+increase;
+            currentLife = getCurrentLife()+increase;
          }
         
+    }
+
+    /**
+     * @return the maxLife
+     */
+    public float getMaxLife() {
+        return maxLife;
     }
 }

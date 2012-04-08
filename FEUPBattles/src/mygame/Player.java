@@ -30,7 +30,6 @@ public class Player {
     private Node playerNode;
     private boolean alive = true;
     private Geometry ball;
-    
     private Keys keys;
     private SuperPower sp;
     private float sizeX = 1;
@@ -42,36 +41,34 @@ public class Player {
     private float velocity = 0.05f;
     private int damage = 1;
     private int model = 0;
-   
-    
-    private Material ballMaterial;
 
-    public Player(String name, Vector3f initialPosition, ESuperPower sp, AssetManager assetManager, float rot) {
-        
+    private Material ballMaterial;
+    private boolean needChange =false;
+
+    public Player(String name, Vector3f initialPosition, ESuperPower sp, AssetManager assetManager, double rot) {
+
         playerGeo = new Spatial[5];
         playerControl = new RigidBodyControl[5];
-        
-        for(int i = 0; i < 5; i++)
-        {
-            playerGeo[i] = assetManager.loadModel("m"+(i+1)+" abrams.j3o");
+
+        for (int i = 0; i < 5; i++) {
+            playerGeo[i] = assetManager.loadModel("m" + (i + 1) + " abrams.j3o");
             playerGeo[i].setName(name);
             playerGeo[i].setLocalTranslation(initialPosition);
-            playerGeo[i].rotate(0.0f, rot, 0.0f);
+            playerGeo[i].rotate(0.0f, (float)rot, 0.0f);
             playerGeo[i].scale(1.5f);
             //playerGeo.setMaterial(playerMaterial);
             playerControl[i] = new RigidBodyControl(mass);
-            System.out.println(playerControl[i].toString());
             playerGeo[i].addControl(playerControl[i]);
             playerControl[i].setKinematic(true);
         }
-        
-       
+
+
         playerName = name;
         playerNode = new Node(name);
         switch (sp) {
             case Informatic:
                 this.sp = new InformaticSuperPower();
-     
+
                 break;
             case Civil:
                 this.sp = new CivilSuperPower();
@@ -98,16 +95,17 @@ public class Player {
 
         }
         this.sp.setType(sp);
-        
-        
+
+
         ballMaterial = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md");
         ballMaterial.setBoolean("m_UseMaterialColors", true);
         ballMaterial.setColor("m_Ambient", ColorRGBA.Orange);
         ballMaterial.setColor("m_Diffuse", ColorRGBA.Orange);
         ballMaterial.setColor("m_Specular", ColorRGBA.White);
         ballMaterial.setFloat("m_Shininess", 12);
-        
+
         playerNode.attachChild(playerGeo[model]);
+      
     }
 
     /**
@@ -366,8 +364,43 @@ public class Player {
     public void setBallMaterial(Material ballMaterial) {
         this.ballMaterial = ballMaterial;
     }
-    
-    public SuperPower getSuperPower(){
+
+    public SuperPower getSuperPower() {
         return sp;
+
+    }
+
+    public void changeModel(int direction) {
+        
+       
+        model += direction;
+        if (model <0){
+            model = 0;
+            return;
+        }
+        
+        Vector3f location = playerGeo[model - 1 * direction].getLocalTranslation();
+        playerNode.detachAllChildren();
+        playerNode.attachChild(playerGeo[model]);
+        playerGeo[model].setLocalTranslation(location);
+       
+       
+      
+
+
+    }
+
+    /**
+     * @return the needChange
+     */
+    public boolean isNeedChange() {
+        return needChange;
+    }
+
+    /**
+     * @param needChange the needChange to set
+     */
+    public void setNeedChange(boolean needChange) {
+        this.needChange = needChange;
     }
 }

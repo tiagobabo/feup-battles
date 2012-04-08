@@ -83,11 +83,11 @@ visibleToMouse="true">
                  <image filename="intro-logo.png"></image>
             </panel>
             
-            <panel id="panel_mid" height="60%" width="75%" align="center" childLayout="center">       
-                <text text="TO DO HOW TO PLAY" font="Interface/Fonts/Default.fnt" width="100%" height="100%" />
+            <panel id="panel_mid" height="65%" width="75%" align="center" childLayout="center">       
+                <image filename="how.png"></image>
             </panel>
             
-            <panel id="panel_mid" height="15%" width="75%" align="center" childLayout="center">       
+            <panel id="panel_mid" height="10%" width="75%" align="center" childLayout="center">       
                 <control name="button" label="Back" id="BackButton" align="center" valign="center" 
 visibleToMouse="true"> 
                     <interact onClick="go(start)" />
