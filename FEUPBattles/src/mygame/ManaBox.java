@@ -22,9 +22,9 @@ public class ManaBox {
     private Quad blackManaQuad;
     private Geometry blackManaGeometry;
     private Node manaNode;
-    private float currentMana = 200.0f;
+    private float currentMana = 1f;
     private float maxMana = 200.0f;
-    float increase = 0.005f;
+    float increase = 0.1f;
     
     public ManaBox(String name, Vector3f position, Material green, Material black) {
         manaNode = new Node("hpbNode");
@@ -36,7 +36,7 @@ public class ManaBox {
 
         manaNode.attachChild(greenManaGeometry);
 
-        blackManaQuad = new Quad(currentMana, 5f);
+        blackManaQuad = new Quad(maxMana, 5f);
         blackManaGeometry = new Geometry("black" + name, blackManaQuad);
         Vector3f pos2 = new Vector3f(position);
         pos2.setZ(-1.0f);
@@ -132,16 +132,20 @@ public class ManaBox {
     }
     
     public void regainMana(){
-        float scale = (currentMana+increase)*(1/currentMana);
-        greenManaGeometry.scale(scale,1.0f,1.0f);
-        currentMana = currentMana+increase;
+        if(currentMana+increase <= maxMana){
+            float scale = (currentMana+increase)*(1/currentMana);
+            greenManaGeometry.scale(scale,1.0f,1.0f);
+            currentMana = currentMana+increase;
+            System.out.println("current mana:" + currentMana);
+        }
+        
         
     }
     
     public void loseMana(float q){
         float scale = (currentMana-q)*(1/currentMana);
         greenManaGeometry.scale(scale,1.0f,1.0f);
-        currentMana = currentMana-q;
+        currentMana = Math.max(currentMana-q,1);
     }
 
     /**
