@@ -99,6 +99,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
     public static String[] iconsSp = {"inf_sp.png", "civil_sp.png", "chem_sp.png", "electro_sp.png", "bio_sp.png", "mec_sp.png", "metal_sp.png"};
     Random generator;
     int randomFlames = 0;
+    ArrayList<AudioNode> scenarioExplosion;
 
     public static void main(String[] args) {
         //Logger.getLogger("").setLevel(Level.OFF);
@@ -133,6 +134,17 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         nifty.fromXml("homeScreen.xml", "startScreen", new MyStartScreen(app));
 
         generator = new Random();
+        scenarioExplosion = new ArrayList<AudioNode>();
+        scenarioExplosion.add(new AudioNode(assetManager, "explosion.wav"));
+        scenarioExplosion.add(new AudioNode(assetManager, "explosion2.wav"));
+        scenarioExplosion.add(new AudioNode(assetManager, "explosion3.wav"));
+        scenarioExplosion.add(new AudioNode(assetManager, "explosion4.wav"));
+        scenarioExplosion.add(new AudioNode(assetManager, "explosion5.wav"));
+        scenarioExplosion.add(new AudioNode(assetManager, "explosion6.wav"));
+        
+        for(AudioNode a: scenarioExplosion)
+            a.setVolume(0.5f);
+        
     }
 
     public void setProgress(final float progress, String loadingText) {
@@ -329,7 +341,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
 
             AudioNode back = new AudioNode(assetManager, "back.wav");
             back.setLooping(true);
-            //back.play();
+            back.play();
             setProgress(0.90f, "Loading sun and screen info...");
         } else if (counter == 4) {
             guiNode.detachAllChildren();
@@ -747,8 +759,6 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         p1Pic.setPosition(10, settings.getHeight() - 150);
         guiNode.attachChild(p1Pic);
 
-
-
         p2Pic = new Picture("HUD Picture 2");
         p2Pic.setImage(assetManager, icons[player2.getSuperPower().getType().ordinal() - 1], true);
         p2Pic.setWidth(80);
@@ -762,8 +772,6 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         p2PicSp.setHeight(0);
         p2PicSp.setPosition(settings.getWidth() - 80 - 20, settings.getHeight() - 150);
         guiNode.attachChild(p2PicSp);
-
-
     }
 
     private void initPowerBar() {
@@ -795,6 +803,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
                 for (ParticleEmitter f : flames) {
                     if (generator.nextInt(5) == 1) {
                         f.emitAllParticles();
+                        scenarioExplosion.get(generator.nextInt(6)).play();
                     }
                 }
             }
@@ -818,8 +827,6 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
                 tasks.remove(i);
 
             }
-
-
 
             if (player1_shoot) {
                 bp1.increasePower();
@@ -851,7 +858,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
 
             if (mana1.getCurrentMana() < mana1.getMaxMana() && !firstPlayer) {
                 mana1.regainMana();
-                
+
             }
             if (mana2.getCurrentMana() < mana2.getMaxMana() && firstPlayer) {
                 mana2.regainMana();
@@ -870,7 +877,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
                 player2.changeModel(-1);
                 rootNode.attachChild(player2.getPlayerGeo());
                 bulletAppState.getPhysicsSpace().add(player2.getPlayerControl());
-                  player2.setNeedChange(false);
+                player2.setNeedChange(false);
             }
         }
 
