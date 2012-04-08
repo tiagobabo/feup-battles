@@ -935,10 +935,10 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
                             death(player1);
                         } else {
 
-                            rootNode.detachChild(player1.getPlayerGeo());
+                            rootNode.detachChild(player1.getPlayerNode());
                             bulletAppState.getPhysicsSpace().remove(player1.getPlayerControl());
                             player1.changeModel(1);
-                            rootNode.attachChild(player1.getPlayerGeo());
+                            rootNode.attachChild(player1.getPlayerNode());
                             bulletAppState.getPhysicsSpace().add(player1.getPlayerControl());
 
                         }
@@ -948,10 +948,10 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
                         if (hp2.getCurrentLife() <= 0) {
                             death(player2);
                         } else {
-                            rootNode.detachChild(player2.getPlayerGeo());
+                            rootNode.detachChild(player2.getPlayerNode());
                             bulletAppState.getPhysicsSpace().remove(player2.getPlayerControl());
                             player2.changeModel(1);
-                            rootNode.attachChild(player2.getPlayerGeo());
+                            rootNode.attachChild(player2.getPlayerNode());
                             bulletAppState.getPhysicsSpace().add(player2.getPlayerControl());
 
                         }
