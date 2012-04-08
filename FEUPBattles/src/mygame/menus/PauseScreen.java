@@ -36,6 +36,7 @@ public class PauseScreen extends AbstractAppState implements ScreenController {
   }
 
   public void onEndScreen() {
+      
   }
   
   public void quitGame() {
@@ -44,8 +45,8 @@ public class PauseScreen extends AbstractAppState implements ScreenController {
   }
   
   public void endGame() {
-   //   TODO restart do jogo
-   //   main.endGame();
+      nifty.exit();
+      main.restartGame();
   }
 
 

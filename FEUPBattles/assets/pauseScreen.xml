@@ -25,14 +25,14 @@ xsi:schemaLocation="http://nifty-gui.sourceforge.net/nifty.xsd http://nifty-gui.
                         <interact onClick="resumeGame()"/>
                     </control>
                 </panel>
-                <!--
+                
                 <panel id="panel_mid2" height="10%" width="100%" align="center" childLayout="vertical">   
                 <control name="button" label="Back to Menu" id="EndButton" align="center" valign="center" 
 visibleToMouse="true" > 
                     <interact onClick="endGame()"/>
                 </control>
                 </panel>
-                -->
+                
                 <panel id="panel_mid2" height="10%" width="100%" align="center" childLayout="vertical">   
                   <control name="button" label="Quit Game" id="QuitButton" align="center" valign="center" 
 visibleToMouse="true" > 
