@@ -17,45 +17,21 @@ public class BioSuperPower extends SuperPower{
         
         manaCost = 50;
         duration = 1;
-        superPowerImage = "keys.png";
+       
     }
    
     public void usePower(int playerNumber) {
        
-        switch(playerNumber){
-            case 1: 
-                if( mygame.Main.mana1.getCurrentMana() >= this.manaCost) {
-                        mygame.Main.hp1.loseLife(-1);
-                        mygame.Main.mana1.loseMana(this.manaCost);
-                        mygame.Main.player1.setNeedChange(true);
-                         warnPlayers(playerNumber);
-                }
-                    break;
-            case 2: 
-                 if(mygame.Main.mana2.getCurrentMana() >= this.manaCost) {
-                        mygame.Main.hp1.loseLife(-1);
-                        mygame.Main.player2.setNeedChange(true);
-                        mygame.Main.mana2.loseMana(this.manaCost);
-                        warnPlayers(playerNumber);
-                 }
-                    break;
-            default:
-                    break;
-        }
+      
+          mygame.Main.hps[playerNumber].loseLife(-1);
+          mygame.Main.players[playerNumber].setNeedChange(true);
+          warnPlayers(playerNumber);
        
         
     }
     public void cancelSuperPower(int playerNumber){
        
-         switch(playerNumber){
-            case 1:mygame.Main.player1.setNeedChange(false);
-                    break;
-            case 2:mygame.Main.player2.setNeedChange(false);
-                    
-                    break;
-            default:
-                    break;
-        }
+        mygame.Main.players[playerNumber].setNeedChange(false);
         removeWarning( playerNumber);
     }
     

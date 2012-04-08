@@ -233,9 +233,12 @@ public class Player {
     }
 
     public void useSuperPower(int pnum) {
-        if (!isSilenced() && !isSuperPowerInUse()) {
+        boolean hasMana = sp.getManaCost()<= mygame.Main.manas[pnum].getCurrentMana();
+        
+        if (!isSilenced() && !isSuperPowerInUse()  && hasMana) {
             this.sp.setInUse(true);
             this.sp.usePower(pnum);
+            mygame.Main.manas[pnum].loseMana(sp.getManaCost());
             new CancelSuperPower(sp, sp.getDuration(), pnum).start();
         }
 
@@ -296,9 +299,7 @@ public class Player {
         return sizeZ;
     }
 
-    public String getSuperPowerImage() {
-        return sp.getSuperPowerImage();
-    }
+    
 
     /**
      * @return the immune

@@ -74,13 +74,17 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
     public static ManaBox mana2;
     BallPowerBox bp1;
     BallPowerBox bp2;
+    
+    BallPowerBox[] bps = new BallPowerBox[2];
+    
     BitmapText info;
     long player1_power = 0;
     long player2_power = 0;
     float powerScale = 5.0f;
     float controlForce = 0.1f;
-    boolean player1_shoot = false, player2_shoot = false;
-    boolean firstPlayer = true;
+    
+    boolean playerShoot = false;
+
     float time = 0f;
     public ArrayList< Future<Node>> tasks = new ArrayList< Future<Node>>();
     BasicShadowRenderer bsr;
@@ -101,7 +105,20 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
     int randomFlames = 0;
     ArrayList<AudioNode> scenarioExplosion;
     AudioNode backgroundMusic;
-
+    public static Player[] players = new Player[2];
+    public static ManaBox[] manas = new ManaBox[2];
+    public static HitPointsBox[] hps = new HitPointsBox[2];
+    
+    public static Picture p1Pic;
+    public static Picture p2Pic;
+    public static Picture p1PicSp;
+    public static Picture p2PicSp;
+    
+    public static Picture[] pics = new Picture[2];
+    public static Picture[] spPics = new Picture[2];
+    
+    private int currentPlayer = 0;
+    
     public static void main(String[] args) {
         //Logger.getLogger("").setLevel(Level.OFF);
         app = new Main();
@@ -162,7 +179,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         rootNode.detachAllChildren();
         guiNode.detachAllChildren();
         app.restart();
-        firstPlayer = true;
+        currentPlayer = 0;
         nifty.fromXml("homeScreen.xml", "start", new MyStartScreen(app));
 
 
@@ -268,7 +285,9 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
 
             platforms.setShadowMode(ShadowMode.Receive);
             setProgress(0.5f, "Loading landscapes and sky...");
-
+            
+            players[0] = player1;
+            players[1] = player2;
             scenarios();
 
         } else if (counter == 3) {
@@ -593,32 +612,26 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
                 backgroundMusic.pause();
                 return;
             } else {
+                
+                 if(players[currentPlayer].getBall()==null && players[currentPlayer].isAlive()){
+                      if (name.equals("P"+(currentPlayer+1)+"_Shoot") && !keyPressed) {
+                        if (bps[currentPlayer].getCurrentPower() > 1) {
+                            int d= currentPlayer == 1 ? -1: 1;
+                            players[currentPlayer].setBall(makeBall(bps[currentPlayer].getCurrentPower() * powerScale, players[currentPlayer].getPlayerGeo(), d, players[currentPlayer].getBallMaterial()));
 
-                if (firstPlayer && player1.getBall() == null && player1.isAlive()) {
-                    if (name.equals("P1_Shoot") && !keyPressed) {
-                        if (bp1.getCurrentPower() > 1) {
-                            player1.setBall(makeBall(bp1.getCurrentPower() * powerScale, player1.getPlayerGeo(), 1, player1.getBallMaterial()));
+                            playerShoot = false;
+                        }
+                    } else if (name.equals("P"+(currentPlayer+1)+"_Shoot")) {
+                        playerShoot = true;
+                    }
+                 }
 
-                            player1_shoot = false;
-                        }
-                    } else if (name.equals("P1_Shoot")) {
-                        player1_shoot = true;
-                    }
-                } else if (!firstPlayer && player2.getBall() == null && player2.isAlive()) {
-                    if (name.equals("P2_Shoot") && !keyPressed) {
-                        if (bp2.getCurrentPower() > 1) {
-                            player2.setBall(makeBall(bp2.getCurrentPower() * powerScale, player2.getPlayerGeo(), -1, player2.getBallMaterial()));
-                            player2_shoot = false;
-                        }
-                    } else if (name.equals("P2_Shoot")) {
-                        player2_shoot = true;
-                    }
-                }
+                
                 if (name.equals("P1_SP") && !keyPressed) {
-                    player1.useSuperPower(1);
+                    player1.useSuperPower(0);
                 }
                 if (name.equals("P2_SP") && !keyPressed) {
-                    player2.useSuperPower(2);
+                    player2.useSuperPower(1);
                 }
             }
         }
@@ -746,6 +759,8 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
 
         guiNode.attachChild(hp1.getHpNode());
         guiNode.attachChild(hp2.getHpNode());
+        hps[0] = hp1;
+        hps[1] = hp2;
     }
 
     public void initManaBars() {
@@ -761,11 +776,10 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
 
         guiNode.attachChild(mana1.getManaNode());
         guiNode.attachChild(mana2.getManaNode());
+        manas[0] = mana1;
+        manas[1] = mana2;
     }
-    public static Picture p1Pic;
-    public static Picture p2Pic;
-    public static Picture p1PicSp;
-    public static Picture p2PicSp;
+   
 
     public void initHudImgs() {
 
@@ -796,6 +810,12 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         p2PicSp.setHeight(0);
         p2PicSp.setPosition(settings.getWidth() - 80 - 20, settings.getHeight() - 150);
         guiNode.attachChild(p2PicSp);
+        
+        pics[0] = p1Pic;
+        pics[1] = p2Pic;
+        
+        spPics[0] = p1PicSp;
+        spPics[1] = p2PicSp;
     }
 
     private void initPowerBar() {
@@ -811,6 +831,8 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         bp2 = new BallPowerBox("bp2", rightPosition, green, yellow, red);
         guiNode.attachChild(bp1.getPowerNode());
         guiNode.attachChild(bp2.getPowerNode());
+        bps[0] = bp1;
+        bps[1] = bp2;
     }
 
     @Override
@@ -852,57 +874,34 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
 
             }
 
-            if (player1_shoot) {
-                bp1.increasePower();
+            if (playerShoot) {
+                bps[currentPlayer].increasePower();
             }
-            if (player2_shoot) {
-                bp2.increasePower();
-            }
+            
 
-            if (player1.getBall() != null && player1.getBall().getControl(RigidBodyControl.class).getPhysicsLocation().getY() <= -20.0f) {
-                //explosion(ball_geo.getLocalTranslation(), 0.5f);
-                rootNode.detachChild(ball_geo);
-                bulletAppState.getPhysicsSpace().remove(player1.getBall());
-                player1.setBall(null);
-                bp1.resetPower();
-                changePlayer();
-            }
-            if (player2.getBall() != null && player2.getBall().getControl(RigidBodyControl.class).getPhysicsLocation().getY() <= -20.0f) {
-                //explosion( ball_geo.getLocalTranslation(),0.5f);
-                rootNode.detachChild(ball_geo);
-                bulletAppState.getPhysicsSpace().remove(player2.getBall());
-                player2.setBall(null);
-                bp2.resetPower();
-                changePlayer();
+           if(players[currentPlayer].getBall() != null && players[currentPlayer].getBall().getControl(RigidBodyControl.class).getPhysicsLocation().getY() <= -20.0f){
+                   rootNode.detachChild(ball_geo);
+                    bulletAppState.getPhysicsSpace().remove(players[currentPlayer].getBall());
+                    players[currentPlayer].setBall(null);
+                    bps[currentPlayer].resetPower();
+                    changePlayer();  
             }
 
 
+             manas[1-currentPlayer].regainMana();
 
-
-
-            if (mana1.getCurrentMana() < mana1.getMaxMana() && !firstPlayer) {
-                mana1.regainMana();
-
-            }
-            if (mana2.getCurrentMana() < mana2.getMaxMana() && firstPlayer) {
-                mana2.regainMana();
-            }
-            if (player1.isNeedChange()) {
-                rootNode.detachChild(player1.getPlayerGeo());
-                bulletAppState.getPhysicsSpace().remove(player1.getPlayerControl());
-                player1.changeModel(-1);
-                rootNode.attachChild(player1.getPlayerGeo());
-                bulletAppState.getPhysicsSpace().add(player1.getPlayerControl());
-                player1.setNeedChange(false);
-            }
-            if (player2.isNeedChange()) {
-                rootNode.detachChild(player2.getPlayerGeo());
-                bulletAppState.getPhysicsSpace().remove(player2.getPlayerControl());
-                player2.changeModel(-1);
-                rootNode.attachChild(player2.getPlayerGeo());
-                bulletAppState.getPhysicsSpace().add(player2.getPlayerControl());
-                player2.setNeedChange(false);
-            }
+             for(int cp = 0; i< 2; i++){
+                if(players[cp].isNeedChange()){
+                    rootNode.detachChild(players[cp].getPlayerGeo());
+                    bulletAppState.getPhysicsSpace().remove(players[cp].getPlayerControl());
+                    players[cp].changeModel(-1);
+                    rootNode.attachChild(players[cp].getPlayerGeo());
+                    bulletAppState.getPhysicsSpace().add(players[cp].getPlayerControl());
+                    players[cp].setNeedChange(false);
+                }
+             }
+           
+            
         }
 
     }
@@ -929,32 +928,22 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
                 p = player1;
             } else if (pce.getNodeA().getName().equals(player2.getPlayerName()) || pce.getNodeB().getName().equals(player2.getPlayerName())) {
                 p = player2;
-            } else {
+            } else { //caiu no chao
                 explosion(cannon.getLocalTranslation(), 0.01f);
                 rootNode.detachChild(cannon);
                 bulletAppState.getPhysicsSpace().remove(cannon.getControl(0));
-                if (firstPlayer) {
-                    player1.setBall(null);
-                    bp1.resetPower();
-                } else {
-                    player2.setBall(null);
-                    bp2.resetPower();
-                }
+                players[currentPlayer].setBall(null);
+                bps[currentPlayer].resetPower();
                 changePlayer();
             }
 
             if (p != null && cannon != null && !p.isImmune()) {
 
                 if (rootNode.hasChild(cannon)) {
-                    if (firstPlayer) {
-                        player1.setBall(null);
-                        bp1.resetPower();
-                        changePlayer();
-                    } else {
-                        player2.setBall(null);
-                        bp2.resetPower();
-                        changePlayer();
-                    }
+                    
+                    players[currentPlayer].setBall(null);
+                    bps[currentPlayer].resetPower();
+                    changePlayer();
 
                     if (p.equals(player1)) {
                         hp1.loseLife(player2.getDamage());
@@ -1015,11 +1004,9 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
     }
 
     private void changePlayer() {
-        firstPlayer = !firstPlayer;
-        if (firstPlayer) {
-            info.setText("Player 1");
-        } else {
-            info.setText("Player 2");
-        }
+        currentPlayer = 1- currentPlayer;
+        info.setText("Player " + (currentPlayer +1));
+        
+       
     }
 }
