@@ -880,7 +880,8 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
             
 
            if(players[currentPlayer].getBall() != null && players[currentPlayer].getBall().getControl(RigidBodyControl.class).getPhysicsLocation().getY() <= -20.0f){
-                   rootNode.detachChild(ball_geo);
+                    explosion(players[currentPlayer].getBall().getLocalTranslation(), 0.5f);
+                    rootNode.detachChild(ball_geo);
                     bulletAppState.getPhysicsSpace().remove(players[currentPlayer].getBall());
                     players[currentPlayer].setBall(null);
                     bps[currentPlayer].resetPower();
