@@ -102,7 +102,9 @@ public class Player {
         ballMaterial.setColor("m_Ambient", ColorRGBA.Orange);
         ballMaterial.setColor("m_Diffuse", ColorRGBA.Orange);
         ballMaterial.setColor("m_Specular", ColorRGBA.White);
-        ballMaterial.setFloat("m_Shininess", 12);
+        ballMaterial.setFloat("m_Shininess", 1.0f);
+        ballMaterial.setTexture("DiffuseMap", assetManager.loadTexture("cannon.jpg"));
+        ballMaterial.setTexture("NormalMap", assetManager.loadTexture("cannon.jpg"));
 
         playerNode.attachChild(playerGeo[model]);
       

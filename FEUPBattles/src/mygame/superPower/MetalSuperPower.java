@@ -27,11 +27,11 @@ public class MetalSuperPower  extends SuperPower{
                         oldDamage = mygame.Main.player1.getDamage();
                       
                         mygame.Main.player1.setDamage(newDamage);
-                        mygame.Main.player1.getBallMaterial().setColor("m_Ambient", ColorRGBA.Gray);
-                        mygame.Main.player1.getBallMaterial().setColor("m_Diffuse", ColorRGBA.Gray);
+                        mygame.Main.player1.getBallMaterial().setColor("m_Ambient", ColorRGBA.Red);
+                        mygame.Main.player1.getBallMaterial().setColor("m_Diffuse", ColorRGBA.Red);
                         if( mygame.Main.player1.getBall()!=null){
-                            mygame.Main.player1.getBall().getMaterial().setColor("m_Ambient", ColorRGBA.Gray);
-                            mygame.Main.player1.getBall().getMaterial().setColor("m_Diffuse", ColorRGBA.Gray);
+                            mygame.Main.player1.getBall().getMaterial().setColor("m_Ambient", ColorRGBA.Red);
+                            mygame.Main.player1.getBall().getMaterial().setColor("m_Diffuse", ColorRGBA.Red);
                         }
                         mygame.Main.mana1.loseMana(this.manaCost);
                         warnPlayers(playerNumber);
@@ -41,11 +41,11 @@ public class MetalSuperPower  extends SuperPower{
                         oldDamage = mygame.Main.player2.getDamage();
                        
                         mygame.Main.player2.setDamage(newDamage);
-                        mygame.Main.player2.getBallMaterial().setColor("m_Ambient", ColorRGBA.Gray);
-                        mygame.Main.player2.getBallMaterial().setColor("m_Diffuse", ColorRGBA.Gray);
+                        mygame.Main.player2.getBallMaterial().setColor("m_Ambient", ColorRGBA.Red);
+                        mygame.Main.player2.getBallMaterial().setColor("m_Diffuse", ColorRGBA.Red);
                         if( mygame.Main.player1.getBall()!=null){
-                            mygame.Main.player2.getBall().getMaterial().setColor("m_Ambient", ColorRGBA.Gray);
-                            mygame.Main.player2.getBall().getMaterial().setColor("m_Diffuse", ColorRGBA.Gray);
+                            mygame.Main.player2.getBall().getMaterial().setColor("m_Ambient", ColorRGBA.Red);
+                            mygame.Main.player2.getBall().getMaterial().setColor("m_Diffuse", ColorRGBA.Red);
                         }
                         mygame.Main.mana2.loseMana(this.manaCost);
                         warnPlayers(playerNumber);

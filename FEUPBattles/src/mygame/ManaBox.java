@@ -136,7 +136,6 @@ public class ManaBox {
             float scale = (currentMana+increase)*(1/currentMana);
             greenManaGeometry.scale(scale,1.0f,1.0f);
             currentMana = currentMana+increase;
-            System.out.println("current mana:" + currentMana);
         }
         
         

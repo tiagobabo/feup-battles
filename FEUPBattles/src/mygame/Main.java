@@ -191,19 +191,16 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
             //Objetos básicos
             Box b2 = new Box(Vector3f.ZERO, boxX, boxY, boxZ);
 
-            Material mat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
-            mat.setColor("Color", ColorRGBA.Blue);
-            Material matp2 = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
-            matp2.setColor("Color", ColorRGBA.Blue);
-
             Material mat2 = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md");
             mat2.setBoolean("m_UseMaterialColors", true);
             mat2.setColor("m_Ambient", ColorRGBA.White);
             mat2.setColor("m_Diffuse", ColorRGBA.White);
             mat2.setColor("m_Specular", ColorRGBA.White);
-            mat2.setFloat("m_Shininess", 2);
+            mat2.setFloat("m_Shininess", 0.5f);
             mat2.setTexture("DiffuseMap", assetManager.loadTexture("parede.jpg"));
             mat2.setTexture("NormalMap", assetManager.loadTexture("parede.jpg"));
+            
+          
 
             //Player 1
 
@@ -266,7 +263,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
             viewPort.addProcessor(bsr);
 
             AmbientLight al = new AmbientLight();
-            al.setColor(ColorRGBA.White.mult(1.3f));
+            al.setColor(ColorRGBA.White.mult(0.8f));
             rootNode.addLight(al);
 
             platforms.setShadowMode(ShadowMode.Receive);
@@ -398,6 +395,31 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         rootNode.attachChild(flame2);
         flames.add(flame2);
     }
+    
+    private void makeCannonFlame(Vector3f c1) {
+        ParticleEmitter flame2 = new ParticleEmitter("Flame", EMITTER_TYPE, 32 * COUNT_FACTOR);
+        flame2.setSelectRandomImage(true);
+        flame2.setStartColor(new ColorRGBA(1f, 0.4f, 0.05f, (float) (1f / COUNT_FACTOR_F)));
+        flame2.setEndColor(new ColorRGBA(.4f, .22f, .12f, 0f));
+        flame2.setStartSize(0.3f);
+        flame2.setEndSize(0.6f);
+        flame2.setShape(new EmitterSphereShape(Vector3f.ZERO, 1.0f));
+        flame2.setParticlesPerSec(0);
+        flame2.setGravity(0, -5, 0);
+        flame2.setLowLife(.4f);
+        flame2.setHighLife(.5f);
+        flame2.getParticleInfluencer().setInitialVelocity(new Vector3f(0, 7, 0));
+        flame2.getParticleInfluencer().setVelocityVariation(1f);
+        flame2.setImagesX(1);
+        flame2.setImagesY(1);
+        Material mat = new Material(assetManager, "Common/MatDefs/Misc/Particle.j3md");
+        mat.setTexture("Texture", assetManager.loadTexture("Effects/Explosion/flame.png"));
+        mat.setBoolean("PointSprite", POINT_SPRITE);
+        flame2.setMaterial(mat);
+        flame2.setLocalTranslation(c1.getX(), c1.getY(), c1.getZ());
+        rootNode.attachChild(flame2);
+        flame2.emitAllParticles();
+    }
 
     private void scenarios() {
         //Cenarios
@@ -435,8 +457,8 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         mat6.setColor("m_Diffuse", ColorRGBA.White);
         mat6.setColor("m_Specular", ColorRGBA.White);
         mat6.setFloat("m_Shininess", 1);
-        mat6.setTexture("DiffuseMap", assetManager.loadTexture("c3.jpg"));
-        mat6.setTexture("NormalMap", assetManager.loadTexture("c3.jpg"));
+        mat6.setTexture("DiffuseMap", assetManager.loadTexture("c4.jpg"));
+        mat6.setTexture("NormalMap", assetManager.loadTexture("c4.jpg"));
 
         Vector3f c1 = new Vector3f(-30f, -25f, -170f);
         float scale = 1.0f;
@@ -453,7 +475,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         makeWall(scale, c1, mat5, mat4, rotx, roty, 0.5f);
 
         c1 = new Vector3f(-20f, -20f, -200f);
-        makeWall(2.0f, c1, mat3, mat4, 0.0f, 0.0f, 0.2f);
+        makeWall(2.0f, c1, mat6, mat4, 0.0f, 0.0f, 0.2f);
     }
     ArrayList<ParticleEmitter> flames = new ArrayList<ParticleEmitter>();
 
@@ -607,7 +629,6 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
 
         Sphere sphere = new Sphere(32, 32, 0.4f, true, false);
         sphere.setTextureMode(TextureMode.Projected);
-
         ball_geo = new Geometry("cannon ball", sphere);
 
 
@@ -620,8 +641,10 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         Vector3f v = geom.getLocalTranslation();
         if (d == 1) {
             ball_geo.setLocalTranslation(new Vector3f(v.x + 4.5f, v.y + 2.2f, v.z));
+            makeCannonFlame(new Vector3f(v.x + 4.5f, v.y + 2.2f, v.z));
         } else {
             ball_geo.setLocalTranslation(new Vector3f(v.x - 4.5f, v.y + 2.2f, v.z));
+            makeCannonFlame(new Vector3f(v.x - 4.5f, v.y + 2.2f, v.z));
         }
 
         RigidBodyControl ball_phy = new RigidBodyControl(1f);
@@ -904,10 +927,8 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
 
             if (pce.getNodeA().getName().equals(player1.getPlayerName()) || pce.getNodeB().getName().equals(player1.getPlayerName())) {
                 p = player1;
-                System.out.println("P1");
             } else if (pce.getNodeA().getName().equals(player2.getPlayerName()) || pce.getNodeB().getName().equals(player2.getPlayerName())) {
                 p = player2;
-                System.out.println("P2");
             } else {
                 explosion(cannon.getLocalTranslation(), 0.01f);
                 rootNode.detachChild(cannon);
@@ -920,7 +941,6 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
                     bp2.resetPower();
                 }
                 changePlayer();
-                System.out.println("P3");
             }
 
             if (p != null && cannon != null && !p.isImmune()) {
@@ -938,7 +958,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
 
                     if (p.equals(player1)) {
                         hp1.loseLife(player2.getDamage());
-                        System.out.println(p.getPlayerName() + " GOT HIT!\n HITPOINTS LEFT:" + hp1.getCurrentLife());
+                      
                         if (hp1.getCurrentLife() <= 0) {
                             death(player1);
                         } else {
@@ -952,7 +972,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
                         }
                     } else {
                         hp2.loseLife(player1.getDamage());
-                        System.out.println(p.getPlayerName() + " GOT HIT!\n HITPOINTS LEFT:" + hp2.getCurrentLife());
+                       
                         if (hp2.getCurrentLife() <= 0) {
                             death(player2);
                         } else {
