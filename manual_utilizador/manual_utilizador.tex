@@ -1,0 +1,101 @@
+\documentclass[11pt,a4paper]{report}
+ 
+\usepackage[portuguese]{babel}
+\usepackage{indentfirst}
+%Em windows
+ 
+\usepackage[latin1]{inputenc} 
+\usepackage[T1]{fontenc}
+\usepackage[tt]{titlepic}
+
+\usepackage{listings}
+\usepackage{graphicx}
+
+
+\begin{document}
+\renewcommand{\thechapter}{}
+\renewcommand{\chaptername}{}
+\renewcommand{\thesection}{}
+
+\begin{titlepage}
+
+\begin{center}
+
+\includegraphics{feup}  
+
+\vspace{10 mm}
+
+\textsc{\LARGE FEUP Battles} \\
+\vspace{20 mm}
+\textsc{\normalsize Faculdade de Engenharia da Universidade do Porto} \\
+\textsc{\normalsize Desenvolvimento de Jogos de Computador} \\
+\vspace{20 mm}
+
+
+% Title
+
+\vfill
+% Author and supervisor
+\textsc{Autores:}\\
+Hélder Alexandre dos Santos Moreira - 080509170 - ei08170@fe.up.pt \\
+Felipe de Souza Schmitt - 080509160 - ei08160@fe.up.pt \\
+José Pedro Marques - 080509087 - jose.pedro.marques@fe.up.pt \\
+Carlos Tiago da Rocha Babo - 080509118 - ei08118@fe.up.pt
+
+\vspace{5 mm}
+
+% Bottom of the page
+{\large \today}
+
+\end{center}
+
+\end{titlepage}
+
+\newpage
+
+\tableofcontents
+\setcounter{tocdepth}{1}
+
+\newpage
+
+\chapter{Game description}
+
+FEUP Battles is a game where the objective is to win the ultimate battle that will decide the long lasting question: "what's the best course in FEUP?". 
+To achieve this glory, the player must destroy the enemy's tank by hitting the projectiles while avoiding being hit by the opponent's own projectiles. \\
+
+One of the key features of the game is the fact that each course has a unique super power. The players can choose one course and while in battle use this super power to improve their chances of winning and destroying the opponent's tank. Every power can have an offensive or defensive nature and to even the game and avoid over use of the super powers, each of them has a mana cost and a duration. \\
+
+However, mana regenerates over time, but only on the opponent's turn (i.e. player 1 mana will regen on the player 2 turn) creating a duality over how fast should I play to avoid the enemy gaining mana and how much time I'll spend preparing my shot.
+
+\chapter{Installation instructions}
+
+In order to install the game there are no special instructions. The deployment generated an executable file (.exe) that can be run directly to start the game. \\
+
+The only concern is to maintain the original structure of folders to assure that the application can access the necessary resources to run correctly.
+
+\chapter{How to play}
+
+To start the game, each of the players must choose a course for his character. After this, they are taken to the battle where they can control, in a first phase, the tank. By moving left or right they can place it on the desired location. When the player shoots, a power bar is shown to help decide on how much power we want to apply to out projectile. In a second phase, after the projectile is shot, the player is able to influence its direction with the same keys as he was able to control the tank, therefore having a improved way to try and hit the opponent. \\
+
+On the other hand, the defending player can control the tank to try and avoid the opponent's missile. \\
+
+At any moment (during the player's turn or in the opponent's turn), the players can use the super power key to activate his super power, and improve his chances of winning. This is however restricted by mana cost, and by the amount of mana the player has in that moment. \\
+
+As in any game, getting hit reduces the player's life and when it comes down to 0, the tank is destroyed and the winner is declared.
+
+\chapter{Group information}
+
+As mentioned in the cover page, the group is composed of four members and all the work was distributed in an even way by the group, each member choosing an area to focus his work on (game design, game logic, physics engine, and other relevant tasks). \\
+
+In the end, everyone contributed with the same amount of effort and has a general knowledge over the entire game. \\
+
+
+Hélder Alexandre dos Santos Moreira - 080509170 - ei08170@fe.up.pt \\
+
+Felipe de Souza Schmitt - 080509160 - ei08160@fe.up.pt \\
+
+José Pedro Marques - 080509087 - jose.pedro.marques@fe.up.pt \\
+
+Carlos Tiago da Rocha Babo - 080509118 - ei08118@fe.up.pt
+
+\end{document}
