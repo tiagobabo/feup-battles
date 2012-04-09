@@ -1,0 +1,89 @@
+\documentclass[11pt,a4paper]{report}
+ 
+\usepackage[english]{babel}
+\usepackage{indentfirst}
+%Em windows
+ 
+\usepackage[utf8]{inputenc} 
+
+\usepackage[tt]{titlepic}
+
+\usepackage{listings}
+\usepackage{graphicx}
+
+
+\begin{document}
+\renewcommand{\thechapter}{}
+\renewcommand{\chaptername}{}
+\renewcommand{\thesection}{}
+
+\begin{titlepage}
+
+\begin{center}
+
+\includegraphics{feup}  
+
+\vspace{10 mm}
+
+\textsc{\LARGE FEUP Battles} \\
+\vspace{20 mm}
+\textsc{\normalsize Faculdade de Engenharia da Universidade do Porto} \\
+\textsc{\normalsize Desenvolvimento de Jogos de Computador} \\
+\vspace{20 mm}
+
+
+% Title
+
+\vfill
+% Author and supervisor
+\textsc{Autores:}\\
+H\'elder Alexandre dos Santos Moreira - 080509170 - ei08170@fe.up.pt
+Felipe de Souza Schmitt - 080509160 - ei08160@fe.up.pt
+Jos\'e Pedro Neto dos Santos Marques - 080509087 - jose.pedro.marques@fe.up.pt
+Carlos Tiago da Rocha Babo - 080509118 - ei08118@fe.up.pt
+
+\vspace{5 mm}
+
+% Bottom of the page
+{\large \today}
+
+\end{center}
+
+\end{titlepage}
+
+\newpage
+
+\tableofcontents
+\setcounter{tocdepth}{1}
+
+\newpage
+
+\chapter{Introduction}
+
+This report will introduce the key feature of the development process of FEUP Battles, focusing on design decisions and code structure. We will try to explain the thought process behind the main decisions and explain particular decisions
+
+\chapter{Super Powers}
+
+On designing this game we tried to keep it simple, yet scalable. When planning the super powers, our goal was to make it as simple as possible to add new super powers. Thus we devised the main Super Power class (started as an Interface, but soon evolved into a class, as the need for attributes arose) which has 2 abstract methods : \textit{useSuperPower()} and \textit{cancelSuperPower()}. The aforementioned attributes are \textit{duration} of the power and \textit{mana cost}. So each new super power inherits this abstract methods and creates it's own implementation of how to use and cancel the effect. \\
+
+Another interesting note is how we chose to cancel a super power. We decided that, when a super power is used, a new thread (CancelSuperPower) is launched, and this thread after \textit{duration} seconds calls the cancel method on the corresponding super power.
+
+\chapter{Collision detection}
+
+While jMonkeyEngine does the physics part of the collision, we needed more. For example, we needed to explode the projectile, and to reduce the hit points of the players, had they been hit. Therefore we decided to override the standard collision method and add these extra functionalities. jMonkeyEngine provides a collision event, and it was this listener we needed overrode and based on the 2 objects that ad collided we made our decisions. For example, if one of the object was the projectile and the other one of the platforms, the action was simply to explode the projectile, remove it from the scene and end the turn. 
+
+\chapter{Explosions}
+
+Explosions are a big visual representation of danger, so we wanted to make them realistic. An explosion is not a simple flash, but is a complex object with different parts working together to achieve a good visualization.
+So, an explosion is made of debris, flames, flashes, sparks, smoke trails and shock waves. But an object so complex as this cannot be left on the scene after the animation ends so we needed to remove it, otherwise after some minutes of game the scene would be filled with many objects that would delay the overall performance of the game. \\
+
+The removal of these objects was not a simple task however, as the scene cannot be updated from any other thread than the main thread. To accomplish this, i.e. a way to count some seconds for the explosion to be seen and then removed, we added a task thread to count this time, hence not stopping the gameplay, and proceeded to check on tha game loop which of those tasks were already finished (meaning that the time had elapsed and the explosion was ready to be removed). \\
+
+The main thread then knows that can remove the explosion associated with the task that has finished counting the time.
+
+
+\chapter{Tank Model}
+
+The model we used was adapted from a free model (with due modification licence) and it changes as the player takes some damage. It was defined that 5 hits were necessary to kill the opponents (some modifiers may apply due to special powers), so we made 5 different models, to give the player a visual representation of his state. We keep a simple Hit Point bar on the HUD, but as the tank is the focus of the player attention, this warning of impending danger seemed appropriate.
+
+\end{document}
