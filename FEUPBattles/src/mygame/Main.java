@@ -233,7 +233,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
 
             player2 = new Player("player 2", p2_pos, p2Selected, assetManager, -Math.PI / 2.0f);
 
-            Keys k1 = new Keys(KeyInput.KEY_LEFT, KeyInput.KEY_RIGHT, KeyInput.KEY_RMENU, KeyInput.KEY_RSHIFT);
+            Keys k1 = new Keys(KeyInput.KEY_LEFT, KeyInput.KEY_RIGHT, KeyInput.KEY_MINUS, KeyInput.KEY_RSHIFT);
 
             player2.setKeys(k1);
             rootNode.attachChild(player2.getPlayerNode());
@@ -1020,7 +1020,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
     private void initInfo() {
         info = new BitmapText(guiFont, false);
         info.setSize(guiFont.getCharSet().getRenderedSize());
-        info.setColor(ColorRGBA.White);
+        info.setColor(ColorRGBA.Black);
         info.setText("Player 1");
         info.setLocalTranslation(settings.getWidth() / 2 - info.getLineWidth() / 2, settings.getHeight() - info.getLineHeight() - 10, 0.0f);
         guiNode.attachChild(info);
