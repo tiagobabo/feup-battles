@@ -29,7 +29,7 @@ public class CancelSuperPower extends Thread {
             Thread.sleep(waitTime*1000);
             power.cancelSuperPower(pNum);
             power.setInUse(false);
-            System.out.println("POWER CANCELED");
+            
         } catch (InterruptedException ex) {
             Logger.getLogger(CancelSuperPower.class.getName()).log(Level.SEVERE, null, ex);
         }
