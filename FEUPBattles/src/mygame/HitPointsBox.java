@@ -128,7 +128,7 @@ public class HitPointsBox {
                 greenHpGeometry.scale(scale, 1.0f, 1.0f);
                 currentLife = getCurrentLife() * scale;
             }
-            System.out.println(getCurrentLife());
+            
         }
     }
 
