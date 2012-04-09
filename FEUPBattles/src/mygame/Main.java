@@ -932,7 +932,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
                 if(players[cp].isNeedChange()){
                     rootNode.detachChild(players[cp].getPlayerGeo());
                     bulletAppState.getPhysicsSpace().remove(players[cp].getPlayerControl());
-                    players[cp].changeModel(-1);
+                    players[cp].changeModel(1,-1);
                     rootNode.attachChild(players[cp].getPlayerGeo());
                     bulletAppState.getPhysicsSpace().add(players[cp].getPlayerControl());
                     players[cp].setNeedChange(false);
@@ -992,7 +992,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
 
                             rootNode.detachChild(player1.getPlayerNode());
                             bulletAppState.getPhysicsSpace().remove(player1.getPlayerControl());
-                            player1.changeModel(1);
+                            player1.changeModel(player2.getDamage(),1);
                             rootNode.attachChild(player1.getPlayerNode());
                             bulletAppState.getPhysicsSpace().add(player1.getPlayerControl());
 
@@ -1005,7 +1005,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
                         } else {
                             rootNode.detachChild(player2.getPlayerNode());
                             bulletAppState.getPhysicsSpace().remove(player2.getPlayerControl());
-                            player2.changeModel(1);
+                            player2.changeModel(player1.getDamage(),1);
                             rootNode.attachChild(player2.getPlayerNode());
                             bulletAppState.getPhysicsSpace().add(player2.getPlayerControl());
 
