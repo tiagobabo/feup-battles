@@ -192,9 +192,9 @@ visibleToMouse="true">
         </image>
     </controlDefinition>
 
-    <screen id="startScreen" controller="mygame.menus.MyStartScreen">
+
+    <screen id="splashScreen" controller="mygame.menus.MyStartScreen">
         <layer id="background" childLayout="center" backgroundColor="#000f">
-           
             <panel id="panel" childLayout="center" backgroundImage="intro-background.png" width="100%" height="100%">
                 <effect>
                     <onStartScreen name="fade" startColor="#fff0" endColor="#ffff" length="1000" post="false"/> 
@@ -207,24 +207,91 @@ visibleToMouse="true">
                     </image> 
                     <image x="240px" y="400px" filename="intro-logo.png" align="center">
                         <effect>
+                            
                             <onStartScreen name="move" timeType="exp" factor="3.5" direction="top" mode="in" length="500" startDelay="3000" />
                         </effect>
                     </image>
                 </panel>
             </panel>
         </layer>
+        
+        
+    </screen>
+    
+    <screen id="screen1" controller="mygame.menus.MyStartScreen">
+        <layer id="screen1" childLayout="center" backgroundImage="screen1.png">
+            <control name="button" label="Skip" id="StartButton2" align="center" valign="bottom" 
+visibleToMouse="true"> 
+                    <interact onClick="skip()" />
+                </control>
+            <effect>
+                <onStartScreen name="fade" start="#0" end="#f" length="500" startDelay="0" />
+            </effect>
+        </layer>
+    </screen>
+    
+    <screen id="screen2" controller="mygame.menus.MyStartScreen">
+        <layer id="screen2" childLayout="center" backgroundImage="screen2.png">
+            <control name="button" label="Skip" id="StartButton2" align="center" valign="bottom" 
+visibleToMouse="true"> 
+                    <interact onClick="skip()" />
+                </control>
+            <effect>
+                <onStartScreen name="fade" start="#0" end="#f" length="500" startDelay="0" />
+            </effect>
+        </layer>   
+    </screen>
+    
+    <screen id="screen3" controller="mygame.menus.MyStartScreen">
+        <layer id="screen3" childLayout="center" backgroundImage="screen3.png">
+            <control name="button" label="Skip" id="StartButton2" align="center" valign="bottom" 
+visibleToMouse="true"> 
+                    <interact onClick="skip()" />
+                </control>
+            <effect>
+                <onStartScreen name="fade" start="#0" end="#f" length="500" startDelay="0" />
+            </effect>
+        </layer>   
+    </screen>
+    
+    <screen id="screen4" controller="mygame.menus.MyStartScreen">
+        <layer id="screen4" childLayout="center" backgroundImage="screen4.png">
+            <control name="button" label="Skip" id="StartButton2" align="center" valign="bottom" 
+visibleToMouse="true"> 
+                    <interact onClick="skip()" />
+                </control>
+            <effect>
+                <onStartScreen name="fade" start="#0" end="#f" length="500" startDelay="0" />
+            </effect>
+        </layer>   
+    </screen>
+    
+    <screen id="screen5" controller="mygame.menus.MyStartScreen">
+        <layer id="screen5" childLayout="center" backgroundImage="screen5.png">
+            <control name="button" label="Skip" id="StartButton2" align="center" valign="bottom" 
+visibleToMouse="true"> 
+                    <interact onClick="skip()" />
+                </control>
+            <effect>
+                <onStartScreen name="fade" start="#0" end="#f" length="500" startDelay="0" />
+            </effect>
+        </layer>   
+    </screen>
+    
+    <screen id="startScreen" controller="mygame.menus.MyStartScreen">
+        
     
         <layer id="background2" childLayout="center">
             <effect>
-                <onStartScreen name="imageSize" startSize="2.0" endSize="1.0" length="250" startDelay="5000" />
-                <onStartScreen name="fade" start="#0" end="#f" length="250" startDelay="5000" />
+                <onStartScreen name="imageSize" startSize="2.0" endSize="1.0" length="250" startDelay="0" />
+                <onStartScreen name="fade" start="#0" end="#f" length="250" startDelay="0" />
             </effect>
             <image filename="background.png"></image>
         </layer>
         
         <layer id="foreground" childLayout="vertical">
             <effect>
-                <onStartScreen name="fade" start="#0" end="#f" length="250" startDelay="5000" />
+                <onStartScreen name="fade" start="#0" end="#f" length="250" startDelay="0" />
             </effect>
             <panel id="panel_top" height="35%" width="75%" align="center" childLayout="center">  
 

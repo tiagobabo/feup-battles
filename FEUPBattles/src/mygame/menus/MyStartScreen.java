@@ -27,6 +27,7 @@ public class MyStartScreen extends AbstractAppState implements ScreenController 
   private Application app;
   private Screen screen;
   private Main main;
+  private AnimationThread at;
   String[] descs = {"inf_desc.png","civil_desc.png","chem_desc.png","electro_desc.png","bio_desc.png","mec_desc.png","metal_desc.png"};
   private NiftyImage[] descImgs ;
   public MyStartScreen(Main app) {
@@ -48,7 +49,12 @@ public class MyStartScreen extends AbstractAppState implements ScreenController 
     
   }
   
-  public void go(String screen) { 
+  public void skip(){
+      at.stop();
+      nifty.gotoScreen("startScreen");
+  }
+  
+  public void go(String screen) {
     nifty.gotoScreen(screen);
   }
 
@@ -96,4 +102,18 @@ public class MyStartScreen extends AbstractAppState implements ScreenController 
       Element element = nifty.getScreen("start_game").findElementByName(id+"_img");
       element.getRenderer(ImageRenderer.class).setImage(descImgs[event.getSelectedIndex()]);
   }
+
+    /**
+     * @return the at
+     */
+    public AnimationThread getAt() {
+        return at;
+    }
+
+    /**
+     * @param at the at to set
+     */
+    public void setAt(AnimationThread at) {
+        this.at = at;
+    }
 }

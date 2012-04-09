@@ -55,6 +55,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import mygame.menus.AnimationThread;
 import mygame.menus.PauseScreen;
 import mygame.sfx.*;
 import mygame.superPower.*;
@@ -136,6 +137,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
     @Override
     public void simpleInitApp() {
 
+        final MyStartScreen mss = new MyStartScreen(app);
         app.setDisplayFps(false);
         app.setDisplayStatView(false);
 
@@ -147,7 +149,11 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         Logger.getLogger("NiftyInputEventHandlingLog").setLevel(Level.SEVERE);
         flyCam.setDragToRotate(true);
         flyCam.setEnabled(false);
-        nifty.fromXml("homeScreen.xml", "startScreen", new MyStartScreen(app));
+        AnimationThread at = new AnimationThread(mss);
+        mss.setAt(at);
+        nifty.fromXml("homeScreen.xml", "splashScreen", mss);
+        at.start();
+        
 
         generator = new Random();
         scenarioExplosion = new ArrayList<AudioNode>();
