@@ -10,7 +10,7 @@ package mygame.superPower;
  */
 public class ChemistrySuperPower extends SuperPower {
 
-     private float newVelocity = 0.01f;
+    
      private float oldVelocity;
      public ChemistrySuperPower(){
         manaCost = 30;
@@ -21,7 +21,7 @@ public class ChemistrySuperPower extends SuperPower {
      public void usePower(int playerNumber) {
        
         oldVelocity = mygame.Main.players[1-playerNumber].getVelocity();
-        mygame.Main.players[1-playerNumber].setVelocity(newVelocity);
+        mygame.Main.players[1-playerNumber].setVelocity((float)(oldVelocity/5.0));
         warnPlayers(playerNumber);
         
         

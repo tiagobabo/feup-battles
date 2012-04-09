@@ -10,7 +10,7 @@ package mygame.superPower;
  */
 public class MechanicsSuperPower extends SuperPower {
 
-     private float newVelocity = 0.10f;
+
      private float oldVelocity;
      public MechanicsSuperPower(){
         manaCost = 30;
@@ -19,15 +19,15 @@ public class MechanicsSuperPower extends SuperPower {
     
      public void usePower(int playerNumber) {
        
-        oldVelocity = mygame.Main.players[1-playerNumber].getVelocity();
-        mygame.Main.players[1-playerNumber].setVelocity(newVelocity);
+        oldVelocity = mygame.Main.players[playerNumber].getVelocity();
+        mygame.Main.players[playerNumber].setVelocity(oldVelocity*3);
         warnPlayers(playerNumber);
        
         
     }
     public void cancelSuperPower(int playerNumber){
        
-        mygame.Main.players[1-playerNumber].setVelocity(oldVelocity);
+        mygame.Main.players[playerNumber].setVelocity(oldVelocity);
        
         removeWarning( playerNumber);
     }
