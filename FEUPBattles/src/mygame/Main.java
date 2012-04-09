@@ -204,7 +204,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
             setProgress(0.2f, "Loading objects and materials...");
         } else if (counter == 2) {
 
-            //Objetos básicos
+            //Objetos bï¿½sicos
             Box b2 = new Box(Vector3f.ZERO, boxX, boxY, boxZ);
 
             Material mat2 = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md");
@@ -627,7 +627,6 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
                         if (bps[currentPlayer].getCurrentPower() > 1) {
                             int d = currentPlayer == 1 ? -1 : 1;
                             players[currentPlayer].setBall(makeBall(bps[currentPlayer].getCurrentPower() * powerScale, players[currentPlayer].getPlayerGeo(), d, players[currentPlayer].getBallMaterial()));
-                            System.out.println("PLAYER " + currentPlayer + " SHOT");
                             playerShoot = false;
                         }
                     } else if (name.equals("P" + (currentPlayer + 1) + "_Shoot")) {
@@ -949,9 +948,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
 
         }
         if (rootNode.hasChild(cannon)) {
-            explosion(cannon.getLocalTranslation(), 0.5f);
-            rootNode.detachChild(cannon);
-            bulletAppState.getPhysicsSpace().remove(cannon.getControl(0));
+            
             if (cannon != null) {
 
                 if (pce.getNodeA().getName().equals(player1.getPlayerName()) || pce.getNodeB().getName().equals(player1.getPlayerName())) {
@@ -962,12 +959,9 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
 
                     explosion(cannon.getLocalTranslation(), 0.01f);
 
-                    bulletAppState.getPhysicsSpace().remove(cannon.getControl(0));
+                   
                     players[currentPlayer].setBall(null);
                     bps[currentPlayer].resetPower();
-                    System.out.println("? - " + cannon.hashCode());
-                    System.out.println("A - " + pce.getNodeA().getName());
-                    System.out.println("B - " + pce.getNodeB().getName());
                    
                     changePlayer();
                 }
@@ -1018,6 +1012,9 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
 
             }
         }
+        explosion(cannon.getLocalTranslation(), 0.5f);
+            rootNode.detachChild(cannon);
+            bulletAppState.getPhysicsSpace().remove(cannon.getControl(0));
     }
 
     private void initInfo() {
