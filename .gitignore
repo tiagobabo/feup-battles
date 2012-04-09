@@ -3,3 +3,13 @@ FEUPBattles/build
 FEUPBattles/.DS_Store
 FEUPBattles/nbproject/private
 FEUPBattles/dist/
+manual_utilizador/*.aux
+manual_utilizador/*.log
+manual_utilizador/*.synctex.gz
+manual_utilizador/*.toc
+manual_utilizador/*.pdf
+report/*.aux
+report/*.log
+report/*.synctex.gz
+report/*.toc
+report/*.pdf
