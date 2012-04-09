@@ -373,10 +373,10 @@ public class Player {
 
     }
 
-    public void changeModel(int direction) {
+    public void changeModel(int howMuch,int direction) {
         
        
-        model += direction;
+        model += howMuch*direction;
         if (model <0){
             model = 0;
             return;
