@@ -792,11 +792,13 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
         Material black = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
         black.setColor("Color", ColorRGBA.Black);
         Material blue = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
-        blue.setColor("Color", ColorRGBA.Blue);
+        blue.setColor("Color", ColorRGBA.Red);
+        Material blue1 = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
+        blue.setColor("Color", ColorRGBA.Red);
         Vector3f leftPosition = new Vector3f(10, settings.getHeight() - 40, 0);
         Vector3f rightPosition = new Vector3f(settings.getWidth() - 200 - 20, settings.getHeight() - 40, 0);
         mana1 = new ManaBox("mana1b", leftPosition, blue, black);
-        mana2 = new ManaBox("mana2b", rightPosition, blue, black);
+        mana2 = new ManaBox("mana2b", rightPosition, blue1, black);
 
         guiNode.attachChild(mana1.getManaNode());
         guiNode.attachChild(mana2.getManaNode());
@@ -913,7 +915,20 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
                 changePlayer();
             }
 
-
+            if(mana1.getCurrentMana() >= player1.getSuperPower().getManaCost())
+                mana1.getGreenManaGeometry().getMaterial().setColor("Color", ColorRGBA.Blue);
+                
+            
+            else
+                
+                mana1.getGreenManaGeometry().getMaterial().setColor("Color", ColorRGBA.Red);
+                
+            
+            if(mana2.getCurrentMana() >= player2.getSuperPower().getManaCost())
+                mana2.getGreenManaGeometry().getMaterial().setColor("Color", ColorRGBA.Blue);
+            else
+                mana2.getGreenManaGeometry().getMaterial().setColor("Color", ColorRGBA.Red);
+    
             manas[1 - currentPlayer].regainMana();
 
             for (int cp = 0; i < 2; i++) {

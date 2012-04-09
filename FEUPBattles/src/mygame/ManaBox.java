@@ -5,6 +5,7 @@
 package mygame;
 
 import com.jme3.material.Material;
+import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
@@ -33,7 +34,7 @@ public class ManaBox {
         greenManaGeometry = new Geometry("green" + name, greenManaQuad);
         greenManaGeometry.setLocalTranslation(position);
         greenManaGeometry.setMaterial(green);
-
+        
         manaNode.attachChild(greenManaGeometry);
 
         blackManaQuad = new Quad(maxMana, 5f);
