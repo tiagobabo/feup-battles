@@ -60,7 +60,7 @@ visibleToMouse="true" >
             </panel>
             
             <panel id="panel_mid" height="60%" width="75%" align="center" childLayout="center">       
-                <text text="TO DO ABOUT" font="Interface/Fonts/Default.fnt" width="100%" height="100%" />
+                <image filename="about.png"></image>
             </panel>
             
             <panel id="panel_mid" height="15%" width="75%" align="center" childLayout="center">       
