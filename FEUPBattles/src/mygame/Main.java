@@ -204,7 +204,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
             setProgress(0.2f, "Loading objects and materials...");
         } else if (counter == 2) {
 
-            //Objetos bÃ¡sicos
+            //Objetos básicos
             Box b2 = new Box(Vector3f.ZERO, boxX, boxY, boxZ);
 
             Material mat2 = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md");
@@ -766,6 +766,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
 
         service = Executors.newFixedThreadPool(1);
         task = service.submit(new ExplosionCleaner(explosionEffect));
+        service.shutdown();
         tasks.add(task);
 
     }
@@ -860,6 +861,25 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
 
     @Override
     public void simpleUpdate(float tpf) {
+        int i = 0;
+        while (tasks.size() > 0 && tasks.get(i).isDone()) {
+            try {
+                rootNode.detachChild(tasks.get(i).get());
+                flame.killAllParticles();
+                flash.killAllParticles();
+                spark.killAllParticles();
+                smoketrail.killAllParticles();
+                debris.killAllParticles();
+                shockwave.killAllParticles();
+            } catch (InterruptedException ex) {
+                Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (ExecutionException ex) {
+                Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+            tasks.remove(i);
+        }
+
 
 
         if (counter > 0 && counter < 5) {
@@ -877,25 +897,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
                 }
             }
             randomFlames = generator.nextInt(50);
-            int i = 0;
-            while (tasks.size() > 0 && tasks.get(i).isDone()) {
-                try {
-
-                    rootNode.detachChild(tasks.get(i).get());
-                    flame.killAllParticles();
-                    flash.killAllParticles();
-                    spark.killAllParticles();
-                    smoketrail.killAllParticles();
-                    debris.killAllParticles();
-                    shockwave.killAllParticles();
-                } catch (InterruptedException ex) {
-                    Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (ExecutionException ex) {
-                    Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
-                }
-                tasks.remove(i);
-
-            }
+            
 
             if (playerShoot) {
                 bps[currentPlayer].increasePower();
