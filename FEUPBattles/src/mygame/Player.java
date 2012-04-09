@@ -382,7 +382,7 @@ public class Player {
             return;
         }
         
-        Vector3f location = playerGeo[model - 1 * direction].getLocalTranslation();
+        Vector3f location = playerGeo[model - howMuch * direction].getLocalTranslation();
         playerNode.detachAllChildren();
         playerNode.attachChild(playerGeo[model]);
         playerGeo[model].setLocalTranslation(location);

@@ -939,10 +939,10 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
 
             for (int cp = 0; i < 2; i++) {
                 if (players[cp].isNeedChange()) {
-                    rootNode.detachChild(players[cp].getPlayerGeo());
+                    rootNode.detachChild(players[cp].getPlayerNode());
                     bulletAppState.getPhysicsSpace().remove(players[cp].getPlayerControl());
                     players[cp].changeModel(1, -1);
-                    rootNode.attachChild(players[cp].getPlayerGeo());
+                    rootNode.attachChild(players[cp].getPlayerNode());
                     bulletAppState.getPhysicsSpace().add(players[cp].getPlayerControl());
                     players[cp].setNeedChange(false);
                 }
