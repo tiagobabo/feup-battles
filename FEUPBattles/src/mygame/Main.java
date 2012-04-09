@@ -896,7 +896,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
                 }
             }
             randomFlames = generator.nextInt(50);
-            
+
 
             if (playerShoot) {
                 bps[currentPlayer].increasePower();
@@ -909,7 +909,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
                 bulletAppState.getPhysicsSpace().remove(players[currentPlayer].getBall());
                 players[currentPlayer].setBall(null);
                 bps[currentPlayer].resetPower();
-               
+
                 changePlayer();
             }
 
@@ -948,7 +948,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
 
         }
         if (rootNode.hasChild(cannon)) {
-            
+
             if (cannon != null) {
 
                 if (pce.getNodeA().getName().equals(player1.getPlayerName()) || pce.getNodeB().getName().equals(player1.getPlayerName())) {
@@ -959,62 +959,63 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
 
                     explosion(cannon.getLocalTranslation(), 0.01f);
 
-                   
+
                     players[currentPlayer].setBall(null);
                     bps[currentPlayer].resetPower();
-                   
+
                     changePlayer();
                 }
 
-                if (p != null && cannon != null && !p.isImmune()) {
+                if (p != null && cannon != null) {
+
 
                     if (rootNode.hasChild(cannon)) {
 
                         players[currentPlayer].setBall(null);
                         bps[currentPlayer].resetPower();
-                       
+
                         changePlayer();
+                        if (!p.isImmune()) {
+                            if (p.equals(player1)) {
+                                hp1.loseLife(player2.getDamage());
 
-                        if (p.equals(player1)) {
-                            hp1.loseLife(player2.getDamage());
+                                if (hp1.getCurrentLife() <= 0) {
+                                    death(player1);
+                                } else {
 
-                            if (hp1.getCurrentLife() <= 0) {
-                                death(player1);
+                                    rootNode.detachChild(player1.getPlayerNode());
+                                    bulletAppState.getPhysicsSpace().remove(player1.getPlayerControl());
+                                    player1.changeModel(player2.getDamage(), 1);
+                                    rootNode.attachChild(player1.getPlayerNode());
+                                    bulletAppState.getPhysicsSpace().add(player1.getPlayerControl());
+
+                                }
                             } else {
+                                hp2.loseLife(player1.getDamage());
 
-                                rootNode.detachChild(player1.getPlayerNode());
-                                bulletAppState.getPhysicsSpace().remove(player1.getPlayerControl());
-                                player1.changeModel(player2.getDamage(), 1);
-                                rootNode.attachChild(player1.getPlayerNode());
-                                bulletAppState.getPhysicsSpace().add(player1.getPlayerControl());
+                                if (hp2.getCurrentLife() <= 0) {
+                                    death(player2);
+                                } else {
+                                    rootNode.detachChild(player2.getPlayerNode());
+                                    bulletAppState.getPhysicsSpace().remove(player2.getPlayerControl());
+                                    player2.changeModel(player1.getDamage(), 1);
+                                    rootNode.attachChild(player2.getPlayerNode());
+                                    bulletAppState.getPhysicsSpace().add(player2.getPlayerControl());
 
+                                }
                             }
-                        } else {
-                            hp2.loseLife(player1.getDamage());
 
-                            if (hp2.getCurrentLife() <= 0) {
-                                death(player2);
-                            } else {
-                                rootNode.detachChild(player2.getPlayerNode());
-                                bulletAppState.getPhysicsSpace().remove(player2.getPlayerControl());
-                                player2.changeModel(player1.getDamage(), 1);
-                                rootNode.attachChild(player2.getPlayerNode());
-                                bulletAppState.getPhysicsSpace().add(player2.getPlayerControl());
 
-                            }
+
                         }
 
-
-
                     }
-
-                }
-
+                } 
             }
         }
         explosion(cannon.getLocalTranslation(), 0.5f);
-            rootNode.detachChild(cannon);
-            bulletAppState.getPhysicsSpace().remove(cannon.getControl(0));
+        rootNode.detachChild(cannon);
+        bulletAppState.getPhysicsSpace().remove(cannon.getControl(0));
     }
 
     private void initInfo() {
@@ -1058,7 +1059,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
     private void changePlayer() {
         currentPlayer = 1 - currentPlayer;
         info.setText("Player " + (currentPlayer + 1));
-        
+
 
 
     }
