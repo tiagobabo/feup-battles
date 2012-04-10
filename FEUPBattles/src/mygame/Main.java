@@ -114,13 +114,13 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
     private int currentPlayer = 0;
 
     public static void main(String[] args) {
-        Logger.getLogger("").setLevel(Level.OFF);
+        //Logger.getLogger("").setLevel(Level.OFF);
         app = new Main();
         AppSettings settings = new AppSettings(true);
-        settings.setResolution(1024, 768);
-        settings.setFullscreen(true);
-        app.setShowSettings(false); // splashscreen
-        app.setSettings(settings);
+        //settings.setResolution(1024, 768);
+        //settings.setFullscreen(true);
+        //app.setShowSettings(false); // splashscreen
+        //app.setSettings(settings);
         app.start();
     }
     private boolean inGame = false;
@@ -145,8 +145,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
                 assetManager, inputManager, audioRenderer, guiViewPort);
         nifty = niftyDisplay.getNifty();
         guiViewPort.addProcessor(niftyDisplay);
-        Logger.getLogger("de.lessvoid.nifty").setLevel(Level.SEVERE);
-        Logger.getLogger("NiftyInputEventHandlingLog").setLevel(Level.SEVERE);
+        
         flyCam.setDragToRotate(true);
         flyCam.setEnabled(false);
         AnimationThread at = new AnimationThread(mss);
@@ -239,7 +238,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
 
             player2 = new Player("player 2", p2_pos, p2Selected, assetManager, -Math.PI / 2.0f);
 
-            Keys k1 = new Keys(KeyInput.KEY_LEFT, KeyInput.KEY_RIGHT, KeyInput.KEY_MINUS, KeyInput.KEY_RSHIFT);
+            Keys k1 = new Keys(KeyInput.KEY_LEFT, KeyInput.KEY_RIGHT, KeyInput.KEY_UP, KeyInput.KEY_RSHIFT);
 
             player2.setKeys(k1);
             rootNode.attachChild(player2.getPlayerNode());
@@ -937,7 +936,7 @@ public class Main extends SimpleApplication implements PhysicsCollisionListener 
     
             manas[1 - currentPlayer].regainMana();
 
-            for (int cp = 0; i < 2; i++) {
+            for (int cp = 0; cp < 2; cp++) {
                 if (players[cp].isNeedChange()) {
                     rootNode.detachChild(players[cp].getPlayerNode());
                     bulletAppState.getPhysicsSpace().remove(players[cp].getPlayerControl());
